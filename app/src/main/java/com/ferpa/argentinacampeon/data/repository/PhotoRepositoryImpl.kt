@@ -66,6 +66,23 @@ class PhotoRepositoryImpl(
         }
     }
 
+    override suspend fun updateLocalAppInfo(): Boolean {
+        return try {
+            val lastUpdate = photoDao.getLastAppInfoUpdateDate().first() ?: ""
+            Log.d("updateLocalAppInfo()", "LastUpdate -> $lastUpdate")
+            val updatedResponse = photoSource.getAppInfo(lastUpdate)
+            if (updatedResponse.isNullOrEmpty()) return true
+            updatedResponse.forEach { appInfo ->
+                photoDao.insertAppInfo(appInfo)
+                Log.d("updateLocalAppInfo", "Insert -> ${appInfo.id}")
+            }
+            true
+        } catch (e: Exception) {
+            Log.d("updateLocalAppInfo", e.toString())
+            false
+        }
+    }
+
     /**
      * Photo data
      */
@@ -211,7 +228,7 @@ class PhotoRepositoryImpl(
     }
 
     override suspend fun getFavoritesPhotos(): List<Photo> {
-        return photoDao.getFavorites().first().map{
+        return photoDao.getFavorites().first().map {
             photoDao.getLocalPhotoById(it.id).first()
         }.sortedByDescending { it.rank }
     }
@@ -246,7 +263,7 @@ class PhotoRepositoryImpl(
         return remotePhoto
     }
 
-    override suspend fun getFavoritePairListState(pairIdList: List<Pair<String, String>>): List<Pair<Boolean,Boolean>> {
+    override suspend fun getFavoritePairListState(pairIdList: List<Pair<String, String>>): List<Pair<Boolean, Boolean>> {
         return pairIdList.map {
             Pair(
                 getFavoriteById(it.first),
@@ -259,7 +276,7 @@ class PhotoRepositoryImpl(
         return idList.map { getFavoriteById(it) }
     }
 
-    private suspend fun getFavoriteById(id: String):Boolean {
+    private suspend fun getFavoriteById(id: String): Boolean {
         val isFavorite = photoDao.getFavoriteById(id).first() != null
         Log.d("getFavorite", "$id $isFavorite")
         return isFavorite

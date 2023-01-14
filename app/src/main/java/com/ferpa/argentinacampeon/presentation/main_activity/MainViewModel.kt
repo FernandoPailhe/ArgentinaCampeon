@@ -18,6 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val updateLocalAppInfoUseCase: UpdateLocalAppInfoUseCase,
     private val updateLocalPhotoListUseCase: UpdateLocalPhotoListUseCase,
     private val updateLocalPlayerListUseCase: UpdateLocalPlayerListUseCase,
     private val updateLocalMatchListUseCase: UpdateLocalMatchListUseCase,
@@ -36,6 +37,7 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            updateLocalAppInfoUseCase().launchIn(viewModelScope)
             getVersusPairList()
             updateLocalDatabase()
         }

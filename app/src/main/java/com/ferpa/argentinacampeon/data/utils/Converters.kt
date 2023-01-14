@@ -219,4 +219,19 @@ class Converters {
         return Gson().toJson(someObjects)
     }
 
+    @TypeConverter
+    fun stringToListInfo(data: String?): List<Info?>? {
+        if (data == null) {
+            return Collections.emptyList()
+        }
+        val listType: Type = object :
+            TypeToken<List<Info?>?>() {}.type
+        return Gson().fromJson<List<Info?>>(data, listType)
+    }
+
+    @TypeConverter
+    fun listInfoTitleToString(someObjects: List<Info?>?): String? {
+        return Gson().toJson(someObjects)
+    }
+
 }

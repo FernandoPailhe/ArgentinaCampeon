@@ -13,6 +13,8 @@ interface PhotoRepository {
 
     suspend fun setFirstTime(isFirstTime: Boolean)
 
+    suspend fun updateLocalAppInfo(): Boolean
+
     suspend fun updateLocalPhotoList(): Boolean
 
     suspend fun updateLocalPhotoVotes(remoteUpdate: String = "")

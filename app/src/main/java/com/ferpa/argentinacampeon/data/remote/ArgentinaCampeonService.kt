@@ -1,6 +1,7 @@
 package com.ferpa.argentinacampeon.data.remote
 
 import com.ferpa.argentinacampeon.common.Constants.BEST_PHOTOS_LIMIT
+import com.ferpa.argentinacampeon.common.ServerRoutes.APP_INFO_BASE_ROUTE
 import com.ferpa.argentinacampeon.common.ServerRoutes.MATCH_BASE_ROUTE
 import com.ferpa.argentinacampeon.common.ServerRoutes.PHOTOGRAPHER_BASE_ROUTE
 import com.ferpa.argentinacampeon.common.ServerRoutes.PHOTO_BASE_ROUTE
@@ -23,6 +24,12 @@ interface ArgentinaCampeonService {
      */
     @GET("${PHOTO_BASE_ROUTE}/lastUpdatesDates")
     suspend fun getLastUpdatesDates(): LastUpdatesResponse
+
+    /**
+     * APP INFO
+     */
+    @GET(APP_INFO_BASE_ROUTE)
+    suspend fun getAppInfo(@Query("getFrom") getFrom: String): List<AppInfo>
 
     /**
      * PHOTO API CALLS

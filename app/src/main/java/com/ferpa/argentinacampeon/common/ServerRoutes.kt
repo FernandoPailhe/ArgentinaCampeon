@@ -9,6 +9,7 @@ object ServerRoutes {
     const val PHOTO_BASE_ROUTE = "/photos"
     const val TAGS_BASE_ROUTE = "/tags"
     const val PHOTOGRAPHER_BASE_ROUTE = "/photographers"
+    const val APP_INFO_BASE_ROUTE = "/appInfo"
     const val DELETE_KEY = "hdsjdwueuei12312478189273aiosjiud87q2730u"
     const val POST_KEY = "4672hd2478189sjdwueuei1231273aiosjiud87q2730u"
 }

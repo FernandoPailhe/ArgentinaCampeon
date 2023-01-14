@@ -1,14 +1,29 @@
 package com.ferpa.argentinacampeon.data.local
 
 import androidx.room.*
-import com.ferpa.argentinacampeon.domain.model.Favorites
-import com.ferpa.argentinacampeon.domain.model.Photo
-import com.ferpa.argentinacampeon.domain.model.Match
-import com.ferpa.argentinacampeon.domain.model.Player
+import com.ferpa.argentinacampeon.domain.model.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PhotoDao {
+
+    /**
+     * APP INFO TABLE
+     */
+    @Query("SELECT * from appInfo")
+    fun getAppInfo(): Flow<List<Info>>
+
+    @Query("SELECT lastUpdate from appInfo ORDER BY lastUpdate DESC LIMIT 1")
+    fun getLastAppInfoUpdateDate(): Flow<String>
+
+    @Query("SELECT * from appInfo WHERE id = :id")
+    fun getAppInfoById(id: String): Flow<Info>
+
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAppInfo(appInfo: AppInfo)
+
+    @Update
+    suspend fun updateAppInfo(appInfo: AppInfo)
 
     /**
      * PHOTO TABLE
