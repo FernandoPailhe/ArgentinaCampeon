@@ -2,6 +2,7 @@ package com.ferpa.argentinacampeon.domain.businesslogic
 
 import com.ferpa.argentinacampeon.common.Resource
 import com.ferpa.argentinacampeon.data.remote.dto.PhotoDto
+import com.ferpa.argentinacampeon.domain.model.Photo
 import com.ferpa.argentinacampeon.domain.repository.PhotoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,7 +14,7 @@ class GetPhotosByPhotographerUseCase @Inject constructor(
     private val repository: PhotoRepository
 ) {
 
-    operator fun invoke(photographerId: String): Flow<Resource<List<PhotoDto>>> = flow {
+    operator fun invoke(photographerId: String): Flow<Resource<List<Photo>>> = flow {
         try {
             emit(Resource.Loading())
             val photos = repository.getPhotosByPhotographer(photographerId)

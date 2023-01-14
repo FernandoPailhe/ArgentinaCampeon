@@ -19,20 +19,20 @@ import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.ferpa.argentinacampeon.presentation.Screen
-import com.ferpa.argentinacampeon.presentation.photo_list.components.PlayerInfoBox
+import com.ferpa.argentinacampeon.presentation.photo_list.components.TagInfoBox
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
-import com.ferpa.argentinacampeon.data.remote.dto.getPhotoUrl
 import com.ferpa.argentinacampeon.R
 import com.ferpa.argentinacampeon.common.Constants
-import com.ferpa.argentinacampeon.domain.model.Match
-import com.ferpa.argentinacampeon.domain.model.Player
+import com.ferpa.argentinacampeon.domain.model.*
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradientViolet
 import com.ferpa.argentinacampeon.presentation.photo_list.components.MatchInfoBox
+import com.ferpa.argentinacampeon.presentation.photo_list.components.PlayerInfoBox
 
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun PhotoListScreen(
-    navController: NavController, viewModel: PhotoListViewModel = hiltViewModel()
+    navController: NavController,
+    viewModel: PhotoListViewModel = hiltViewModel()
 ) {
     val listState = viewModel.photoListState.value
     val infoState = viewModel.infoState.value
@@ -40,22 +40,29 @@ fun PhotoListScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         val lazyGridState = rememberLazyGridState()
-
+        val availablePhotos = listState.photos.filter { !it.photoUrl.isNullOrEmpty() }
 
         when (infoState.info) {
             is Player -> {
-                val availablesPhotos = listState.photos.filter { !it.photoUrl.isNullOrEmpty() }
-                if (availablesPhotos.isEmpty()) {
-                    PlayerInfoBox(player = infoState.info)
-                } else {
-                    PlayerInfoBox(
-                        player = infoState.info,
-                        bestPhoto = availablesPhotos.first().getPhotoUrl()
-                    )
-                }
+                PlayerInfoBox(
+                    player = infoState.info,
+                    bestPhoto = if (availablePhotos.isNotEmpty()) availablePhotos.first()
+                        .getPhotoUrl() else null
+                )
             }
             is Match -> {
                 MatchInfoBox(match = infoState.info)
+            }
+            is Tag -> {
+                TagInfoBox(
+                    tag = infoState.info,
+                    bestPhoto = if (availablePhotos.isNotEmpty()) availablePhotos.first()
+                        .getPhotoUrl() else null,
+                    photosCount = listState.photos.size
+                )
+            }
+            is Photographer -> {
+
             }
         }
 
@@ -71,7 +78,6 @@ fun PhotoListScreen(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
                 state = lazyGridState
             ) {
-//                items(3) { Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium)) }
                 items(listState.photos.size) { index ->
                     val photo = listState.photos[index]
                     GlideImage(
@@ -90,45 +96,6 @@ fun PhotoListScreen(
                         contentScale = ContentScale.FillHeight,
                     )
                 }
-                items(listState.photos.size) { index ->
-                    val photo = listState.photos[index]
-                    GlideImage(
-                        model = if (photo.photoUrl.isNullOrEmpty()) R.drawable.fot_bloqueada else photo.getPhotoUrl(),
-                        contentDescription = photo.description,
-                        modifier = Modifier
-                            .height(120.dp)
-                            .clickable {
-                                if (!photo.photoUrl.isNullOrEmpty())
-                                    navController.navigate(
-                                        Screen.PhotoDetailScreenRoute.createRoute(
-                                            photo.id
-                                        )
-                                    )
-                            }
-                            .padding(vertical = MaterialTheme.spacing.nano),
-                        contentScale = ContentScale.FillHeight,
-                    )
-                }
-                items(listState.photos.size) { index ->
-                    val photo = listState.photos[index]
-                    GlideImage(
-                        model = if (photo.photoUrl.isNullOrEmpty()) R.drawable.fot_bloqueada else photo.getPhotoUrl(),
-                        contentDescription = photo.description,
-                        modifier = Modifier
-                            .height(120.dp)
-                            .clickable {
-                                if (!photo.photoUrl.isNullOrEmpty())
-                                    navController.navigate(
-                                        Screen.PhotoDetailScreenRoute.createRoute(
-                                            photo.id
-                                        )
-                                    )
-                            }
-                            .padding(vertical = MaterialTheme.spacing.nano),
-                        contentScale = ContentScale.FillHeight,
-                    )
-                }
-//                items(3) { Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium)) }
             }
             if (listState.error.isNotBlank()) {
                 Text(

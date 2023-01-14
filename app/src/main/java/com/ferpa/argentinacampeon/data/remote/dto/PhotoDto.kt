@@ -1,6 +1,8 @@
 package com.ferpa.argentinacampeon.data.remote.dto
 
 import androidx.room.PrimaryKey
+import com.ferpa.argentinacampeon.common.ServerRoutes.BASE_URL
+import com.ferpa.argentinacampeon.common.ServerRoutes.PHOTO_PATH
 import com.ferpa.argentinacampeon.data.remote.ArgentinaCampeonService
 import com.ferpa.argentinacampeon.domain.model.*
 
@@ -22,13 +24,13 @@ data class PhotoDto(
     val rarity: Int? = 0
 )
 
-fun PhotoDto.toLocalPhoto(): Photo {
+fun PhotoDto.toLocalPhoto(hiddenPhoto: Boolean = false): Photo {
     return Photo(
         id = this.id,
         insertDate = this.insertDate,
         lastUpdate = this.lastUpdate,
         votesUpdate = this.votesUpdate,
-        photoUrl = this.photoUrl,
+        photoUrl = if(hiddenPhoto) null else this.photoUrl,
         match = this.match,
         players = this.players,
         photographer = this.photographer,
@@ -68,7 +70,14 @@ fun PhotoDto.getRank(): String {
     return if (this.rank != null) {
         val rank = (this.rank * 100)
         val difference = 100 - rank
-        (rank + difference / 1.5).toString().substring(0, 4)
+        val formattedRank = (rank + difference / 1.5).toString().substring(0, 4)
+        if (formattedRank.contains("100")) {
+            formattedRank.substring(0, 3)
+        } else if (formattedRank[3].equals("0")) {
+            formattedRank.substring(0, 2)
+        } else {
+            formattedRank
+        }
     } else ""
 }
 
@@ -78,8 +87,14 @@ fun PhotoDto.getPhotoUrl(): String {
     return if (this.photoUrl.isNullOrEmpty()) {
         ""
     } else {
-        "${ArgentinaCampeonService.BASE_URL}${ArgentinaCampeonService.PHOTO_PATH}/${
-            this.photoUrl.split("/").last()
-        }"
+        if (photoUrl.contains("192.168.100.4")) {
+            "${BASE_URL}${PHOTO_PATH}/${
+                this.photoUrl.split(
+                    "/"
+                ).last()
+            }"
+        } else {
+            "${BASE_URL}${PHOTO_PATH}/${this.photoUrl}"
+        }
     }
 }

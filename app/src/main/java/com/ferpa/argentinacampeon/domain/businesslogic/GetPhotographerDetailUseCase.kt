@@ -1,21 +1,24 @@
 package com.ferpa.argentinacampeon.domain.businesslogic
 
+import android.util.Log
 import com.ferpa.argentinacampeon.common.Resource
-import com.ferpa.argentinacampeon.domain.model.Photo
+import com.ferpa.argentinacampeon.domain.model.Photographer
 import com.ferpa.argentinacampeon.domain.repository.PhotoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+
 import javax.inject.Inject
 
-class GetVersusListUseCase @Inject constructor(
+class GetPhotographerDetailUseCase @Inject constructor(
     private val repository: PhotoRepository
 ) {
 
-    operator fun invoke(ignorePair: Pair<String, String> = Pair("","")): Flow<Resource<List<Pair<Photo, Photo>>>> = flow {
+    operator fun invoke(photographerId: String): Flow<Resource<Photographer>> = flow {
         try {
             emit(Resource.Loading())
-            val photos = repository.getVersusList(ignorePair)
-            emit(Resource.Success(photos))
+            val photographer = repository.getPhotographerDetail(photographerId)
+            Log.d("getPhotographerDetailUseCase", photographer.name ?: "null photographer name")
+            emit(Resource.Success(photographer))
         } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
         }

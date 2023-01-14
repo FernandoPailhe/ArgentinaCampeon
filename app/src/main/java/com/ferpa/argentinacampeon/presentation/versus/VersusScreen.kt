@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Constants.POST_VOTE_DELAY
@@ -39,9 +38,11 @@ fun VersusScreen(
     )
     val scope = rememberCoroutineScope()
     val pairList = mainViewModel.versusListState.value.photos
+    val pairFavoritesList = mainViewModel.favoriteState.value.favorites
     if (pairList.isEmpty()) return
-
-    Box(modifier = Modifier.fillMaxSize().background(Constants.VioletDark)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Constants.VioletDark)) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -57,53 +58,59 @@ fun VersusScreen(
                     return@VerticalPager
                 } else {
                     pairList[page]?.let { versusPair ->
-                        PairPhotoItem(
-                            modifier = Modifier.fillMaxSize(),
-                            photoPair = versusPair,
-                            onPhotoClick = {
-                                try {
-                                    if (page + 2 < pairList.size) {
-                                        scope.launch {
-                                            delay(POST_VOTE_DELAY)
-                                            pagerState.animateScrollToPage(page + 1)
+                        if (!mainViewModel.favoriteState.value.isLoading) {
+                            PairPhotoItem(
+                                modifier = Modifier.fillMaxSize(),
+                                photoPair = versusPair,
+                                bookmarkPair = if (pairFavoritesList.size > page) {
+                                    pairFavoritesList[page]
+                                } else Pair(false, false),
+                                onPhotoClick = {
+                                    try {
+                                        if (page + 2 < pairList.size) {
+                                            scope.launch {
+                                                delay(POST_VOTE_DELAY)
+                                                pagerState.animateScrollToPage(page + 1)
+                                            }
+                                        } else {
+                                            scope.launch {
+                                                delay(POST_VOTE_DELAY)
+                                                pagerState.animateScrollToPage(page + 1)
+                                                mainViewModel.addNewVersusPhotos()
+                                            }
                                         }
-                                    } else {
-                                        scope.launch {
-                                            delay(POST_VOTE_DELAY)
-                                            pagerState.animateScrollToPage(page + 1)
-                                            mainViewModel.addNewVersusPhotos()
-                                        }
+                                    } catch (e: Exception) {
+                                        Log.e("VersusScreen", e.localizedMessage ?: "Unknown error")
                                     }
-                                } catch (e: Exception) {
-                                    Log.e("VersusScreen", e.localizedMessage ?: "Unknown error" )
+                                    versusViewModel.postVote(it)
+                                },
+                                onPlayerClick = {
+                                    navController.navigate(
+                                        Screen.PhotoListByPlayerScreenRoute.createRoute(
+                                            it
+                                        )
+                                    )
+                                },
+                                onTagClick = {
+                                    navController.navigate(
+                                        Screen.PhotoListByTagScreenRoute.createRoute(
+                                            it
+                                        )
+                                    )
+                                },
+                                onMatchClick = {
+                                    navController.navigate(
+                                        Screen.PhotoListByMatchScreenRoute.createRoute(
+                                            it
+                                        )
+                                    )
+                                },
+                                onBookmarkClick = {
+                                    versusViewModel.switchFavorite(it)
+                                    mainViewModel.getFavoritePairListStateUpdate()
                                 }
-                                versusViewModel.postVote(it)
-                            },
-                            onPlayerClick = {
-                                navController.navigate(
-                                    Screen.PhotoListByPlayerScreenRoute.createRoute(
-                                        it
-                                    )
-                                )
-                            },
-                            onTagClick = {
-                                navController.navigate(
-                                    Screen.PhotoListByTagScreenRoute.createRoute(
-                                        it
-                                    )
-                                )
-                            },
-                            onMatchClick = {
-                                navController.navigate(
-                                    Screen.PhotoListByMatchScreenRoute.createRoute(
-                                        it
-                                    )
-                                )
-                            },
-                            onBookmarkClick = {
-                                versusViewModel.switchFavorite(it)
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.ferpa.argentinacampeon.R
 import com.ferpa.argentinacampeon.data.previewsource.PreviewPhotos
 import com.ferpa.argentinacampeon.data.remote.dto.toLocalPhoto
 import com.ferpa.argentinacampeon.domain.model.Photo
@@ -28,12 +29,10 @@ import com.ferpa.argentinacampeon.domain.model.getPhotoUrl
 import com.ferpa.argentinacampeon.presentation.ui.theme.BestQatar2022PhotosTheme
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 
-
 private enum class HeartState {
     Gone,
     Voted
 }
-
 
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -58,9 +57,6 @@ fun VersusPhotoBox(
                 HeartState.Voted -> 0.5f
             }
         }
-        Box(modifier = Modifier.fillMaxWidth()){
-
-        }
         GlideImage(
             model = photo.getPhotoUrl(),
             contentDescription = photo.description,
@@ -81,8 +77,10 @@ fun VersusPhotoBox(
             tint = color,
             contentDescription = "favorite",
         )
-        Box(modifier = Modifier.padding(vertical = MaterialTheme.spacing.default, horizontal = MaterialTheme.spacing.small).align(Alignment.BottomEnd)) {
-            AuthorBox(author = PhotographerTitle(id ="larara", "Joselito Fotografo"))
+        Box(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small, horizontal = MaterialTheme.spacing.small).align(Alignment.BottomEnd)) {
+            photo.photographer?.apply {
+                AuthorBox(author = this)
+            }
         }
     }
 }

@@ -1,22 +1,74 @@
 package com.ferpa.argentinacampeon.data.repository
 
 
+import android.content.Context
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.common.Constants.DATA_STORE_NAME
 import com.ferpa.argentinacampeon.common.Extensions.toHiddenPhotoList
 import com.ferpa.argentinacampeon.data.remote.ArgentinaCampeonService
-import com.ferpa.argentinacampeon.data.PhotoDao
+import com.ferpa.argentinacampeon.data.local.PhotoDao
 import com.ferpa.argentinacampeon.data.remote.dto.*
 import com.ferpa.argentinacampeon.domain.model.*
 import com.ferpa.argentinacampeon.domain.repository.PhotoRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import java.time.LocalDateTime
 
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATA_STORE_NAME)
+
+
+@Suppress("USELESS_ELVIS")
 class PhotoRepositoryImpl(
     private val photoDao: PhotoDao,
-    private val photoSource: ArgentinaCampeonService
+    private val photoSource: ArgentinaCampeonService,
+    private val context: Context,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : PhotoRepository {
 
+    companion object {
+        const val TAG = "PhotoRepositoryImpl"
+        val FIRST_TIME = booleanPreferencesKey("firstTime")
+        val LOCAL_USER_VERSION = intPreferencesKey("userVersion")
+    }
+
+    /**
+     * Data Store Preferences
+     */
+    override fun getFirstTime(): Flow<Boolean?> {
+        return context.dataStore.data.map {
+            Log.d(TAG, "$FIRST_TIME value -> ${it[FIRST_TIME]}")
+            it[FIRST_TIME]
+        }
+    }
+
+    override suspend fun checkFirstTime() {
+        if (getFirstTime().first() == null) {
+            setFirstTime(false)
+        }
+    }
+
+    override suspend fun setFirstTime(isFirstTime: Boolean) {
+        context.dataStore.edit {
+            it[FIRST_TIME] = isFirstTime
+            it[LOCAL_USER_VERSION] = Constants.LOCAL_USER_VERSION
+            Log.d(TAG, "New $FIRST_TIME value -> ${it[FIRST_TIME]}")
+            Log.d(TAG, "$LOCAL_USER_VERSION value -> ${it[LOCAL_USER_VERSION]}")
+        }
+    }
+
+    /**
+     * Photo data
+     */
     override suspend fun updateLocalPhotoList(): Boolean {
 
         return if (photoDao.getAllLocalPhoto().first().isEmpty()) {
@@ -32,7 +84,6 @@ class PhotoRepositoryImpl(
             }
         } else {
             val lastRemoteUpdates = photoSource.getLastUpdatesDates()
-            updateLocalPhotoVotes(lastRemoteUpdates.lastVotesUpdate.toString())
             val localLastInsertPhotoDate =
                 LocalDateTime.parse(photoDao.getLastInsertPhotoDate().first())
             val remoteLastInsertPhotoDate = LocalDateTime.parse(lastRemoteUpdates.lastInsertDate)
@@ -42,16 +93,19 @@ class PhotoRepositoryImpl(
                 Log.d("updateLocalPhotoList", "False")
                 if (insertNewPhotos(localLastInsertPhotoDate.toString())) {
                     Log.d("updateLocalPhotoList", "True")
+                    updateLocalPhotoVotes(lastRemoteUpdates.lastVotesUpdate.toString())
                     true
                 } else false
             } else {
                 Log.d("updateLocalPhotoList", "True")
+                updateLocalPhotoVotes(lastRemoteUpdates.lastVotesUpdate.toString())
                 true
             }
+
         }
     }
 
-    override suspend fun updateLocalPhotoVotes(remoteUpdate: String){
+    override suspend fun updateLocalPhotoVotes(remoteUpdate: String) {
 
         val localLastVotesUpdate = LocalDateTime.parse(photoDao.getLastVotesUpdate().first())
         val remoteLastVotesUpdate = if (remoteUpdate.isEmpty()) {
@@ -66,7 +120,6 @@ class PhotoRepositoryImpl(
             }
         } else {
             Log.d("updateLocalPhotoVotes", "True")
-            true
         }
     }
 
@@ -120,16 +173,24 @@ class PhotoRepositoryImpl(
         }
     }
 
-    override suspend fun getVersusList(): List<Pair<Photo, Photo>> {
+    override suspend fun getVersusList(ignorePair: Pair<String, String>): List<Pair<Photo, Photo>> {
 
-        val versusPhotos = photoDao.getVersusPhoto().first().sortedWith(compareBy(
-            { it.localVersus }, { it.rank }
-        ))
+        val versusPhotos = photoDao.getVersusPhoto().first()
+            .filterNot {
+                it.id == ignorePair.first || it.id == ignorePair.first
+            }
+            .sortedWith(compareBy(
+                { it.localVersus }, { it.rank }
+            ))
 
         val firstList = versusPhotos.subList(0, versusPhotos.size / 2).shuffled()
         val secondList = versusPhotos.subList(versusPhotos.size / 2, versusPhotos.size).shuffled()
         var randomPair = firstList.mapIndexed { index, localPhotoTitle ->
-            Pair(localPhotoTitle, secondList[index])
+            if (index / 2 == 0) {
+                Pair(localPhotoTitle, secondList[index])
+            } else {
+                Pair(secondList[index], localPhotoTitle)
+            }
         }.filterNot {
             it.first.versusIds.contains(it.second.id)
         }
@@ -150,30 +211,32 @@ class PhotoRepositoryImpl(
     }
 
     override suspend fun getFavoritesPhotos(): List<Photo> {
-        return emptyList()
+        return photoDao.getFavorites().first().map{
+            photoDao.getLocalPhotoById(it.id).first()
+        }.sortedByDescending { it.rank }
     }
 
-    override suspend fun getPhotosByPlayer(playerId: String): List<PhotoDto> {
+    override suspend fun getPhotosByPlayer(playerId: String): List<Photo> {
         return photoSource.getPhotosByPlayer(playerId)
             .toHiddenPhotoList(photoDao.getVotedPhotosIds().first())
     }
 
-    override suspend fun getPhotosByMatch(matchId: String): List<PhotoDto> {
+    override suspend fun getPhotosByMatch(matchId: String): List<Photo> {
         return photoSource.getPhotosByMatch(matchId)
             .toHiddenPhotoList(photoDao.getVotedPhotosIds().first())
     }
 
-    override suspend fun getPhotosByTag(tag: String): List<PhotoDto> {
+    override suspend fun getPhotosByTag(tag: String): List<Photo> {
         return photoSource.getPhotosByTag(tag)
             .toHiddenPhotoList(photoDao.getVotedPhotosIds().first())
     }
 
-    override suspend fun getPhotosByPhotographer(photographerId: String): List<PhotoDto> {
+    override suspend fun getPhotosByPhotographer(photographerId: String): List<Photo> {
         return photoSource.getPhotosByPhotographer(photographerId)
             .toHiddenPhotoList(photoDao.getVotedPhotosIds().first())
     }
 
-    override suspend fun getBestPhotos(): List<PhotoDto> {
+    override suspend fun getBestPhotos(): List<Photo> {
         return photoSource.getBestPhotos().toHiddenPhotoList(photoDao.getVotedPhotosIds().first())
     }
 
@@ -183,8 +246,23 @@ class PhotoRepositoryImpl(
         return remotePhoto
     }
 
-    override suspend fun getFavoriteStateById(id: String): Boolean {
-        return false
+    override suspend fun getFavoritePairListState(pairIdList: List<Pair<String, String>>): List<Pair<Boolean,Boolean>> {
+        return pairIdList.map {
+            Pair(
+                getFavoriteById(it.first),
+                getFavoriteById(it.second)
+            )
+        }
+    }
+
+    override suspend fun getFavoriteListState(idList: List<String>): List<Boolean> {
+        return idList.map { getFavoriteById(it) }
+    }
+
+    private suspend fun getFavoriteById(id: String):Boolean {
+        val isFavorite = photoDao.getFavoriteById(id).first() != null
+        Log.d("getFavorite", "$id $isFavorite")
+        return isFavorite
     }
 
     override suspend fun getPlayerDetail(playerId: String): Player {
@@ -197,6 +275,10 @@ class PhotoRepositoryImpl(
 
     override suspend fun getMatchDetail(matchId: String): Match {
         return photoDao.getMatchById(matchId).first()
+    }
+
+    override suspend fun getTagDetail(tagId: String): Tag {
+        return photoSource.getTag(tagId)
     }
 
     override suspend fun postVote(vote: Vote) {
@@ -214,7 +296,13 @@ class PhotoRepositoryImpl(
     }
 
     override suspend fun switchFavorite(photoId: String) {
-
+        if (getFavoriteById(photoId)) {
+            photoDao.deleteFavorite(Favorites(photoId))
+            Log.d("getFavorites", "delete $photoId")
+        } else {
+            Log.d("getFavorites", "insert $photoId")
+            photoDao.insertFavorite(Favorites(photoId))
+        }
     }
 
     private suspend fun updatePlayersLocalVotes(vote: Vote) {
@@ -247,7 +335,9 @@ class PhotoRepositoryImpl(
     private suspend fun updateLocalPhotoDetail(remotePhoto: PhotoDto) {
         try {
             val localPhoto = photoDao.getLocalPhotoById(remotePhoto.id).first()
-            if (LocalDateTime.parse(remotePhoto.lastUpdate).isAfter(LocalDateTime.parse(localPhoto.lastUpdate))){
+            if (LocalDateTime.parse(remotePhoto.lastUpdate)
+                    .isAfter(LocalDateTime.parse(localPhoto.lastUpdate))
+            ) {
                 photoDao.updateLocalPhoto(remotePhoto.toExistingLocalPhoto(localPhoto))
                 Log.d("updateLocalPhotoDetail", remotePhoto.photoUrl.toString())
             } else {

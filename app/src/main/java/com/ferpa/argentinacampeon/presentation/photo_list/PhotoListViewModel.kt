@@ -22,6 +22,8 @@ class PhotoListViewModel @Inject constructor(
     private val getPhotosByPhotographerUseCase: GetPhotosByPhotographerUseCase,
     private val getPlayerDetailUseCase: GetPlayerDetailUseCase,
     private val getMatchDetailUseCase: GetMatchDetailUseCase,
+    private val getTagDetailUseCase: GetTagDetailUseCase,
+    private val getPhotographerDetailUseCase: GetPhotographerDetailUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -42,13 +44,13 @@ class PhotoListViewModel @Inject constructor(
         }
         savedStateHandle.get<String>(Constants.PARAM_TAG)?.let { tag ->
             getPhotoListByTag(tag)
+            getTagDetailById(tag)
         }
         savedStateHandle.get<String>(Constants.PARAM_PHOTOGRAPHER_ID)?.let { photographerId ->
             getPhotoListByPhotographer(photographerId)
+            getPhotographerDetailById(photographerId)
         }
-
     }
-
 
     private fun getMatchDetailById(id: String){
         Log.d("getMatchDetailViewModel",id )
@@ -70,6 +72,40 @@ class PhotoListViewModel @Inject constructor(
     private fun getPlayerDetailById(playerId: String){
         Log.d("getPlayerDetailViewModel",playerId )
         getPlayerDetailUseCase(playerId).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _infoState.value = InfoState(info = result.data)
+                }
+                is Resource.Error -> {
+                    _infoState.value = InfoState( error = result.message ?: "An unexpected error occurred")
+                }
+                is Resource.Loading -> {
+                    _infoState.value = InfoState(isLoading = true)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun getTagDetailById(id: String){
+        Log.d("getTagViewModel",id )
+        getTagDetailUseCase(id).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _infoState.value = InfoState(info = result.data)
+                }
+                is Resource.Error -> {
+                    _infoState.value = InfoState( error = result.message ?: "An unexpected error occurred")
+                }
+                is Resource.Loading -> {
+                    _infoState.value = InfoState(isLoading = true)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun getPhotographerDetailById(id: String){
+        Log.d("getTagViewModel",id )
+        getPhotographerDetailUseCase(id).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     _infoState.value = InfoState(info = result.data)

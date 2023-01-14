@@ -1,8 +1,14 @@
 package com.ferpa.argentinacampeon.data.remote
 
 import com.ferpa.argentinacampeon.common.Constants.BEST_PHOTOS_LIMIT
+import com.ferpa.argentinacampeon.common.ServerRoutes.MATCH_BASE_ROUTE
+import com.ferpa.argentinacampeon.common.ServerRoutes.PHOTOGRAPHER_BASE_ROUTE
+import com.ferpa.argentinacampeon.common.ServerRoutes.PHOTO_BASE_ROUTE
+import com.ferpa.argentinacampeon.common.ServerRoutes.PLAYER_BASE_ROUTE
+import com.ferpa.argentinacampeon.common.ServerRoutes.TAGS_BASE_ROUTE
 import com.ferpa.argentinacampeon.data.remote.dto.*
 import com.ferpa.argentinacampeon.domain.model.*
+import com.ferpa.argentinacampeon.domain.model.Tag
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -12,14 +18,15 @@ interface ArgentinaCampeonService {
     @GET("{downloadPath}")
     suspend fun downloadImage(downloadPath: String): Response<ResponseBody>
 
+    /**
+     * UPDATE STATUS
+     */
     @GET("${PHOTO_BASE_ROUTE}/lastUpdatesDates")
     suspend fun getLastUpdatesDates(): LastUpdatesResponse
-
 
     /**
      * PHOTO API CALLS
      */
-
     @GET(PHOTO_BASE_ROUTE)
     suspend fun getNewPhotos(@Query("getFrom") updateFrom: String): List<PhotoDto>
 
@@ -44,14 +51,17 @@ interface ArgentinaCampeonService {
     @GET("${PHOTO_BASE_ROUTE}${PHOTOGRAPHER_BASE_ROUTE}/{photographerId}")
     suspend fun getPhotosByPhotographer(@Path("photographerId") photographerId: String): List<PhotoDto>
 
-    @GET("${PHOTO_BASE_ROUTE}${PLAYER_BASE_ROUTE}/{id}")
+    @GET("${PLAYER_BASE_ROUTE}/{id}")
     suspend fun getPlayer(@Path("id") id: String): Player
 
-    @GET("${PHOTO_BASE_ROUTE}${MATCH_BASE_ROUTE}/{id}")
+    @GET("${MATCH_BASE_ROUTE}/{id}")
     suspend fun getMatch(@Path("id") id: String): Match
 
-    @GET("${PHOTO_BASE_ROUTE}${PHOTOGRAPHER_BASE_ROUTE}/{id}")
+    @GET("${PHOTOGRAPHER_BASE_ROUTE}/{id}")
     suspend fun getPhotographer(@Path("id") id: String): Photographer
+
+    @GET("${TAGS_BASE_ROUTE}/{id}")
+    suspend fun getTag(@Path("id") id: String): Tag
 
     @POST("${PHOTO_BASE_ROUTE}/vote")
     suspend fun postVote(@Body voteDto: VoteDto)
@@ -70,18 +80,5 @@ interface ArgentinaCampeonService {
      */
     @GET(MATCH_BASE_ROUTE)
     suspend fun getMatchList(@Query("getFrom") getFrom: String): List<Match>
-
-    companion object {
-//        const val BASE_URL = "http://192.168.100.4:8080/"
-        const val BASE_URL = "http://181.215.135.148"
-        const val PHOTO_PATH = "/photoTest"
-        const val MATCH_BASE_ROUTE = "/matches"
-        const val PLAYER_BASE_ROUTE = "/players"
-        const val PHOTO_BASE_ROUTE = "/photos"
-        const val TAGS_BASE_ROUTE = "/tags"
-        const val PHOTOGRAPHER_BASE_ROUTE = "/photographers"
-        const val DELETE_KEY = "hdsjdwueuei12312478189273aiosjiud87q2730u"
-        const val POST_KEY = "4672hd2478189sjdwueuei1231273aiosjiud87q2730u"
-    }
 
 }

@@ -1,5 +1,6 @@
 package com.ferpa.argentinacampeon.di
 
+import com.ferpa.argentinacampeon.common.ServerRoutes
 import com.ferpa.argentinacampeon.data.remote.ArgentinaCampeonService
 import dagger.Module
 import dagger.Provides
@@ -18,7 +19,7 @@ object RetrofitModule {
     fun provideArgentinaCampeonService(): ArgentinaCampeonService {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(ArgentinaCampeonService.BASE_URL)
+            .baseUrl(ServerRoutes.BASE_URL)
             .build()
             .create(ArgentinaCampeonService::class.java)
     }

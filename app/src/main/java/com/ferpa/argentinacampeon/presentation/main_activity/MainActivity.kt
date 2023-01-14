@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                (viewModel.versusListState.value.isLoading && viewModel.versusListState.value.photos.isEmpty())
+                (viewModel.versusListState.value.isLoading && viewModel.versusListState.value.photos.isEmpty() && viewModel.favoriteState.value.isLoading)
             }
         }
         setContent {

@@ -19,6 +19,7 @@ import com.ferpa.argentinacampeon.presentation.ui.theme.BestQatar2022PhotosTheme
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.domain.model.MatchTitle
+import com.ferpa.argentinacampeon.domain.model.getMinimalTitle
 
 @Composable
 fun MatchText(
@@ -28,20 +29,24 @@ fun MatchText(
     matchTitleText: String = ""
 ) {
     if (matchTitle == null && matchTitleText.isNullOrEmpty()) return
-    Box(modifier = Modifier.clickable {
-        onMatchClick(matchTitle?.id ?: "")
-    }) {
-        Text(
-            text = matchTitle?.title ?: matchTitleText,
-            fontSize =  if (itemList) 10.sp else 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-            color = if (itemList) Constants.VioletDark else Color.White,
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.default)
-                .fillMaxWidth(),
-            overflow = TextOverflow.Ellipsis,
-        )
+    matchTitle?.let {
+        Box(modifier = Modifier.clickable {
+            onMatchClick(matchTitle?.id ?: "")
+        }) {
+            Text(
+                text = if (itemList) matchTitle.getMinimalTitle() else matchTitle.title
+                    ?: matchTitleText,
+                fontSize = if (itemList) 12.sp else 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                color = if (itemList) Constants.VioletDark else Color.White,
+                modifier = Modifier
+                    .padding(horizontal = MaterialTheme.spacing.default,
+                        vertical = MaterialTheme.spacing.extraSmall)
+                    .fillMaxWidth(),
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 

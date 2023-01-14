@@ -2,8 +2,8 @@ package com.ferpa.argentinacampeon.di
 
 import android.content.Context
 import androidx.room.Room
-import com.ferpa.argentinacampeon.data.PhotoDao
-import com.ferpa.argentinacampeon.data.PhotoRoomDatabase
+import com.ferpa.argentinacampeon.data.local.PhotoDao
+import com.ferpa.argentinacampeon.data.local.PhotoRoomDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

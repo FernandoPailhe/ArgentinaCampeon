@@ -2,11 +2,9 @@
 
 package com.ferpa.argentinacampeon.presentation.best_photos.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -15,35 +13,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.ferpa.argentinacampeon.common.Constants
-import com.ferpa.argentinacampeon.data.remote.dto.PhotoDto
-import com.ferpa.argentinacampeon.data.remote.dto.getPhotoUrl
-import com.ferpa.argentinacampeon.data.remote.dto.getRank
-import com.ferpa.argentinacampeon.presentation.common.components.RateIconColumn
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.presentation.versus.components.MatchText
 import com.ferpa.argentinacampeon.presentation.versus.components.PlayerRow
 import com.ferpa.argentinacampeon.presentation.versus.components.TagRow
 import com.ferpa.argentinacampeon.R
-import com.ferpa.argentinacampeon.presentation.ui.theme.Shapes
+import com.ferpa.argentinacampeon.common.Constants.CARD_PHOTO_LIST_ITEM_HEIGHT
+import com.ferpa.argentinacampeon.common.Constants.ICON_SIZE
+import com.ferpa.argentinacampeon.domain.model.Photo
+import com.ferpa.argentinacampeon.domain.model.getPhotoUrl
+import com.ferpa.argentinacampeon.domain.model.getRank
+import com.ferpa.argentinacampeon.presentation.versus.components.Icons
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun CardPhotoListItem(
-    modifier: Modifier = Modifier,
-    photo: PhotoDto,
+    photo: Photo,
     position: Int,
-    onItemClick: (PhotoDto) -> Unit = {},
+    isFavorite: Boolean = false,
+    onItemClick: (Photo) -> Unit = {},
     onPlayerClick: (String) -> Unit = {},
     onMatchClick: (String) -> Unit = {},
-    onTagClick: (String) -> Unit = {}
+    onTagClick: (String) -> Unit = {},
+    onBookMarkClick: (String) -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -62,7 +60,7 @@ fun CardPhotoListItem(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(140.dp)
+                    .height(CARD_PHOTO_LIST_ITEM_HEIGHT.dp)
                     .clip(RoundedCornerShape(MaterialTheme.spacing.small))
                     .background(Constants.LightBlue),
                 onClick = { onItemClick(photo) }
@@ -82,77 +80,48 @@ fun CardPhotoListItem(
                             .fillMaxHeight(),
                         contentScale = ContentScale.Crop
                     )
-                    Column {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.SpaceAround
+                    ) {
                         MatchText(matchTitle = photo.match, onMatchClick, true)
                         PlayerRow(
                             modifier = Modifier.fillMaxHeight(0.25f),
                             players = photo.players,
                             onPlayerClick = onPlayerClick
                         )
-                        TagRow(tags = photo.tags, isCard = false, onTagClick = onTagClick)
+                        Box(modifier = Modifier.padding(horizontal = ICON_SIZE.dp)) {
+                            TagRow(tags = photo.tags, isCard = false, onTagClick = onTagClick)
+                        }
                     }
                 }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd,
+                    content = {
+                        if (!photo.photoUrl.isNullOrEmpty()) {
+                            Icons(
+                                isFavorite = isFavorite,
+                                isPhotoCard = true,
+                                onBookmarkClick = { onBookMarkClick(photo.id) }
+                            )
+                        }
+                    })
             }
         }
         Box(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
 
-            /*
-            Box(
-                modifier = Modifier
-                    .width(75.dp)
-                    .height(75.dp)
-                    .align(Alignment.TopStart),
-                contentAlignment = Alignment.Center,
-                content = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_star_rate_24),
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                    Text(
-                        text = "${photo.getRank()}",
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.offset(y = 5.dp)
-                    )
-                }
-            )
-            Card(
-                modifier = Modifier
-                    .width(MaterialTheme.spacing.positionOffset)
-                    .height(MaterialTheme.spacing.positionOffset)
-                    .clip(CircleShape)
-                    .background(Constants.VioletDark)
-                    .align(Alignment.TopStart),
-                elevation = MaterialTheme.spacing.default
-            ) {
-                Box(
-                    modifier = Modifier.background(Constants.VioletDark),
-                    contentAlignment = Alignment.Center,
-                    content = {
-                        Text(
-                            text = "$position",
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.White,
-                            fontSize = 12.sp,
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                        )
-                    })
-            }
-             */
             Card(
                 modifier = Modifier
                     .height(MaterialTheme.spacing.positionOffset)
                     .clip(RoundedCornerShape(MaterialTheme.spacing.small))
-                    .background(Constants.VioletDark)
                     .align(Alignment.TopStart),
                 elevation = MaterialTheme.spacing.medium
             ) {
                 Box(
-                    modifier = Modifier.background(Constants.LightBlue)
+                    modifier = Modifier
+                        .background(Constants.LightBlue)
                         .padding(horizontal = MaterialTheme.spacing.default),
                     contentAlignment = Alignment.Center,
                     content = {
@@ -163,10 +132,39 @@ fun CardPhotoListItem(
                             fontSize = 10.sp,
                             modifier = Modifier
                                 .align(Alignment.Center)
+                                .padding(start = MaterialTheme.spacing.positionOffset)
+                        )
+                    })
+            }
+
+            Card(
+                modifier = Modifier
+                    .height(MaterialTheme.spacing.positionOffset)
+                    .width(MaterialTheme.spacing.positionOffset * 1.2f)
+                    .clip(RoundedCornerShape(MaterialTheme.spacing.small))
+                    .background(Constants.VioletDark)
+                    .align(Alignment.TopStart),
+                elevation = MaterialTheme.spacing.medium
+            ) {
+                Box(
+                    modifier = Modifier
+                        .background(Constants.Violet)
+                        .padding(horizontal = MaterialTheme.spacing.default),
+                    contentAlignment = Alignment.Center,
+                    content = {
+                        Text(
+                            text = "$position",
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White,
+                            fontSize = 10.sp,
+                            modifier = Modifier
+                                .align(Alignment.Center),
+                            maxLines = 1
                         )
                     })
             }
         }
+
     }
 
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.ferpa.argentinacampeon.common.Constants.NO_TAG_KEY
 import com.ferpa.argentinacampeon.domain.model.Tag
 import com.ferpa.argentinacampeon.presentation.ui.theme.BestQatar2022PhotosTheme
 
@@ -27,6 +28,9 @@ fun TagRow(
     ) {
         tags?.forEach {
             it?.let { TagCard(tag = it, onTagClick, isCard = isCard) }
+        }
+        if (tags.isNullOrEmpty()){
+            TagCard(tag = Tag(tag = NO_TAG_KEY, id = ""), isCard = isCard)
         }
     }
 }

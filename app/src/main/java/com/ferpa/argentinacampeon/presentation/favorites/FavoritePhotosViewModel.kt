@@ -6,14 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ferpa.argentinacampeon.common.Resource
 import com.ferpa.argentinacampeon.domain.businesslogic.GetFavoritesPhotosUseCase
+import com.ferpa.argentinacampeon.domain.businesslogic.SwitchFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FavoritePhotosViewModel @Inject constructor(
-    private val getFavoritesPhotosUseCase: GetFavoritesPhotosUseCase
+    private val getFavoritesPhotosUseCase: GetFavoritesPhotosUseCase,
+    private val switchFavoriteUseCase: SwitchFavoriteUseCase
 ) : ViewModel() {
 
     private val _state = mutableStateOf(FavoritePhotosListState())
@@ -39,6 +42,12 @@ class FavoritePhotosViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun switchFavorite(photoId: String) {
+        viewModelScope.launch {
+            switchFavoriteUseCase(photoId)
+        }
     }
 
 }

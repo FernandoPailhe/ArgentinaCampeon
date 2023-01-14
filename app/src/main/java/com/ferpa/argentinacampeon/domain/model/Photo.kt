@@ -2,8 +2,8 @@ package com.ferpa.argentinacampeon.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ferpa.argentinacampeon.data.remote.ArgentinaCampeonService.Companion.BASE_URL
-import com.ferpa.argentinacampeon.data.remote.ArgentinaCampeonService.Companion.PHOTO_PATH
+import com.ferpa.argentinacampeon.common.ServerRoutes.BASE_URL
+import com.ferpa.argentinacampeon.common.ServerRoutes.PHOTO_PATH
 import kotlin.math.roundToInt
 
 @Entity
@@ -64,6 +64,10 @@ fun Photo.getPhotoUrl(isPhotoList: Boolean = false): String? {
     return if ((this.localVotes == 0 && isPhotoList) || this.photoUrl == null){
         null
     } else {
-        "$BASE_URL$PHOTO_PATH/${this.photoUrl.split("/").last()}"
+        if (photoUrl.contains("192.168.100.4")){
+            "$BASE_URL$PHOTO_PATH/${this.photoUrl.split("/").last()}"
+        } else {
+            "$BASE_URL$PHOTO_PATH/${this.photoUrl}"
+        }
     }
 }

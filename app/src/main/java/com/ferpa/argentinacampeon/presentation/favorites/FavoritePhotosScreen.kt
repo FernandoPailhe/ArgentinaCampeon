@@ -1,5 +1,6 @@
 package com.ferpa.argentinacampeon.presentation.favorites
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
@@ -13,7 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ferpa.argentinacampeon.presentation.Screen
-import com.ferpa.argentinacampeon.presentation.favorites.components.LocalPhotoListItem
+import com.ferpa.argentinacampeon.presentation.best_photos.components.CardPhotoListItem
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 
 
@@ -26,12 +27,15 @@ fun FavoritePhotosScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
     ) {
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.default))
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(state.photos.size) { index ->
-                LocalPhotoListItem(
+                CardPhotoListItem(
                     photo = state.photos[index],
+                    position = index + 1,
+                    isFavorite = true,
                     onItemClick = { photo ->
                         navController.navigate(Screen.PhotoDetailScreenRoute.createRoute(photo.id))
                     },
@@ -55,6 +59,9 @@ fun FavoritePhotosScreen(
                                 it
                             )
                         )
+                    },
+                    onBookMarkClick = {
+                        viewModel.switchFavorite(it)
                     })
             }
         }

@@ -13,6 +13,16 @@ object Constants {
     const val PARAM_TAG = "tag"
     const val PARAM_PHOTOGRAPHER_ID = "photographerId"
 
+
+    const val NO_TAG_KEY = "no_tag"
+
+
+    /**
+     * DATA STORE
+     */
+    const val DATA_STORE_NAME = "localUser"
+    const val LOCAL_USER_VERSION = 1
+
     /**
      * LISTS SIZE
      */
@@ -40,5 +50,7 @@ object Constants {
      * VIEWS SIZE
      */
     const val TOP_BACKGROUND_HEIGHT = 180
+    const val CARD_PHOTO_LIST_ITEM_HEIGHT = 140
+    const val ICON_SIZE = (CARD_PHOTO_LIST_ITEM_HEIGHT / 5)
 
 }

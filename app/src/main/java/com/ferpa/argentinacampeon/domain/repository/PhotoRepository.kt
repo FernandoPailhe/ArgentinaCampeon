@@ -2,8 +2,16 @@ package com.ferpa.argentinacampeon.domain.repository
 
 import com.ferpa.argentinacampeon.data.remote.dto.PhotoDto
 import com.ferpa.argentinacampeon.domain.model.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 interface PhotoRepository {
+
+    fun getFirstTime(): Flow<Boolean?>
+
+    suspend fun checkFirstTime()
+
+    suspend fun setFirstTime(isFirstTime: Boolean)
 
     suspend fun updateLocalPhotoList(): Boolean
 
@@ -15,31 +23,33 @@ interface PhotoRepository {
 
     suspend fun insertNewPhotos(localLastInsertPhotoDate: String): Boolean
 
-    suspend fun getVersusList(): List<Pair<Photo, Photo>>
-
-//    suspend fun getVersusPair(): Flow<Pair<LocalPhoto, LocalPhoto>>
+    suspend fun getVersusList(ignorePair: Pair<String, String>): List<Pair<Photo, Photo>>
 
     suspend fun getFavoritesPhotos(): List<Photo>
 
-    suspend fun getPhotosByPlayer(playerId: String): List<PhotoDto>
+    suspend fun getPhotosByPlayer(playerId: String): List<Photo>
 
-    suspend fun getPhotosByMatch(matchId: String): List<PhotoDto>
+    suspend fun getPhotosByMatch(matchId: String): List<Photo>
 
-    suspend fun getPhotosByTag(tag: String): List<PhotoDto>
+    suspend fun getPhotosByTag(tag: String): List<Photo>
 
-    suspend fun getPhotosByPhotographer(photographerId: String): List<PhotoDto>
+    suspend fun getPhotosByPhotographer(photographerId: String): List<Photo>
 
-    suspend fun getBestPhotos(): List<PhotoDto>
+    suspend fun getBestPhotos(): List<Photo>
 
     suspend fun getPhotoDetail(id: String): PhotoDto
 
-    suspend fun getFavoriteStateById(id: String): Boolean
+    suspend fun getFavoritePairListState(pairIdList: List<Pair<String, String>>): List<Pair<Boolean,Boolean>>
+
+    suspend fun getFavoriteListState(idList: List<String>): List<Boolean>
 
     suspend fun getPlayerDetail(playerId: String): Player
 
     suspend fun getPhotographerDetail(photographerId: String): Photographer
 
     suspend fun getMatchDetail(matchId: String): Match
+
+    suspend fun getTagDetail(tagId: String): Tag
 
     suspend fun postVote(vote: Vote)
 

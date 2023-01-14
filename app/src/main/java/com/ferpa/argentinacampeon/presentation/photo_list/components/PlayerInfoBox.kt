@@ -2,19 +2,15 @@
 
 package com.ferpa.argentinacampeon.presentation.photo_list.components
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -23,7 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.ferpa.argentinacampeon.R
@@ -34,7 +29,7 @@ import com.ferpa.argentinacampeon.presentation.ui.theme.BestQatar2022PhotosTheme
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun PlayerInfoBox(
     modifier: Modifier = Modifier,
@@ -54,9 +49,9 @@ fun PlayerInfoBox(
                 .fillMaxWidth()
                 .height(Constants.TOP_BACKGROUND_HEIGHT.dp)
         ) {
-            bestPhoto?.apply {
+            bestPhoto.apply {
                 GlideImage(
-                    model = bestPhoto,
+                    model = bestPhoto ?: painterResource(id = R.drawable.fot_bloqueada),
                     contentDescription = "player",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

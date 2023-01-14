@@ -3,6 +3,7 @@ package com.ferpa.argentinacampeon.presentation.versus.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.ferpa.argentinacampeon.presentation.ui.theme.BestQatar2022PhotosTheme
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.common.Constants.NO_TAG_KEY
 import com.ferpa.argentinacampeon.domain.model.Tag
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -26,11 +28,11 @@ import com.ferpa.argentinacampeon.domain.model.Tag
 fun TagCard(tag: Tag, onTagClick: (String) -> Unit = {}, isCard: Boolean = true) {
 
     Box(
-        modifier = Modifier.fillMaxSize().clickable {
+        modifier = Modifier.fillMaxWidth().clickable {
             onTagClick(tag.id)
         }
     ) {
-        if (isCard) {
+        if (isCard && tag.tag != NO_TAG_KEY) {
             Card(
                 modifier = Modifier
                     .padding(MaterialTheme.spacing.default),
@@ -49,12 +51,13 @@ fun TagCard(tag: Tag, onTagClick: (String) -> Unit = {}, isCard: Boolean = true)
             }
         } else {
             Text(
-                text = "#${tag.tag}",
+                text = if (tag.tag == NO_TAG_KEY) "" else "#${tag.tag}",
                 fontWeight = FontWeight.SemiBold,
                 color = Constants.VioletDark,
                 fontSize = 10.sp,
                 modifier = Modifier
-                    .padding(MaterialTheme.spacing.default)
+                    .padding(horizontal = MaterialTheme.spacing.default,
+                        vertical = MaterialTheme.spacing.extraSmall)
             )
         }
     }

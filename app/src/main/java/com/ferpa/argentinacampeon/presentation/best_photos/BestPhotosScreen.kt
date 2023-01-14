@@ -24,6 +24,7 @@ fun BestPhotosScreen(
     viewModel: BestPhotosViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
+    val favoritesState = viewModel.favoriteState.value
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -31,36 +32,50 @@ fun BestPhotosScreen(
     ) {
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.default))
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(state.photos.size) { index ->
-                CardPhotoListItem(
-                    photo = state.photos[index],
-                    position = index + 1,
-                    onItemClick = { photo ->
-                        if (!photo.photoUrl.isNullOrEmpty()) {
-                            navController.navigate(Screen.PhotoDetailScreenRoute.createRoute(photo.id))
-                        }
-                    },
-                    onPlayerClick = {
-                        navController.navigate(
-                            Screen.PhotoListByPlayerScreenRoute.createRoute(
-                                it
+            if (favoritesState.favorites.size == state.photos.size) {
+                items(state.photos.size) { index ->
+                    CardPhotoListItem(
+                        photo = state.photos[index],
+                        position = index + 1,
+                        isFavorite = if (favoritesState.favorites.size > index) {
+                            viewModel.favoriteState.value.favorites[index]
+                        } else {
+                            false
+                        },
+                        onItemClick = { photo ->
+                            if (!photo.photoUrl.isNullOrEmpty()) {
+                                navController.navigate(
+                                    Screen.PhotoDetailScreenRoute.createRoute(
+                                        photo.id
+                                    )
+                                )
+                            }
+                        },
+                        onPlayerClick = {
+                            navController.navigate(
+                                Screen.PhotoListByPlayerScreenRoute.createRoute(
+                                    it
+                                )
                             )
-                        )
-                    },
-                    onMatchClick = {
-                        navController.navigate(
-                            Screen.PhotoListByMatchScreenRoute.createRoute(
-                                it
+                        },
+                        onMatchClick = {
+                            navController.navigate(
+                                Screen.PhotoListByMatchScreenRoute.createRoute(
+                                    it
+                                )
                             )
-                        )
-                    },
-                    onTagClick = {
-                        navController.navigate(
-                            Screen.PhotoListByTagScreenRoute.createRoute(
-                                it
+                        },
+                        onTagClick = {
+                            navController.navigate(
+                                Screen.PhotoListByTagScreenRoute.createRoute(
+                                    it
+                                )
                             )
-                        )
+                        },
+                    onBookMarkClick = {
+                        viewModel.switchFavorite(it)
                     })
+                }
             }
         }
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
@@ -75,7 +90,7 @@ fun BestPhotosScreen(
                     .align(Alignment.Center)
             )
         }
-        if (state.isLoading) {
+        if (state.isLoading || favoritesState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }

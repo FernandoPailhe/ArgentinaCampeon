@@ -12,7 +12,7 @@ class SwitchFavoriteUseCase @Inject constructor(
         try {
             repository.switchFavorite(photoId)
         } catch (e: Exception) {
-            Log.e(TAG, e.message ?: "Unexpected error")
+            Log.d(TAG, e.message ?: "Unexpected error")
         }
     }
 

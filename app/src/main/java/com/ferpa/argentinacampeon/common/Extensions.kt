@@ -10,18 +10,27 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
 import com.ferpa.argentinacampeon.data.remote.dto.PhotoDto
 import com.ferpa.argentinacampeon.data.remote.dto.toHiddenPhoto
+import com.ferpa.argentinacampeon.data.remote.dto.toLocalPhoto
+import com.ferpa.argentinacampeon.domain.model.Photo
 
 object Extensions {
 
-    fun List<PhotoDto>.toHiddenPhotoList(votedIds: List<String>): List<PhotoDto> {
-        return this.map { photoDto ->
-            if (votedIds.contains(photoDto.id)) {
-                photoDto
+    fun List<PhotoDto>.toHiddenPhotoList(votedIds: List<String>): List<Photo> =
+        this.map { photoDto ->
+            photoDto.toLocalPhoto(hiddenPhoto = !votedIds.contains(photoDto.id))
+        }
+
+    fun List<Pair<Photo, Photo>?>.toPairIdList(): List<Pair<String, String>> =
+        this.map {
+            if (it?.first?.id != null) {
+                Pair(
+                    it.first.id,
+                    it.second.id
+                )
             } else {
-                photoDto.toHiddenPhoto()
+                Pair("", "")
             }
         }
-    }
 
     fun Modifier.rotating(duration: Int): Modifier = composed {
         val transition = rememberInfiniteTransition()

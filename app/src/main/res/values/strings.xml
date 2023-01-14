@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">Argentina Campeón del Mundo</string>
+    <string name="app_name">Argentina Campeón</string>
     <string name="favorites">Favoritos</string>
     <string name="best">Top</string>
     <string name="versus">Duelo</string>
+    <string name="search">Buscar</string>
 </resources>

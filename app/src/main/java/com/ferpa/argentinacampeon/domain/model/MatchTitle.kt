@@ -8,3 +8,7 @@ data class MatchTitle (
 )
 
 fun MatchTitle.twoLinesTitle() = if (this.title != null) this.title.replace(": ", ":" + System.getProperty("line.separator")) else ""
+
+fun MatchTitle.getMinimalTitle(): String {
+    return this.title?.split(": ")?.last() ?: ""
+}

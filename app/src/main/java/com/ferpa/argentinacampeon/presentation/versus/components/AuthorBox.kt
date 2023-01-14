@@ -8,7 +8,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,21 +29,21 @@ fun AuthorBox(
     onPhotographerClick: () -> Unit = {}
 ) {
     if (author.name.isNullOrEmpty()) return
+    val text = "Fuente: ${author.name}"
     Text(
-        text = "Ph: ${author.name}",
-        fontWeight = FontWeight.SemiBold,
-        color = Constants.VioletDark,
-        fontSize = 10.sp,
-        modifier = Modifier
-            .padding(MaterialTheme.spacing.extraSmall).blur(1.dp).offset(2.dp, 2.dp)
-    )
-    Text(
-        text = "Ph: ${author.name}",
+        text = text,
         fontWeight = FontWeight.SemiBold,
         color = Color.White,
         fontSize = 10.sp,
         modifier = Modifier
-            .padding(MaterialTheme.spacing.extraSmall)
+            .padding(MaterialTheme.spacing.extraSmall),
+        style = TextStyle(
+            shadow = Shadow(
+                color = Constants.VioletDark,
+                offset = Offset(2.5f, 2.0f),
+                blurRadius = 2f
+            )
+        )
     )
 }
 

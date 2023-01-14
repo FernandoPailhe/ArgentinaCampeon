@@ -28,7 +28,7 @@ fun PlayerCard(player: PlayerTitle, onPlayerClick: (String) -> Unit = {}) {
             modifier = Modifier
                 .padding(
                     horizontal = MaterialTheme.spacing.default,
-                    vertical = MaterialTheme.spacing.small
+                    vertical = MaterialTheme.spacing.extraSmall
                 ),
             shape = shapes.small,
             elevation = 8.dp,

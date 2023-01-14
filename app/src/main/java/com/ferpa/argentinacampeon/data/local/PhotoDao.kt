@@ -1,6 +1,7 @@
-package com.ferpa.argentinacampeon.data
+package com.ferpa.argentinacampeon.data.local
 
 import androidx.room.*
+import com.ferpa.argentinacampeon.domain.model.Favorites
 import com.ferpa.argentinacampeon.domain.model.Photo
 import com.ferpa.argentinacampeon.domain.model.Match
 import com.ferpa.argentinacampeon.domain.model.Player
@@ -12,7 +13,6 @@ interface PhotoDao {
     /**
      * PHOTO TABLE
      */
-
     @Insert
     suspend fun insertLocalPhoto(photo: Photo)
 
@@ -70,4 +70,18 @@ interface PhotoDao {
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMatch(match: Match)
 
+    /**
+     * FAVORITES TABLE
+     */
+    @Query("SELECT * from favorites WHERE id = :id")
+    fun getFavoriteById(id: String): Flow<Favorites?>
+
+    @Query("SELECT * from favorites")
+    fun getFavorites(): Flow<List<Favorites>>
+
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFavorite(favorite: Favorites)
+
+    @Delete
+    suspend fun deleteFavorite(favorite: Favorites)
 }

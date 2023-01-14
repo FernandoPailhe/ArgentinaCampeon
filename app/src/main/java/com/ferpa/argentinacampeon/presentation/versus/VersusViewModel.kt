@@ -1,7 +1,6 @@
 package com.ferpa.argentinacampeon.presentation.versus
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ferpa.argentinacampeon.domain.businesslogic.PostVoteUseCase
@@ -16,9 +15,6 @@ class VersusViewModel @Inject constructor(
     private val postVoteUseCase: PostVoteUseCase,
     private val switchFavoriteUseCase: SwitchFavoriteUseCase
 ) : ViewModel() {
-
-    private val _favoriteIconState = mutableStateOf(Pair(false, false))
-    val favoriteIconState: State<Pair<Boolean?, Boolean?>> = _favoriteIconState
 
     init {
 
