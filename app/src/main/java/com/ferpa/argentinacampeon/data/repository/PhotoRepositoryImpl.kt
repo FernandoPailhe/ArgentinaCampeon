@@ -180,6 +180,18 @@ class PhotoRepositoryImpl(
         return photoDao.getAppInfo().first().tutorial
     }
 
+    override suspend fun getAboutUsInfo(): List<InfoFromApi?>? {
+        return photoDao.getAppInfo().first().aboutUs?.sortedBy { it?.priority }
+    }
+
+    override suspend fun getShareInfo(): List<InfoFromApi?>? {
+        return photoDao.getAppInfo().first().share
+    }
+
+    override suspend fun getExtraInfo(): List<InfoFromApi?>? {
+        return photoDao.getAppInfo().first().extra
+    }
+
     override suspend fun insertNewPhotos(localLastInsertPhotoDate: String): Boolean {
         return try {
             photoSource.getNewPhotos(localLastInsertPhotoDate).forEach {

@@ -26,6 +26,12 @@ interface PhotoRepository {
 
     suspend fun getTutorialInfo(): List<InfoFromApi?>?
 
+    suspend fun getAboutUsInfo(): List<InfoFromApi?>?
+
+    suspend fun getShareInfo(): List<InfoFromApi?>?
+
+    suspend fun getExtraInfo(): List<InfoFromApi?>?
+
     suspend fun insertNewPhotos(localLastInsertPhotoDate: String): Boolean
 
     suspend fun getTutorialVersusList(size: Int): List<Pair<Photo, Photo>>

@@ -68,7 +68,7 @@ fun WelcomeScreen(
             modifier = Modifier.fillMaxHeight(),
             contentAlignment = Alignment.Center,
             content = {
-                if (infoList.isEmpty()) {
+                if (verticalPagerState.currentPage < 1 && verticalPagerState.currentPageOffset == 0f ) {
                     Box(modifier = Modifier.fillMaxHeight()) {
                         WelcomeBackdrop(
                             drawableResource = R.drawable.coronacion_cerca,
@@ -78,14 +78,9 @@ fun WelcomeScreen(
                         )
                     }
                 }
-                if (viewModel.tutorialInfo.value.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center),
-                        color = Color.White
-                    )
-                }
                 if (infoList.isNotEmpty()) {
-                    val infoListPosition = remember {mutableStateOf(verticalPagerState.currentPage + 3)}
+                    val infoListPosition =
+                        remember { mutableStateOf(verticalPagerState.currentPage + 3) }
                     VerticalPager(
                         count = pairList.size,
                         state = verticalPagerState,
@@ -103,7 +98,7 @@ fun WelcomeScreen(
                                     onPhotoClick = {
                                         try {
                                             scope.launch {
-                                                infoListPosition.value ++
+                                                infoListPosition.value++
                                                 delay(Constants.POST_VOTE_DELAY)
                                                 verticalPagerState.animateScrollToPage(verticalPage + 1)
                                             }
@@ -116,10 +111,11 @@ fun WelcomeScreen(
                                         versusViewModel.postVote(it, true)
                                     },
                                     onButtonClicked = { viewModel.setFirstTimeFalse() },
-                                    infoContent = if (verticalPagerState.currentPage == 1) infoList[3]?.content ?: "" else infoList[4]?.content ?: ""
+                                    infoContent = if (verticalPagerState.currentPage == 1) infoList[3]?.content
+                                        ?: "" else infoList[4]?.content ?: ""
                                 )
                                 if (verticalPagerState.currentPage == 0 && verticalPagerState.currentPageOffset < 1.0f) {
-                                    Box(modifier = Modifier.fillMaxHeight()) {
+                                    Box(modifier = Modifier.fillMaxSize()) {
                                         WelcomeBackdrop(
                                             drawableResource = R.drawable.coronacion_cerca,
                                             offset = horizontalPagerState.currentPageOffset,
@@ -128,7 +124,7 @@ fun WelcomeScreen(
                                         )
                                     }
                                     HorizontalPager(
-                                        count = infoList.size,
+                                        count = 3,
                                         state = horizontalPagerState,
                                         userScrollEnabled = userScrollEnabled.value
                                     ) { horizontalPage ->
@@ -140,9 +136,6 @@ fun WelcomeScreen(
                                                 verticalArrangement = Arrangement.Center
                                             ) {
                                                 if (horizontalPagerState.currentPage == 1) tutorialViewModel.getTutorialPairList()
-                                                if (horizontalPagerState.currentPage == 2 && horizontalPagerState.currentPageOffset == 0.0f) {
-                                                    userScrollEnabled.value = false
-                                                }
                                                 /*
                                                 if (horizontalPagerState.currentPage == 3) {
 
@@ -182,66 +175,44 @@ fun WelcomeScreen(
                                                         .fillMaxWidth()
                                                         .offset(y = textOffset),
                                                 )
-                                                if (horizontalPagerState.currentPage == 2) {
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .offset(y = textOffset),
-                                                        contentAlignment = Alignment.Center,
-                                                        content = {
-                                                            Card(
-                                                                modifier = Modifier
-                                                                    .padding(MaterialTheme.spacing.medium)
-                                                                    .clickable {
-                                                                        scope.launch {
-                                                                            delay(Constants.POST_VOTE_DELAY/2)
-                                                                            verticalPagerState.animateScrollToPage(
-                                                                                verticalPage + 1
-                                                                            )
-                                                                        }
-                                                                    },
-                                                                shape = MaterialTheme.shapes.small,
-                                                                backgroundColor = Constants.LightBlue,
-                                                                elevation = 8.dp
-                                                            ) {
-                                                                Text(
-                                                                    text = if (info.title.isNullOrEmpty()) "OK" else info.title,
-                                                                    fontWeight = FontWeight.SemiBold,
-                                                                    color = Color.White,
-                                                                    fontSize = 16.sp,
-                                                                    textAlign = TextAlign.Justify,
-                                                                    modifier = Modifier
-                                                                        .padding(
-                                                                            horizontal = MaterialTheme.spacing.medium,
-                                                                            vertical = MaterialTheme.spacing.default
-                                                                        )
-                                                                )
-                                                            }
-                                                        })
-                                                }
-//                                            }
-                                                Log.d(
-                                                    "current page",
-                                                    horizontalPagerState.currentPage.toString()
-                                                )
-                                                if (horizontalPagerState.currentPage < 3) {
-                                                    /*
-                                                    Text(
-                                                        text = "✭     ✭     ✭",
-                                                        fontSize = 16.sp,
-                                                        fontWeight = FontWeight.SemiBold,
-                                                        textAlign = TextAlign.Center,
-                                                        color = Color.White,
-                                                        modifier = Modifier
-                                                            .padding(
-                                                                horizontal = MaterialTheme.spacing.default,
-                                                                vertical = MaterialTheme.spacing.medium
-                                                            )
-                                                            .fillMaxWidth(),
-                                                    )
 
-                                                     */
-                                                }
+                                            }
+                                            if (!info.title.isNullOrEmpty()) {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .fillMaxSize()
+                                                        .padding(bottom = MaterialTheme.spacing.large*4),
+                                                    contentAlignment = Alignment.BottomCenter,
+                                                    content = {
+                                                        Card(
+                                                            modifier = Modifier
+                                                                .padding(MaterialTheme.spacing.medium)
+                                                                .clickable {
+                                                                    scope.launch {
+                                                                        delay(Constants.POST_VOTE_DELAY / 2)
+                                                                        verticalPagerState.animateScrollToPage(
+                                                                            verticalPage + 1
+                                                                        )
+                                                                    }
+                                                                },
+                                                            shape = MaterialTheme.shapes.small,
+                                                            backgroundColor = Constants.LightBlue,
+                                                            elevation = 8.dp
+                                                        ) {
+                                                            Text(
+                                                                text = if (info.title.isNullOrEmpty()) "OK" else info.title,
+                                                                fontWeight = FontWeight.SemiBold,
+                                                                color = Color.White,
+                                                                fontSize = 16.sp,
+                                                                textAlign = TextAlign.Justify,
+                                                                modifier = Modifier
+                                                                    .padding(
+                                                                        horizontal = MaterialTheme.spacing.medium,
+                                                                        vertical = MaterialTheme.spacing.default
+                                                                    )
+                                                            )
+                                                        }
+                                                    })
                                             }
                                         }
                                     }
@@ -258,7 +229,6 @@ fun WelcomeScreen(
                                                 Row(
                                                     modifier = Modifier
                                                         .padding(vertical = MaterialTheme.spacing.large)
-//                                .offset(x = 40.dp - rowStarPageOffset.dp - rowStarCurrentOffset.dp)
                                                 ) {
                                                     Icon(
                                                         imageVector = Icons.Default.Star,

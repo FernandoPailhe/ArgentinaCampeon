@@ -1,9 +1,7 @@
 package com.ferpa.argentinacampeon.presentation
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -13,19 +11,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.navArgument
 import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.presentation.about_us.AboutUsScreen
 import com.ferpa.argentinacampeon.presentation.best_photos.BestPhotosScreen
 import com.ferpa.argentinacampeon.presentation.favorites.FavoritePhotosScreen
 import com.ferpa.argentinacampeon.presentation.insertData.InsertDataScreen
 import com.ferpa.argentinacampeon.presentation.main_activity.MainViewModel
 import com.ferpa.argentinacampeon.presentation.photo_detail.PhotoDetailScreen
 import com.ferpa.argentinacampeon.presentation.photo_list.PhotoListScreen
-import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.presentation.versus.VersusScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
@@ -58,8 +54,8 @@ fun Navigation(navController: NavHostController, mainViewModel: MainViewModel, p
         composable(route = Screen.FavoritePhotosScreenRoute.route) {
             FavoritePhotosScreen(navController)
         }
-        composable(route = Screen.InfoScreenRoute.route) {
-            PhotoListScreen(navController)
+        composable(route = Screen.AboutUsScreenRoute.route) {
+            AboutUsScreen(navController)
         }
         composable(route = Screen.StoryScreenRoute.route) {
             InsertDataScreen()

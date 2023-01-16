@@ -82,7 +82,6 @@ class MainViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
-
     }
 
     private fun updateLocalDatabase(){

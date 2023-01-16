@@ -23,8 +23,8 @@ fun WelcomeBackdrop(drawableResource: Int, offset: Float, page: Int, slideOut: B
             modifier = Modifier
                 .offset(WELCOME_DIALOG_OFFSET.dp - scrollOffset - pageOffSet - slideOutOffset)
                 .graphicsLayer(
-                    scaleX = 3f,
-                    scaleY = 3f,
+                    scaleX = 2.5f,
+                    scaleY = 2.5f,
                 ),
             contentAlignment = Alignment.BottomCenter,
             content = {

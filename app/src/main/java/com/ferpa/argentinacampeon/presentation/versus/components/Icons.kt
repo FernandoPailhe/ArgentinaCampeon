@@ -12,9 +12,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Constants.ICON_SIZE
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 
@@ -53,23 +55,49 @@ fun Icons(
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             val isFavoriteOnChange = remember { mutableStateOf(isFavorite) }
-            Icon(
-                imageVector = if (isFavoriteOnChange.value) Icons.Default.BookmarkAdded else Icons.Default.BookmarkAdd,
-                tint = Color.White,
-                contentDescription = "favorite",
-                modifier = Modifier.clickable {
-                    onBookmarkClick()
-                    isFavoriteOnChange.value = !isFavoriteOnChange.value
-                }.size(ICON_SIZE.dp)
-            )
-            Icon(
-                imageVector = Icons.Default.Send,
-                tint = Color.White,
-                contentDescription = "send",
-                modifier = Modifier.clickable {
-                    onSendClick()
-                }.size(ICON_SIZE.dp)
-            )
+            Box() {
+                Icon(
+                    imageVector = if (isFavoriteOnChange.value) Icons.Default.BookmarkAdded else Icons.Default.BookmarkAdd,
+                    tint = Constants.VioletTransparent,
+                    contentDescription = "favorite",
+                    modifier = Modifier
+                        .size(ICON_SIZE.dp)
+                        .offset(1.dp, 1.dp)
+                        .blur(2.dp),
+                )
+                Icon(
+                    imageVector = if (isFavoriteOnChange.value) Icons.Default.BookmarkAdded else Icons.Default.BookmarkAdd,
+                    tint = Color.White,
+                    contentDescription = "favorite",
+                    modifier = Modifier
+                        .clickable {
+                            onBookmarkClick()
+                            isFavoriteOnChange.value = !isFavoriteOnChange.value
+                        }
+                        .size(ICON_SIZE.dp),
+                )
+            }
+            Box() {
+                Icon(
+                    imageVector = Icons.Default.Send,
+                    tint = Constants.VioletTransparent,
+                    contentDescription = "send",
+                    modifier = Modifier
+                        .size(ICON_SIZE.dp)
+                        .offset(1.dp, 1.dp)
+                        .blur(2.dp)
+                )
+                Icon(
+                    imageVector = Icons.Default.Send,
+                    tint = Color.White,
+                    contentDescription = "send",
+                    modifier = Modifier
+                        .clickable {
+                            onSendClick()
+                        }
+                        .size(ICON_SIZE.dp)
+                )
+            }
         }
     }
 }

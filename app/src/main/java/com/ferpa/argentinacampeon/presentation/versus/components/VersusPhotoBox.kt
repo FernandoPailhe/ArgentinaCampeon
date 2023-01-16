@@ -14,18 +14,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.ferpa.argentinacampeon.R
 import com.ferpa.argentinacampeon.data.previewsource.PreviewPhotos
 import com.ferpa.argentinacampeon.data.remote.dto.toLocalPhoto
 import com.ferpa.argentinacampeon.domain.model.Photo
-import com.ferpa.argentinacampeon.domain.model.PhotographerTitle
 import com.ferpa.argentinacampeon.domain.model.getPhotoUrl
 import com.ferpa.argentinacampeon.presentation.ui.theme.BestQatar2022PhotosTheme
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
@@ -59,6 +57,20 @@ fun VersusPhotoBox(
                 HeartState.Voted -> 0.5f
             }
         }
+        if (tutorialPhoto == 0) {
+            GlideImage(
+                model = R.drawable.cargando,
+                contentDescription = photo.description,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(photoHeight)
+                    .graphicsLayer(
+                        scaleX = 0.5f,
+                        scaleY = 0.5f,
+                    ),
+                contentScale = ContentScale.FillWidth
+            )
+        }
         GlideImage(
             model = if (tutorialPhoto == 0) photo.getPhotoUrl() else tutorialPhoto,
             contentDescription = photo.description,
@@ -79,7 +91,14 @@ fun VersusPhotoBox(
             tint = color,
             contentDescription = "favorite",
         )
-        Box(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small, horizontal = MaterialTheme.spacing.small).align(Alignment.BottomEnd)) {
+        Box(
+            modifier = Modifier
+                .padding(
+                    vertical = MaterialTheme.spacing.small,
+                    horizontal = MaterialTheme.spacing.small
+                )
+                .align(Alignment.BottomEnd)
+        ) {
             photo.photographer?.apply {
                 AuthorBox(author = this)
             }
@@ -94,3 +113,5 @@ fun VersusPhotoBoxPreview() {
         PreviewPhotos.prevPhotoTitle.toLocalPhoto()
     }
 }
+
+

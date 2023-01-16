@@ -1,5 +1,7 @@
 package com.ferpa.argentinacampeon.common
 
+import android.content.Context
+import android.content.pm.PackageManager
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -42,6 +44,14 @@ object Extensions {
             )
         )
         graphicsLayer(rotationZ = 360f * angleRatio)
+    }
+
+    fun Context.appVersion(): String {
+        return try {
+            packageManager.getPackageInfo(packageName, 0).versionName
+        } catch (ex: PackageManager.NameNotFoundException) {
+            ""
+        }
     }
 
 }
