@@ -10,14 +10,14 @@ interface PhotoDao {
     /**
      * APP INFO TABLE
      */
-    @Query("SELECT * from appInfo")
-    fun getAppInfo(): Flow<List<Info>>
+    @Query("SELECT * FROM appInfo LIMIT 1")
+    fun getAppInfo(): Flow<AppInfo>
 
-    @Query("SELECT lastUpdate from appInfo ORDER BY lastUpdate DESC LIMIT 1")
+    @Query("SELECT lastUpdate FROM appInfo ORDER BY lastUpdate DESC LIMIT 1")
     fun getLastAppInfoUpdateDate(): Flow<String>
 
     @Query("SELECT * from appInfo WHERE id = :id")
-    fun getAppInfoById(id: String): Flow<Info>
+    fun getAppInfoById(id: String): Flow<AppInfo>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAppInfo(appInfo: AppInfo)
@@ -39,6 +39,9 @@ interface PhotoDao {
 
     @Query("SELECT * from photo ORDER BY localVersus ASC LIMIT 20")
     fun getVersusPhoto(): Flow<List<Photo>>
+
+    @Query("SELECT * from photo WHERE insertDate = 1")
+    fun getTutorialVersusPhoto(): Flow<List<Photo>>
 
     @Query("SELECT id from photo WHERE localVersus > 0")
     fun getVotedPhotosIds(): Flow<List<String>>

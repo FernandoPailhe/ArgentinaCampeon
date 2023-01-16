@@ -11,10 +11,15 @@ class PostVoteUseCase @Inject constructor(
     private val repository: PhotoRepository
 ) {
 
-    suspend operator fun invoke(vote: Vote) {
+    suspend operator fun invoke(vote: Vote, isTutorial: Boolean = false) {
         try {
-            repository.postVote(vote)
-            Log.d("postVote", vote.photoWin.toString() + " - " + vote.photoLost.toString())
+            if (isTutorial){
+                repository.onlyLocalVote(vote)
+                Log.d("postVoteOnlyLocal", vote.photoWin.toString() + " - " + vote.photoLost.toString())
+            } else {
+                repository.postVote(vote)
+                Log.d("postVote", vote.photoWin.toString() + " - " + vote.photoLost.toString())
+            }
         } catch (e: HttpException) {
             Log.d("postVote", e.message())
         } catch (e: IOException) {

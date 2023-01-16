@@ -58,6 +58,9 @@ fun Navigation(navController: NavHostController, mainViewModel: MainViewModel, p
         composable(route = Screen.FavoritePhotosScreenRoute.route) {
             FavoritePhotosScreen(navController)
         }
+        composable(route = Screen.InfoScreenRoute.route) {
+            PhotoListScreen(navController)
+        }
         composable(route = Screen.StoryScreenRoute.route) {
             InsertDataScreen()
         }

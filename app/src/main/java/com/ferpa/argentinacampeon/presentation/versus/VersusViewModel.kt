@@ -20,9 +20,9 @@ class VersusViewModel @Inject constructor(
 
     }
 
-    fun postVote(vote: Vote) {
+    fun postVote(vote: Vote, isTutorial: Boolean = false) {
         viewModelScope.launch {
-            postVoteUseCase(vote)
+            postVoteUseCase(vote, isTutorial)
         }
     }
 

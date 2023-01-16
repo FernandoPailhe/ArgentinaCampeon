@@ -24,7 +24,7 @@ import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.R
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.domain.model.*
-import com.ferpa.argentinacampeon.presentation.common.components.BottomGradientViolet
+import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
 import com.ferpa.argentinacampeon.presentation.photo_list.components.MatchInfoBox
 import com.ferpa.argentinacampeon.presentation.photo_list.components.PlayerInfoBox
 
@@ -112,7 +112,7 @@ fun PhotoListScreen(
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
             Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                BottomGradientViolet(0.02f)
+                BottomGradient(0.02f)
             }
         }
     }

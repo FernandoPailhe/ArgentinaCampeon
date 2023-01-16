@@ -11,6 +11,7 @@ sealed class Screen(val route: String) {
     object BestPhotosScreenRoute: Screen("best_photos_screen")
     object FavoritePhotosScreenRoute: Screen("favorite_photos_screen")
     object StoryScreenRoute: Screen("story_screen")
+    object InfoScreenRoute: Screen("info_screen")
     object InsertDataScreenRoute: Screen("insert_data_screen")
     object PhotoListScreenRoute: Screen("photo_list_screen")
     object PhotoListByPlayerScreenRoute: Screen("photo_list_screen_by_player/{${PARAM_PLAYER_ID}}") {

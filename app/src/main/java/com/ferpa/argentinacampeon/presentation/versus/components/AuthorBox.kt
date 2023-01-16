@@ -12,11 +12,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ferpa.argentinacampeon.R
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.domain.model.PhotographerTitle
 import com.ferpa.argentinacampeon.presentation.ui.theme.BestQatar2022PhotosTheme
@@ -42,7 +45,9 @@ fun AuthorBox(
                 color = Constants.VioletDark,
                 offset = Offset(2.5f, 2.0f),
                 blurRadius = 2f
-            )
+            ),
+            fontFamily = FontFamily(Font(R.font.qatar)),
+            fontWeight = FontWeight.Normal,
         )
     )
 }

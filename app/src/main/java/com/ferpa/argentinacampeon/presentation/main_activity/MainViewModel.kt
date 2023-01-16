@@ -18,13 +18,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val getIsFirstTimeUseCase: GetIsFirstTimeUseCase,
+    private val setFirstTimeFalseUseCase: SetFirstTimeFalseUseCase,
     private val updateLocalAppInfoUseCase: UpdateLocalAppInfoUseCase,
+    private val getTutorialInfoListUseCase: GetTutorialInfoListUseCase,
+    private val getWelcomeInfoListUseCase: GetWelcomeInfoListUseCase,
     private val updateLocalPhotoListUseCase: UpdateLocalPhotoListUseCase,
     private val updateLocalPlayerListUseCase: UpdateLocalPlayerListUseCase,
     private val updateLocalMatchListUseCase: UpdateLocalMatchListUseCase,
     private val getVersusListUseCase: GetVersusListUseCase,
     private val getFavoritePairListStateUseCase: GetFavoritePairListStateUseCase
 ) : ViewModel() {
+
+    private val _isFirstTime = mutableStateOf(true)
+    val isFirstTime: MutableState<Boolean> = _isFirstTime
+
+    private val _tutorialInfo = mutableStateOf(InfoListState())
+    val tutorialInfo: MutableState<InfoListState> = _tutorialInfo
+
+    private val _welcomeInfo = mutableStateOf(InfoListState())
+    val welcomeInfo: MutableState<InfoListState> = _welcomeInfo
 
     private val _updateState = mutableStateOf(UpdateLocalDatabaseState())
     val updateState: MutableState<UpdateLocalDatabaseState> = _updateState
@@ -37,13 +50,76 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            updateLocalAppInfoUseCase().launchIn(viewModelScope)
+            checkIsFirstTime()
             getVersusPairList()
             updateLocalDatabase()
         }
     }
 
-    private fun updateLocalDatabase() {
+    private fun checkIsFirstTime(){
+        getIsFirstTimeUseCase().onEach {
+            _isFirstTime.value = it
+            Log.d(TAG, "FIRST TIME -> $it")
+        }.launchIn(viewModelScope)
+    }
+
+    private fun getTutorialInfoList() {
+        Log.d(TAG, "getTutorialList -> running")
+        getTutorialInfoListUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _tutorialInfo.value =
+                        InfoListState(infoFromApi = result.data ?: emptyList())
+                    getFavoritePairListState()
+                }
+                is Resource.Error -> {
+                    _tutorialInfo.value = InfoListState(
+                        error = result.message ?: "An unexpected error occurred"
+                    )
+                }
+                is Resource.Loading -> {
+                    _tutorialInfo.value = InfoListState(isLoading = true)
+                }
+            }
+        }.launchIn(viewModelScope)
+
+    }
+
+    private fun updateLocalDatabase(){
+        updateLocalAppInfoUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    Log.d(TAG, "LOCAL APP INFO TABLE SUCCESSFULLY")
+                    _updateState.value = UpdateLocalDatabaseState(
+                        updateLocalAppInfoState = UpdateLocalAppInfoState(
+                            isLoading = false,
+                            succes = true
+                        )
+                    )
+                    getTutorialInfoList()
+                    updateLocalPhotoList()
+                }
+                is Resource.Loading -> {
+                    Log.d(TAG, "LOCAL APP INFO TABLE LOADING...")
+                    _updateState.value = UpdateLocalDatabaseState(
+                        updateLocalAppInfoState = UpdateLocalAppInfoState(isLoading = true)
+                    )
+                }
+                is Resource.Error -> {
+                    Log.d(TAG, "LOCAL APP INFO TABLE FAIL")
+                    _updateState.value = UpdateLocalDatabaseState(
+                        updateLocalAppInfoState = UpdateLocalAppInfoState(
+                            isLoading = false,
+                            error = result.message.toString()
+                        )
+                    )
+                    updateLocalPhotoList()
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun updateLocalPhotoList() {
         updateLocalPhotoListUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -231,6 +307,13 @@ class MainViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun setFirstTimeFalse(){
+        _isFirstTime.value = false
+        viewModelScope.launch {
+            setFirstTimeFalseUseCase()
+        }
     }
 
     companion object {

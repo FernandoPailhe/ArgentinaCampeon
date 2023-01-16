@@ -19,13 +19,11 @@ import com.ferpa.argentinacampeon.domain.model.*
 import com.ferpa.argentinacampeon.domain.repository.PhotoRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import java.time.LocalDateTime
 
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATA_STORE_NAME)
-
 
 @Suppress("USELESS_ELVIS")
 class PhotoRepositoryImpl(
@@ -51,11 +49,7 @@ class PhotoRepositoryImpl(
         }
     }
 
-    override suspend fun checkFirstTime() {
-        if (getFirstTime().first() == null) {
-            setFirstTime(false)
-        }
-    }
+    override suspend fun checkFirstTime(): Boolean = (getFirstTime().first() == null)
 
     override suspend fun setFirstTime(isFirstTime: Boolean) {
         context.dataStore.edit {
@@ -178,6 +172,14 @@ class PhotoRepositoryImpl(
         }
     }
 
+    override suspend fun getWelcomeInfo(): List<InfoFromApi?>? {
+        return photoDao.getAppInfo().first().welcome
+    }
+
+    override suspend fun getTutorialInfo(): List<InfoFromApi?>? {
+        return photoDao.getAppInfo().first().tutorial
+    }
+
     override suspend fun insertNewPhotos(localLastInsertPhotoDate: String): Boolean {
         return try {
             photoSource.getNewPhotos(localLastInsertPhotoDate).forEach {
@@ -188,6 +190,16 @@ class PhotoRepositoryImpl(
         } catch (e: Exception) {
             false
         }
+    }
+
+    override suspend fun getTutorialVersusList(size: Int): List<Pair<Photo, Photo>> {
+        val tutorialVersusPhoto = photoDao.getTutorialVersusPhoto().first()
+        Log.d("getTutorialVersusList", tutorialVersusPhoto.size.toString())
+        return listOf(
+            Pair(Photo("0"), Photo("0")),
+            Pair(tutorialVersusPhoto[0], tutorialVersusPhoto[1]),
+            Pair(Photo("0"), Photo("0"))
+        )
     }
 
     override suspend fun getVersusList(ignorePair: Pair<String, String>): List<Pair<Photo, Photo>> {
@@ -300,6 +312,12 @@ class PhotoRepositoryImpl(
 
     override suspend fun postVote(vote: Vote) {
         photoSource.postVote(vote.toVoteDto())
+        photoDao.updateLocalPhoto(vote.photoWin.updateVoteWin(versusId = vote.photoLost.id))
+        photoDao.updateLocalPhoto(vote.photoLost.updateVoteLost(versusId = vote.photoWin.id))
+        updatePlayersLocalVotes(vote)
+    }
+
+    override suspend fun onlyLocalVote(vote: Vote) {
         photoDao.updateLocalPhoto(vote.photoWin.updateVoteWin(versusId = vote.photoLost.id))
         photoDao.updateLocalPhoto(vote.photoLost.updateVoteLost(versusId = vote.photoWin.id))
         updatePlayersLocalVotes(vote)

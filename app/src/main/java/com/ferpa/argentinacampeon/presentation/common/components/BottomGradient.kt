@@ -8,10 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.presentation.ui.theme.AppColors.VioletUltraDark
 
 @Composable
-fun BottomGradientViolet(maxHeight: Float = 0.03f) {
+fun BottomGradient(maxHeight: Float = 0.03f, bottomColor: Color = VioletUltraDark) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -25,10 +25,11 @@ fun BottomGradientViolet(maxHeight: Float = 0.03f) {
                         ),
                         Pair(
                             0.7f,
-                            Constants.VioletUltraDark
+                            bottomColor
                         )
                     )
                 )
             )
     )
 }
+

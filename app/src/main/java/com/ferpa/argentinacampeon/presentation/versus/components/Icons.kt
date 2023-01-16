@@ -60,7 +60,7 @@ fun Icons(
                 modifier = Modifier.clickable {
                     onBookmarkClick()
                     isFavoriteOnChange.value = !isFavoriteOnChange.value
-                }
+                }.size(ICON_SIZE.dp)
             )
             Icon(
                 imageVector = Icons.Default.Send,
@@ -68,7 +68,7 @@ fun Icons(
                 contentDescription = "send",
                 modifier = Modifier.clickable {
                     onSendClick()
-                }
+                }.size(ICON_SIZE.dp)
             )
         }
     }

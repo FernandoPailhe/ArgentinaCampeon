@@ -10,10 +10,10 @@ import kotlin.math.roundToInt
 data class Photo(
     @PrimaryKey
     val id: String,
-    val insertDate: String?,
-    val lastUpdate: String?,
-    val votesUpdate: String?,
-    val photoUrl: String?,
+    val insertDate: String? = null,
+    val lastUpdate: String? = null,
+    val votesUpdate: String? = null,
+    val photoUrl: String? = null,
     val match: MatchTitle? = null,
     val players: List<PlayerTitle?>? = null,
     val photographer: PhotographerTitle? = null,
@@ -29,13 +29,18 @@ data class Photo(
     val versusIds: List<String?> = emptyList()
 )
 
-fun Photo.updateVoteWin(versusId: String): Photo  {
+fun Photo.updateVoteWin(versusId: String): Photo {
     val updatedList = this.versusIds.toMutableList()
     updatedList.add(versusId)
     val localVotes = this.localVotes.inc()
     val localVersus = this.localVersus.inc()
     val localRank = localVotes.divideToPercent(localVersus)
-    return this.copy(localVotes = localVotes, localVersus =  localVersus, localRank = localRank, versusIds = updatedList)
+    return this.copy(
+        localVotes = localVotes,
+        localVersus = localVersus,
+        localRank = localRank,
+        versusIds = updatedList
+    )
 }
 
 fun Photo.updateVoteLost(versusId: String): Photo {
@@ -61,10 +66,10 @@ fun Photo.getRank(): String {
 fun Photo.updateRank(rankUpdate: Double): Photo = this.copy(rank = rankUpdate)
 
 fun Photo.getPhotoUrl(isPhotoList: Boolean = false): String? {
-    return if ((this.localVotes == 0 && isPhotoList) || this.photoUrl == null){
+    return if ((this.localVotes == 0 && isPhotoList) || this.photoUrl == null) {
         null
     } else {
-        if (photoUrl.contains("192.168.100.4")){
+        if (photoUrl.contains("192.168.100.4")) {
             "$BASE_URL$PHOTO_PATH/${this.photoUrl.split("/").last()}"
         } else {
             "$BASE_URL$PHOTO_PATH/${this.photoUrl}"

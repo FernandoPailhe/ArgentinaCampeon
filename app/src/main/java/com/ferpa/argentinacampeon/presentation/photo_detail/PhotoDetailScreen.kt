@@ -22,7 +22,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.data.remote.dto.getPhotoUrl
 import com.ferpa.argentinacampeon.presentation.Screen
-import com.ferpa.argentinacampeon.presentation.common.components.BottomGradientViolet
+import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.presentation.versus.components.MatchText
 import com.ferpa.argentinacampeon.presentation.versus.components.PlayerRow
@@ -104,7 +104,7 @@ fun PhotoDetailScreen(
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-            BottomGradientViolet()
+            BottomGradient()
         }
     }
 }

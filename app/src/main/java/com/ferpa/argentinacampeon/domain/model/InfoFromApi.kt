@@ -1,6 +1,6 @@
 package com.ferpa.argentinacampeon.domain.model
 
-data class Info(
+data class InfoFromApi(
     val id: String? = "",
     val title: String? = "",
     val content: String? = "",

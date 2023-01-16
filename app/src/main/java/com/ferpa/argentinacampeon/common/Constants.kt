@@ -32,6 +32,7 @@ object Constants {
     /**
      * COLORS
      */
+    val VioletRadialGradient = Color(0x8018182F)
     val VioletUltraDark = Color(0xFF10101E)
     val VioletDark = Color(0xFF18182F)
     val Violet = Color(0xFF333366)
@@ -52,5 +53,6 @@ object Constants {
     const val TOP_BACKGROUND_HEIGHT = 180
     const val CARD_PHOTO_LIST_ITEM_HEIGHT = 140
     const val ICON_SIZE = (CARD_PHOTO_LIST_ITEM_HEIGHT / 5)
+    const val WELCOME_DIALOG_OFFSET = 200
 
 }
