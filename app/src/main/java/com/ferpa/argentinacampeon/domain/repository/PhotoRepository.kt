@@ -10,6 +10,8 @@ interface PhotoRepository {
 
     suspend fun checkFirstTime(): Boolean
 
+    suspend fun getMinVersion(): String
+
     suspend fun setFirstTime(isFirstTime: Boolean)
 
     suspend fun updateLocalAppInfo(): Boolean

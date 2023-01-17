@@ -1,17 +1,19 @@
 package com.ferpa.argentinacampeon.presentation.main_activity
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ferpa.argentinacampeon.common.Extensions.appVersion
 import com.ferpa.argentinacampeon.common.Extensions.toPairIdList
 import com.ferpa.argentinacampeon.common.Resource
 import com.ferpa.argentinacampeon.domain.businesslogic.*
 import com.ferpa.argentinacampeon.domain.model.Photo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -19,6 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val getMinVersionUseCase: GetMinVersionUseCase,
     private val getIsFirstTimeUseCase: GetIsFirstTimeUseCase,
     private val setFirstTimeFalseUseCase: SetFirstTimeFalseUseCase,
     private val updateLocalAppInfoUseCase: UpdateLocalAppInfoUseCase,
@@ -28,8 +31,12 @@ class MainViewModel @Inject constructor(
     private val updateLocalPlayerListUseCase: UpdateLocalPlayerListUseCase,
     private val updateLocalMatchListUseCase: UpdateLocalMatchListUseCase,
     private val getVersusListUseCase: GetVersusListUseCase,
-    private val getFavoritePairListStateUseCase: GetFavoritePairListStateUseCase
+    private val getFavoritePairListStateUseCase: GetFavoritePairListStateUseCase,
+    @ApplicationContext context: Context
 ) : ViewModel() {
+
+    private val _versionOk = mutableStateOf(true)
+    val versionOk: MutableState<Boolean> = _versionOk
 
     private val _isFirstTime = mutableStateOf(UpdateLocalState())
     val isFirstTime: MutableState<UpdateLocalState> = _isFirstTime
@@ -51,10 +58,26 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            checkMinVersion(context)
             checkIsFirstTime()
             getVersusPairList()
             updateLocalDatabase()
         }
+    }
+
+    private fun checkMinVersion(context: Context){
+        getMinVersionUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _versionOk.value = result.data == context.appVersion()
+                    Log.d("appVersion", versionOk.value.toString())
+                }
+                is Resource.Error -> {
+                    _versionOk.value = true
+                    Log.d("appVersion", "no data from server")
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun checkIsFirstTime() {

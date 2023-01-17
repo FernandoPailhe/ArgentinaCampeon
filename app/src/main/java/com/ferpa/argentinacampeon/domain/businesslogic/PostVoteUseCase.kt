@@ -23,7 +23,9 @@ class PostVoteUseCase @Inject constructor(
         } catch (e: HttpException) {
             Log.d("postVote", e.message())
         } catch (e: IOException) {
-            Log.d("postVote2", e.toString())
+            Log.d("postVote", e.toString())
+        } catch (e: Exception) {
+            Log.d("postVote", "An unexpected error occurred")
         }
     }
 

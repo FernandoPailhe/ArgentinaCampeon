@@ -21,6 +21,8 @@ class GetPhotographerDetailUseCase @Inject constructor(
             emit(Resource.Success(photographer))
         } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
+        } catch (e: Exception) {
+            emit(Resource.Error("An unexpected error occurred"))
         }
     }
 

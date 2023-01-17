@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#18182F</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash</item>
         <!-- <item name="windowSplashScreenAnimationDuration"></item>-->
         <item name="postSplashScreenTheme">@style/BestQatar2022Photos</item>
     </style>

@@ -23,6 +23,8 @@ class GetBestPhotosUseCase @Inject constructor(
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
         } catch (e: IOException) {
             emit(Resource.Error("Could´t reach server. Check your internet connexion"))
+        } catch (e: Exception) {
+            emit(Resource.Error("An unexpected error occurred"))
         }
     }
 

@@ -51,6 +51,10 @@ class PhotoRepositoryImpl(
 
     override suspend fun checkFirstTime(): Boolean = (getFirstTime().first() == null)
 
+    override suspend fun getMinVersion(): String {
+        return photoSource.getMinVersion()
+    }
+
     override suspend fun setFirstTime(isFirstTime: Boolean) {
         context.dataStore.edit {
             it[FIRST_TIME] = isFirstTime
