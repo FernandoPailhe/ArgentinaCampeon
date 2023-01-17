@@ -58,16 +58,14 @@ fun TagInfoBox(
                 .fillMaxWidth()
                 .height(Constants.TOP_BACKGROUND_HEIGHT.dp)
         ) {
-            bestPhoto.apply {
-                GlideImage(
-                    model = bestPhoto ?: painterResource(id = R.drawable.fot_bloqueada),
-                    contentDescription = "tagPhoto",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(Constants.TOP_BACKGROUND_HEIGHT.dp)
-                )
-            }
+            GlideImage(
+                model = bestPhoto ?: R.drawable.tag_default_backdrop,
+                contentDescription = "tagPhoto",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Constants.TOP_BACKGROUND_HEIGHT.dp)
+            )
             BoxWithConstraints(
                 Modifier
                     .fillMaxWidth()

@@ -15,7 +15,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,16 +48,19 @@ fun PlayerInfoBox(
                 .fillMaxWidth()
                 .height(Constants.TOP_BACKGROUND_HEIGHT.dp)
         ) {
-            bestPhoto.apply {
-                GlideImage(
-                    model = bestPhoto ?: painterResource(id = R.drawable.coronacion),
-                    contentDescription = "player",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(Constants.TOP_BACKGROUND_HEIGHT.dp)
-                )
+            val drawable = if (player.nationalTeam == "Argentina") {
+                R.drawable.player_argentina_backdrop
+            } else {
+                R.drawable.fot_bloqueada
             }
+            GlideImage(
+                model = bestPhoto ?: drawable,
+                contentDescription = "player",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Constants.TOP_BACKGROUND_HEIGHT.dp)
+            )
             BoxWithConstraints(
                 Modifier
                     .fillMaxWidth()
