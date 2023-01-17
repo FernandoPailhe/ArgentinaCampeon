@@ -29,15 +29,17 @@ import androidx.navigation.NavController
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.R
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.FINISH_TUTORIAL_CAROUSEL
+import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.presentation.common.components.WelcomeBackdrop
 import com.ferpa.argentinacampeon.presentation.main_activity.MainViewModel
 import com.ferpa.argentinacampeon.presentation.tutorial.component.PairPhotoItemTutorial
-import com.ferpa.argentinacampeon.presentation.tutorial.component.VersusScreenTutorial
 import com.ferpa.argentinacampeon.presentation.versus.VersusViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -48,7 +50,8 @@ fun WelcomeScreen(
     viewModel: MainViewModel,
     tutorialViewModel: TutorialViewModel = hiltViewModel(),
     versusViewModel: VersusViewModel = hiltViewModel(),
-    onDataLoaded: () -> Unit
+    onDataLoaded: () -> Unit,
+    firebaseAnalytics: FirebaseAnalytics
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -105,7 +108,8 @@ fun WelcomeScreen(
                                     },
                                     onButtonClicked = { viewModel.setFirstTimeFalse() },
                                     infoContent = if (verticalPagerState.currentPage == 1) infoList[3]?.content
-                                        ?: "" else infoList[4]?.content ?: ""
+                                        ?: "" else infoList[4]?.content ?: "",
+                                    firebaseAnalytics = firebaseAnalytics
                                 )
                                 if (verticalPagerState.currentPage == 0 && verticalPagerState.currentPageOffset < 1.0f) {
                                     Box(modifier = Modifier.fillMaxSize()) {
@@ -165,6 +169,7 @@ fun WelcomeScreen(
                                                             modifier = Modifier
                                                                 .padding(MaterialTheme.spacing.medium)
                                                                 .clickable {
+                                                                    firebaseAnalytics.logSingleEvent(FINISH_TUTORIAL_CAROUSEL)
                                                                     scope.launch {
                                                                         delay(Constants.POST_VOTE_DELAY / 2)
                                                                         verticalPagerState.animateScrollToPage(

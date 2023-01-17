@@ -1,7 +1,6 @@
 package com.ferpa.argentinacampeon.common
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 
 object Constants {
 

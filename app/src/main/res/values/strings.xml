@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">Argentina Campeón</string>
     <string name="favorites">Favoritos</string>
-    <string name="best">Top</string>
+    <string name="best">Top 20</string>
     <string name="versus">Duelo</string>
     <string name="search">Buscar</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="empty_favorites">Todavía no agregaste ninguna foto\na tu lista de favoritos.</string>
 </resources>

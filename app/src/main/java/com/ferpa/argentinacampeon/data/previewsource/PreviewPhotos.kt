@@ -91,17 +91,10 @@ object PreviewPhotos {
 
 
     val photoList: List<Int> = listOf(
-        R.drawable.prev1,
-        R.drawable.prev2,
-        R.drawable.prev3,
-        R.drawable.prev4,
-        R.drawable.prev5,
-        R.drawable.prev6,
-        R.drawable.prev7,
-        R.drawable.prev8,
-        R.drawable.prev9,
-        R.drawable.prev10,
-        R.drawable.prev11
+        R.drawable.tuto_fideo,
+        R.drawable.tuto_julian,
+        R.drawable.tuto_dibu,
+        R.drawable.tuto_enzo
     )
 
     val prevPlayerMessi = Player(

@@ -2,6 +2,7 @@ package com.ferpa.argentinacampeon.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ferpa.argentinacampeon.R
 import com.ferpa.argentinacampeon.common.ServerRoutes.BASE_URL
 import com.ferpa.argentinacampeon.common.ServerRoutes.PHOTO_PATH
 import kotlin.math.roundToInt
@@ -74,5 +75,15 @@ fun Photo.getPhotoUrl(isPhotoList: Boolean = false): String? {
         } else {
             "$BASE_URL$PHOTO_PATH/${this.photoUrl}"
         }
+    }
+}
+
+fun Photo.getLocalDrawableResource(): Int {
+    return when (this.id) {
+        "c567da10-3c75-4262-be60-91f73b41f562" -> R.drawable.tuto_enzo
+        "40ae9632-bf02-40e6-b30d-9a51ba8ade37" -> R.drawable.tuto_dibu
+        "10febc0b-6c86-417f-bda5-ebcb3679a09e" -> R.drawable.tuto_julian
+        "4e31c2b9-49c8-4291-aeae-d15e818a0103" -> R.drawable.tuto_fideo
+        else -> R.drawable.coronacion_cerca
     }
 }

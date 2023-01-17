@@ -7,9 +7,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.VOTE_BOTTOM
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.VOTE_TOP
+import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
+import com.ferpa.argentinacampeon.common.Extensions.logSwitchFavorite
 import com.ferpa.argentinacampeon.domain.model.Photo
 import com.ferpa.argentinacampeon.domain.model.Vote
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
+import com.google.android.gms.dynamic.IFragmentWrapper
+import com.google.firebase.analytics.FirebaseAnalytics
 
 
 @Composable
@@ -22,7 +29,8 @@ fun PairPhotoItem(
     onPlayerClick: (String) -> Unit = {},
     onTagClick: (String) -> Unit = {},
     onMatchClick: (String) -> Unit = {},
-    onBookmarkClick: (String) -> Unit = {}
+    onBookmarkClick: (String) -> Unit = {},
+    firebaseAnalytics: FirebaseAnalytics
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -47,23 +55,30 @@ fun PairPhotoItem(
         ) {
             VersusPhotoBox(
                 photo = photoPair.first,
-                onPhotoClick = { onPhotoClick(Vote(photoPair.first, photoPair.second)) },
+                onPhotoClick = {
+                    firebaseAnalytics.logSingleEvent(VOTE_TOP)
+                    onPhotoClick(Vote(photoPair.first, photoPair.second))
+                },
                 photoHeight = photoHeight
             )
             Box(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.CenterEnd,
+                contentAlignment = Alignment.TopEnd,
+//                contentAlignment = Alignment.CenterEnd,
                 content = {
-
                     Icons(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .padding(MaterialTheme.spacing.default)
+                            .padding( horizontal = MaterialTheme.spacing.default,
+                            vertical = MaterialTheme.spacing.medium)
+//                            .padding(MaterialTheme.spacing.default)
                             .fillMaxHeight(0.8f),
                         isFavorite = bookmarkPair.first,
-                        onBookmarkClick = { onBookmarkClick(photoPair.first.id) }
+                        onBookmarkClick = {
+                            firebaseAnalytics.logSwitchFavorite(bookmarkPair.first)
+                            onBookmarkClick(photoPair.first.id)
+                        }
                     )
-
                 })
         }
 
@@ -72,7 +87,10 @@ fun PairPhotoItem(
         ) {
             VersusPhotoBox(
                 photo = photoPair.second,
-                onPhotoClick = { onPhotoClick(Vote(photoPair.second, photoPair.first)) },
+                onPhotoClick = {
+                    firebaseAnalytics.logSingleEvent(VOTE_BOTTOM)
+                    onPhotoClick(Vote(photoPair.second, photoPair.first))
+                },
                 photoHeight = photoHeight
             )
             Box(
@@ -83,10 +101,15 @@ fun PairPhotoItem(
                     Icons(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .padding(MaterialTheme.spacing.default)
+                            .padding( horizontal = MaterialTheme.spacing.default,
+                                vertical = MaterialTheme.spacing.medium)
+//                            .padding(MaterialTheme.spacing.default)
                             .fillMaxHeight(0.8f),
                         isFavorite = bookmarkPair.second,
-                        onBookmarkClick = { onBookmarkClick(photoPair.second.id) }
+                        onBookmarkClick = {
+                            firebaseAnalytics.logSwitchFavorite(bookmarkPair.second)
+                            onBookmarkClick(photoPair.second.id)
+                        }
                     )
 
                 })
@@ -105,14 +128,14 @@ fun PairPhotoItem(
 @Preview(showBackground = true)
 @Composable
 fun PairPhotoItemBackUpPreview() {
-    BestQatar2022PhotosTheme {
-        PairPhotoItem(
-            photoPair = Pair(
-                PreviewPhotos.prevPhotoTitle.toLocalPhoto(),
-                PreviewPhotos.prevPhotoTitle.toLocalPhoto()
-            ),
-            onPhotoClick = { VoteDto("1", "2") })
-    }
+BestQatar2022PhotosTheme {
+PairPhotoItem(
+photoPair = Pair(
+PreviewPhotos.prevPhotoTitle.toLocalPhoto(),
+PreviewPhotos.prevPhotoTitle.toLocalPhoto()
+),
+onPhotoClick = { VoteDto("1", "2") })
+}
 }
  */
 

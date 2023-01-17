@@ -14,7 +14,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_FAVORITES
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_INFO
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_LIST
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_PHOTO_DETAIL
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_TOP
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_VERSUS
 import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.presentation.about_us.AboutUsScreen
 import com.ferpa.argentinacampeon.presentation.best_photos.BestPhotosScreen
 import com.ferpa.argentinacampeon.presentation.favorites.FavoritePhotosScreen
@@ -25,37 +32,47 @@ import com.ferpa.argentinacampeon.presentation.photo_list.PhotoListScreen
 import com.ferpa.argentinacampeon.presentation.versus.VersusScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
+import com.google.firebase.analytics.FirebaseAnalytics
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun Navigation(navController: NavHostController, mainViewModel: MainViewModel, pagerState: PagerState, onDataLoaded: () -> Unit ) {
+fun Navigation(navController: NavHostController, mainViewModel: MainViewModel, pagerState: PagerState, onDataLoaded: () -> Unit, firebaseAnalytics: FirebaseAnalytics ) {
     NavHost(navController = navController, startDestination = Screen.VersusScreenRoute.route) {
         composable(route = Screen.VersusScreenRoute.route) {
-            VersusScreen(navController, mainViewModel =  mainViewModel, pagerState = pagerState, onDataLoaded = { onDataLoaded() })
+            firebaseAnalytics.logSingleEvent(NAV_VERSUS)
+            VersusScreen(navController, mainViewModel =  mainViewModel, pagerState = pagerState, onDataLoaded = { onDataLoaded() }, firebaseAnalytics = firebaseAnalytics)
         }
         composable(route = Screen.PhotoDetailScreenRoute.route) {
-            PhotoDetailScreen(navController)
+            firebaseAnalytics.logSingleEvent(NAV_PHOTO_DETAIL)
+            PhotoDetailScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.PhotoListScreenRoute.route) {
-            PhotoListScreen(navController)
+            firebaseAnalytics.logSingleEvent(NAV_LIST)
+            PhotoListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.PhotoListByPlayerScreenRoute.route) {
-            PhotoListScreen(navController)
+            firebaseAnalytics.logSingleEvent(NAV_LIST)
+            PhotoListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.PhotoListByTagScreenRoute.route) {
-            PhotoListScreen(navController)
+            firebaseAnalytics.logSingleEvent(NAV_LIST)
+            PhotoListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.PhotoListByMatchScreenRoute.route) {
-            PhotoListScreen(navController)
+            firebaseAnalytics.logSingleEvent(NAV_LIST)
+            PhotoListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.BestPhotosScreenRoute.route) {
-            BestPhotosScreen(navController = navController)
+            firebaseAnalytics.logSingleEvent(NAV_TOP)
+            BestPhotosScreen(navController = navController, firebaseAnalytics)
         }
         composable(route = Screen.FavoritePhotosScreenRoute.route) {
-            FavoritePhotosScreen(navController)
+            firebaseAnalytics.logSingleEvent(NAV_FAVORITES)
+            FavoritePhotosScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.AboutUsScreenRoute.route) {
-            AboutUsScreen(navController)
+            firebaseAnalytics.logSingleEvent(NAV_INFO)
+            AboutUsScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.StoryScreenRoute.route) {
             InsertDataScreen()

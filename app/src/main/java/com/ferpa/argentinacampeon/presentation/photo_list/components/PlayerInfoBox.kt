@@ -51,7 +51,7 @@ fun PlayerInfoBox(
         ) {
             bestPhoto.apply {
                 GlideImage(
-                    model = bestPhoto ?: painterResource(id = R.drawable.fot_bloqueada),
+                    model = bestPhoto ?: painterResource(id = R.drawable.coronacion),
                     contentDescription = "player",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

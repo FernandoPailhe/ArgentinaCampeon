@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "513412605408",
+    "project_id": "argentina-campeon",
+    "storage_bucket": "argentina-campeon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513412605408:android:f094cfe819d327b9cbf785",
+        "android_client_info": {
+          "package_name": "com.ferpa.argentinacampeon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "513412605408-gcu98nueimaae9c3jmilhj05ibv7qd60.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_8fyietiXpou_h2_I0wlmlW3LG-aMUI4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "513412605408-gcu98nueimaae9c3jmilhj05ibv7qd60.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

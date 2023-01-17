@@ -5,32 +5,39 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
+import com.ferpa.argentinacampeon.R
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.FIRST_OPEN
 import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
+import com.ferpa.argentinacampeon.common.LockScreenOrientation
 import com.ferpa.argentinacampeon.presentation.BottomNavItem
 import com.ferpa.argentinacampeon.presentation.BottomNavigationBar
 import com.ferpa.argentinacampeon.presentation.Navigation
 import com.ferpa.argentinacampeon.presentation.Screen
+import com.ferpa.argentinacampeon.presentation.tutorial.WelcomeScreen
 import com.ferpa.argentinacampeon.presentation.ui.theme.BestQatar2022PhotosTheme
 import com.ferpa.argentinacampeon.presentation.versus.VersusScreenPreview
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
-import dagger.hilt.android.AndroidEntryPoint
-import com.ferpa.argentinacampeon.R
-import com.ferpa.argentinacampeon.common.LockScreenOrientation
-import com.ferpa.argentinacampeon.presentation.tutorial.WelcomeScreen
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.analytics.FirebaseAnalytics
+import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
@@ -40,16 +47,19 @@ class MainActivity : ComponentActivity() {
 
     private var keepSplashScreen = true
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                        viewModel.isFirstTime.value.isLoading && keepSplashScreen && viewModel.updateState.value.updateLocalMatchListState.isLoading
+                viewModel.isFirstTime.value.isLoading && keepSplashScreen && viewModel.updateState.value.updateLocalMatchListState.isLoading
             }
         }
         setContent {
             BestQatar2022PhotosTheme {
+                firebaseAnalytics = FirebaseAnalytics.getInstance(LocalContext.current)
                 val systemUiController = rememberSystemUiController()
                 systemUiController.setSystemBarsColor(
                     color = Constants.VioletDark,
@@ -76,12 +86,12 @@ class MainActivity : ComponentActivity() {
                                 route = Screen.PhotoDetailScreenRoute.route,
                                 icon = Icons.Default.Done
                             ),
-                             */
+
                                 BottomNavItem(
                                     name = "List",
                                     route = Screen.PhotoListScreenRoute.route,
                                     icon = Icons.Default.List
-                                ),
+                                ),*/
                                 BottomNavItem(
                                     name = stringResource(id = R.string.best),
                                     route = Screen.BestPhotosScreenRoute.route,
@@ -120,14 +130,19 @@ class MainActivity : ComponentActivity() {
                                     pagerState,
                                     onDataLoaded = {
                                         keepSplashScreen = false
-                                    }
+                                    },
+                                    firebaseAnalytics = firebaseAnalytics
                                 )
                             }
                         }
                     } else {
-                        WelcomeScreen(navController = navController, viewModel, onDataLoaded = {
-                            keepSplashScreen = false
-                        })
+                        firebaseAnalytics.logSingleEvent(FIRST_OPEN)
+                        WelcomeScreen(navController = navController,
+                            viewModel = viewModel,
+                            onDataLoaded = {
+                                keepSplashScreen = false
+                            }, firebaseAnalytics = firebaseAnalytics
+                        )
                     }
                 }
             }

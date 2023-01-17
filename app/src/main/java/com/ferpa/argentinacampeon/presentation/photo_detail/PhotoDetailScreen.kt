@@ -27,6 +27,7 @@ import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.presentation.versus.components.MatchText
 import com.ferpa.argentinacampeon.presentation.versus.components.PlayerRow
 import com.ferpa.argentinacampeon.presentation.versus.components.TagRow
+import com.google.firebase.analytics.FirebaseAnalytics
 
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -34,6 +35,7 @@ import com.ferpa.argentinacampeon.presentation.versus.components.TagRow
 @Composable
 fun PhotoDetailScreen(
     navController: NavController,
+    firebaseAnalytics: FirebaseAnalytics,
     viewModel: PhotoDetailViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value

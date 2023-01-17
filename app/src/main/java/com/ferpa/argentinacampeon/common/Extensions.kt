@@ -2,6 +2,7 @@ package com.ferpa.argentinacampeon.common
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Bundle
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -10,10 +11,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.ADD_TO_FAVORITE
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.DELETE_FAVORITE
+import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.data.remote.dto.PhotoDto
 import com.ferpa.argentinacampeon.data.remote.dto.toHiddenPhoto
 import com.ferpa.argentinacampeon.data.remote.dto.toLocalPhoto
 import com.ferpa.argentinacampeon.domain.model.Photo
+import com.google.firebase.analytics.FirebaseAnalytics
 
 object Extensions {
 
@@ -51,6 +56,24 @@ object Extensions {
             packageManager.getPackageInfo(packageName, 0).versionName
         } catch (ex: PackageManager.NameNotFoundException) {
             ""
+        }
+    }
+
+   /**
+    *  Extension function to log event in Firebase Analytics.
+    *  Call this function from a Fragment Class with String of event to log.
+    */
+    fun FirebaseAnalytics.logSingleEvent(event: String){
+        val bundle = Bundle()
+        bundle.putString("eventLog", event)
+        this.logEvent(event, bundle)
+    }
+
+    fun FirebaseAnalytics.logSwitchFavorite(oldStatus: Boolean){
+        if (oldStatus) {
+            this.logSingleEvent(DELETE_FAVORITE)
+        } else {
+            this.logSingleEvent(ADD_TO_FAVORITE)
         }
     }
 

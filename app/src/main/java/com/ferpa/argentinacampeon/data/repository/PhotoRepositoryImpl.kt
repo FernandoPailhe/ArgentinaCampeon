@@ -205,7 +205,7 @@ class PhotoRepositoryImpl(
     }
 
     override suspend fun getTutorialVersusList(size: Int): List<Pair<Photo, Photo>> {
-        val tutorialVersusPhoto = photoDao.getTutorialVersusPhoto().first()
+        val tutorialVersusPhoto = photoDao.getTutorialVersusPhoto().first().shuffled()
         Log.d("getTutorialVersusList", tutorialVersusPhoto.size.toString())
         return listOf(
             Pair(Photo("0"), Photo("0")),

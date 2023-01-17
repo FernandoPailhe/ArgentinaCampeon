@@ -37,7 +37,7 @@ interface PhotoDao {
     @Query("SELECT * from photo")
     fun getAllLocalPhoto(): Flow<List<Photo>>
 
-    @Query("SELECT * from photo ORDER BY localVersus ASC LIMIT 20")
+    @Query("SELECT * from photo WHERE rarity > -1 ORDER BY localVersus ASC LIMIT 30")
     fun getVersusPhoto(): Flow<List<Photo>>
 
     @Query("SELECT * from photo WHERE insertDate = 1")

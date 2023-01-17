@@ -52,7 +52,7 @@ fun Icons(
     } else {
         Column(
             modifier = modifier,
-            verticalArrangement = Arrangement.SpaceEvenly
+//            verticalArrangement = Arrangement.SpaceEvenly
         ) {
             val isFavoriteOnChange = remember { mutableStateOf(isFavorite) }
             Box() {
@@ -77,7 +77,9 @@ fun Icons(
                         .size(ICON_SIZE.dp),
                 )
             }
+            /*
             Box() {
+
                 Icon(
                     imageVector = Icons.Default.Send,
                     tint = Constants.VioletTransparent,
@@ -97,7 +99,7 @@ fun Icons(
                         }
                         .size(ICON_SIZE.dp)
                 )
-            }
+            }*/
         }
     }
 }

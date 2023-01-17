@@ -15,13 +15,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ferpa.argentinacampeon.R
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.FINISH_TUTORIAL
 import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.domain.model.Photo
 import com.ferpa.argentinacampeon.domain.model.Vote
+import com.ferpa.argentinacampeon.domain.model.getLocalDrawableResource
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.presentation.versus.components.MatchText
 import com.ferpa.argentinacampeon.presentation.versus.components.PlayerRow
 import com.ferpa.argentinacampeon.presentation.versus.components.VersusPhotoBox
+import com.google.firebase.analytics.FirebaseAnalytics
 
 
 @Composable
@@ -31,7 +35,8 @@ fun PairPhotoItemTutorial(
     photoPair: Pair<Photo, Photo>,
     onPhotoClick: (Vote) -> Unit = {},
     onButtonClicked: () -> Unit = {},
-    infoContent: String = ""
+    infoContent: String = "",
+    firebaseAnalytics: FirebaseAnalytics
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -54,7 +59,7 @@ fun PairPhotoItemTutorial(
                     photo = photoPair.first,
                     onPhotoClick = { onPhotoClick(Vote(photoPair.first, photoPair.second)) },
                     photoHeight = photoHeight,
-                    tutorialPhoto = R.drawable.prev11
+                    tutorialPhoto = photoPair.first.getLocalDrawableResource()
                 )
             }
 
@@ -65,7 +70,7 @@ fun PairPhotoItemTutorial(
                     photo = photoPair.second,
                     onPhotoClick = { onPhotoClick(Vote(photoPair.second, photoPair.first)) },
                     photoHeight = photoHeight,
-                    tutorialPhoto = R.drawable.prev6
+                    tutorialPhoto = photoPair.second.getLocalDrawableResource()
                 )
             }
         }
@@ -87,7 +92,10 @@ fun PairPhotoItemTutorial(
             Card(
                 modifier = Modifier
                     .padding(MaterialTheme.spacing.medium)
-                    .clickable { onButtonClicked() },
+                    .clickable {
+                        firebaseAnalytics.logSingleEvent(FINISH_TUTORIAL)
+                        onButtonClicked()
+                    },
                 shape = MaterialTheme.shapes.small,
                 backgroundColor = Constants.LightBlue,
                 elevation = 8.dp

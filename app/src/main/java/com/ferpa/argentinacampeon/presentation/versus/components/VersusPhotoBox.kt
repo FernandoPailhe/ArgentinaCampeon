@@ -91,16 +91,18 @@ fun VersusPhotoBox(
             tint = color,
             contentDescription = "favorite",
         )
-        Box(
-            modifier = Modifier
-                .padding(
-                    vertical = MaterialTheme.spacing.small,
-                    horizontal = MaterialTheme.spacing.small
-                )
-                .align(Alignment.BottomEnd)
-        ) {
-            photo.photographer?.apply {
-                AuthorBox(author = this)
+        if (tutorialPhoto == 0) {
+            Box(
+                modifier = Modifier
+                    .padding(
+                        vertical = MaterialTheme.spacing.small,
+                        horizontal = MaterialTheme.spacing.small
+                    )
+                    .align(Alignment.BottomEnd)
+            ) {
+                photo.photographer?.apply {
+                    AuthorBox(author = this)
+                }
             }
         }
     }

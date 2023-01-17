@@ -5,12 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -23,16 +25,20 @@ import com.ferpa.argentinacampeon.presentation.Screen
 import com.ferpa.argentinacampeon.presentation.photo_list.components.TagInfoBox
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.R
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.LIST_PHOTO_CLICK
 import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.domain.model.*
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
 import com.ferpa.argentinacampeon.presentation.photo_list.components.MatchInfoBox
 import com.ferpa.argentinacampeon.presentation.photo_list.components.PlayerInfoBox
+import com.google.firebase.analytics.FirebaseAnalytics
 
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun PhotoListScreen(
     navController: NavController,
+    firebaseAnalytics: FirebaseAnalytics,
     viewModel: PhotoListViewModel = hiltViewModel()
 ) {
     val listState = viewModel.photoListState.value
@@ -79,6 +85,30 @@ fun PhotoListScreen(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
                 state = lazyGridState
             ) {
+                /*
+                if (listState.photos.isNotEmpty()) {
+                    items(6) {
+                        val photo = listState.photos[0]
+                        Box(modifier = Modifier.height(120.dp)) {
+                            GlideImage(
+                                model = if (photo.photoUrl.isNullOrEmpty()) R.drawable.fot_bloqueada else photo.getPhotoUrl(),
+                                contentDescription = photo.description,
+                                modifier = Modifier
+                                    .clickable {
+                                        firebaseAnalytics.logSingleEvent(LIST_PHOTO_CLICK)
+                                        if (!photo.photoUrl.isNullOrEmpty()) {
+                                            navController.navigate(
+                                                Screen.PhotoDetailScreenRoute.createRoute(photo.id)
+                                            )
+                                        }
+                                    }
+                                    .padding(vertical = MaterialTheme.spacing.nano),
+                                contentScale = ContentScale.Fit
+                            )
+                        }
+                    }
+                }
+                 */
                 items(listState.photos.size) { index ->
                     val photo = listState.photos[index]
                     GlideImage(
@@ -87,6 +117,7 @@ fun PhotoListScreen(
                         modifier = Modifier
                             .height(120.dp)
                             .clickable {
+                                firebaseAnalytics.logSingleEvent(LIST_PHOTO_CLICK)
                                 if (!photo.photoUrl.isNullOrEmpty()) {
                                     navController.navigate(
                                         Screen.PhotoDetailScreenRoute.createRoute(photo.id)

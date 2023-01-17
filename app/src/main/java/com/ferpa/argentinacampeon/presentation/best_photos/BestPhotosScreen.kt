@@ -14,13 +14,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ferpa.argentinacampeon.common.AnalyticsEvents
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_BLOCKED_PHOTO_CLICK
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_MATCH_CLICK
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_PHOTO_CLICK
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_PLAYER_CLICK
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_TAG_CLICK
+import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.presentation.Screen
 import com.ferpa.argentinacampeon.presentation.best_photos.components.CardPhotoListItem
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
+import com.google.firebase.analytics.FirebaseAnalytics
 
 @Composable
 fun BestPhotosScreen(
     navController: NavController,
+    firebaseAnalytics: FirebaseAnalytics,
     viewModel: BestPhotosViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
@@ -44,14 +54,18 @@ fun BestPhotosScreen(
                         },
                         onItemClick = { photo ->
                             if (!photo.photoUrl.isNullOrEmpty()) {
+                                firebaseAnalytics.logSingleEvent(BEST_PHOTO_CLICK)
                                 navController.navigate(
                                     Screen.PhotoDetailScreenRoute.createRoute(
                                         photo.id
                                     )
                                 )
+                            } else {
+                                firebaseAnalytics.logSingleEvent(BEST_BLOCKED_PHOTO_CLICK)
                             }
                         },
                         onPlayerClick = {
+                            firebaseAnalytics.logSingleEvent(BEST_PLAYER_CLICK)
                             navController.navigate(
                                 Screen.PhotoListByPlayerScreenRoute.createRoute(
                                     it
@@ -59,6 +73,7 @@ fun BestPhotosScreen(
                             )
                         },
                         onMatchClick = {
+                            firebaseAnalytics.logSingleEvent(BEST_MATCH_CLICK)
                             navController.navigate(
                                 Screen.PhotoListByMatchScreenRoute.createRoute(
                                     it
@@ -66,6 +81,7 @@ fun BestPhotosScreen(
                             )
                         },
                         onTagClick = {
+                            firebaseAnalytics.logSingleEvent(BEST_TAG_CLICK)
                             navController.navigate(
                                 Screen.PhotoListByTagScreenRoute.createRoute(
                                     it
