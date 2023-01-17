@@ -3,8 +3,8 @@ package com.ferpa.argentinacampeon.domain.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ferpa.argentinacampeon.R
-import com.ferpa.argentinacampeon.common.ServerRoutes.BASE_URL
-import com.ferpa.argentinacampeon.common.ServerRoutes.PHOTO_PATH
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.BASE_URL
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.PHOTO_PATH
 import kotlin.math.roundToInt
 
 @Entity

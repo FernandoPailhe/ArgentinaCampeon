@@ -39,7 +39,7 @@ fun MatchInfoBox(
             "Ahmed bin Ali" -> R.drawable.ahmed
             "Lusail" -> R.drawable.lusail
             "974" -> R.drawable.stadium_974
-            else -> R.drawable.logo_qatar
+            else -> R.drawable.player_argentina_backdrop
         }
         TopBackdrop(drawableResource = drawableResource)
 

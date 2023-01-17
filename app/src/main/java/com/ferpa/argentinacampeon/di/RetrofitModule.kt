@@ -1,6 +1,6 @@
 package com.ferpa.argentinacampeon.di
 
-import com.ferpa.argentinacampeon.common.ServerRoutes
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes
 import com.ferpa.argentinacampeon.data.remote.ArgentinaCampeonService
 import dagger.Module
 import dagger.Provides

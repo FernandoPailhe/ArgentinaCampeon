@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.util.PatternsCompat
@@ -26,12 +27,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.ferpa.argentinacampeon.common.AnalyticsEvents
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.ABOUT_US_LINK_CLICK
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Extensions.appVersion
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
+import com.ferpa.argentinacampeon.domain.model.InfoFromApi
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
 import com.google.firebase.analytics.FirebaseAnalytics
 
@@ -81,72 +82,7 @@ fun AboutUsScreen(
                         }
                         items(listState.infoFromApi.size) { index ->
                             val info = listState.infoFromApi[index] ?: return@items
-                            Column(
-                                verticalArrangement = Arrangement.SpaceAround
-                            ) {
-                                if (!info.photoUrl.isNullOrEmpty()) {
-                                    GlideImage(
-                                        model = info.photoUrl,
-                                        contentDescription = info.title,
-                                        modifier = Modifier
-                                            .fillMaxWidth(),
-                                        contentScale = ContentScale.Crop,
-                                    )
-                                }
-                                if (!info.title.isNullOrEmpty()) {
-                                    Text(
-                                        text = info.title,
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color.White,
-                                        modifier = Modifier
-                                            .padding(MaterialTheme.spacing.default)
-                                    )
-                                }
-                                if (!info.content.isNullOrEmpty()) {
-                                    Text(
-                                        text = info.content,
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = Color.White,
-                                        modifier = Modifier
-                                            .padding(MaterialTheme.spacing.default),
-                                    )
-                                }
-                                if (!info.link.isNullOrEmpty()) {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(bottom = MaterialTheme.spacing.default)
-                                            .clickable {
-                                                firebaseAnalytics.logSingleEvent(ABOUT_US_LINK_CLICK)
-                                                contactUs(info.link, context)
-                                            },
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Box(modifier = Modifier.padding(start = MaterialTheme.spacing.small)) {
-                                            info.iconUrl?.let {
-                                                GlideImage(
-                                                    model = it,
-                                                    contentDescription = info.title,
-                                                    modifier = Modifier
-                                                        .size(Constants.ICON_SIZE.dp)
-                                                        .padding(MaterialTheme.spacing.small),
-                                                    contentScale = ContentScale.Fit,
-                                                )
-                                            }
-                                        }
-                                        Text(
-                                            text = info.link,
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Light,
-                                            color = Color.White,
-                                            modifier = Modifier
-                                                .padding(MaterialTheme.spacing.default)
-                                        )
-                                    }
-                                }
-                            }
+                            AppInfoBlock(info = info, firebaseAnalytics)
                         }
                     }
                     if (listState.error.isNotBlank()) {
@@ -167,6 +103,88 @@ fun AboutUsScreen(
                         BottomGradient(0.02f)
                     }
                 })
+        }
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun AppInfoBlock(
+    info: InfoFromApi,
+    firebaseAnalytics: FirebaseAnalytics? = null,
+    context: Context = LocalContext.current,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    paddingValues: PaddingValues = PaddingValues(0.dp)
+) {
+    Column(
+        verticalArrangement = Arrangement.SpaceAround,
+        horizontalAlignment = horizontalAlignment,
+        modifier = Modifier.padding(paddingValues)
+    ) {
+        if (!info.photoUrl.isNullOrEmpty()) {
+            GlideImage(
+                model = info.photoUrl,
+                contentDescription = info.title,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Crop,
+            )
+        }
+        if (!info.title.isNullOrEmpty() && info.title != "minVersion") {
+            Text(
+                text = info.title,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(MaterialTheme.spacing.default)
+            )
+        }
+        if (!info.content.isNullOrEmpty()) {
+            Text(
+                text = info.content,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(MaterialTheme.spacing.default),
+                textAlign = TextAlign.Justify
+            )
+        }
+        if (!info.link.isNullOrEmpty()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = MaterialTheme.spacing.default)
+                    .clickable {
+                        firebaseAnalytics?.let { it.logSingleEvent(ABOUT_US_LINK_CLICK) }
+                        contactUs(info.link, context)
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(modifier = Modifier.padding(start = MaterialTheme.spacing.small)) {
+                    info.iconUrl?.let {
+                        GlideImage(
+                            model = it,
+                            contentDescription = info.title,
+                            modifier = Modifier
+                                .size(Constants.ICON_SIZE.dp)
+                                .padding(MaterialTheme.spacing.small),
+                            contentScale = ContentScale.Fit,
+                        )
+                    }
+                }
+                Text(
+                    text = info.link,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Light,
+                    color = Color.White,
+                    modifier = Modifier
+                        .padding(MaterialTheme.spacing.default),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+            }
         }
     }
 }

@@ -10,8 +10,6 @@ interface PhotoRepository {
 
     suspend fun checkFirstTime(): Boolean
 
-    suspend fun getMinVersion(): String
-
     suspend fun setFirstTime(isFirstTime: Boolean)
 
     suspend fun updateLocalAppInfo(): Boolean
@@ -33,6 +31,8 @@ interface PhotoRepository {
     suspend fun getShareInfo(): List<InfoFromApi?>?
 
     suspend fun getExtraInfo(): List<InfoFromApi?>?
+
+    suspend fun getMinVersion(): InfoFromApi?
 
     suspend fun insertNewPhotos(localLastInsertPhotoDate: String): Boolean
 

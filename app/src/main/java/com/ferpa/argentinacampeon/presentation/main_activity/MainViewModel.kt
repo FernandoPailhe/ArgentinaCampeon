@@ -11,6 +11,7 @@ import com.ferpa.argentinacampeon.common.Extensions.appVersion
 import com.ferpa.argentinacampeon.common.Extensions.toPairIdList
 import com.ferpa.argentinacampeon.common.Resource
 import com.ferpa.argentinacampeon.domain.businesslogic.*
+import com.ferpa.argentinacampeon.domain.model.InfoFromApi
 import com.ferpa.argentinacampeon.domain.model.Photo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -22,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getMinVersionUseCase: GetMinVersionUseCase,
+    private val getForceUpdateVersionUseCase: GetForceUpdateVersionUseCase,
     private val getIsFirstTimeUseCase: GetIsFirstTimeUseCase,
     private val setFirstTimeFalseUseCase: SetFirstTimeFalseUseCase,
     private val updateLocalAppInfoUseCase: UpdateLocalAppInfoUseCase,
@@ -37,6 +39,9 @@ class MainViewModel @Inject constructor(
 
     private val _versionOk = mutableStateOf(true)
     val versionOk: MutableState<Boolean> = _versionOk
+
+    private val _forceUpdateVersion = mutableStateOf(InfoFromApi(content = "Debe actualizar la versión"))
+    val forceUpdateVersion: MutableState<InfoFromApi> = _forceUpdateVersion
 
     private val _isFirstTime = mutableStateOf(UpdateLocalState())
     val isFirstTime: MutableState<UpdateLocalState> = _isFirstTime
@@ -58,10 +63,9 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            checkMinVersion(context)
             checkIsFirstTime()
             getVersusPairList()
-            updateLocalDatabase()
+            updateLocalDatabase(context)
         }
     }
 
@@ -69,8 +73,11 @@ class MainViewModel @Inject constructor(
         getMinVersionUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    _versionOk.value = result.data == context.appVersion()
-                    Log.d("appVersion", versionOk.value.toString())
+                    result.data?.apply {
+                        _versionOk.value = result.data <= context.appVersion()
+                        Log.d("appVersion", versionOk.value.toString())
+                        getForceUpdateVersion()
+                    }
                 }
                 is Resource.Error -> {
                     _versionOk.value = true
@@ -120,7 +127,7 @@ class MainViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun updateLocalDatabase() {
+    private fun updateLocalDatabase(context: Context) {
         updateLocalAppInfoUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -131,6 +138,7 @@ class MainViewModel @Inject constructor(
                             succes = true
                         )
                     )
+                    checkMinVersion(context)
                     getTutorialInfoList()
                     updateLocalPhotoList()
                 }
@@ -349,6 +357,16 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             setFirstTimeFalseUseCase()
         }
+    }
+
+    private fun getForceUpdateVersion() {
+        getForceUpdateVersionUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _forceUpdateVersion.value = result.data ?: InfoFromApi(content = "Debe actualizar la versión")
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
     companion object {

@@ -5,20 +5,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.ferpa.argentinacampeon.R
@@ -30,8 +32,10 @@ import com.ferpa.argentinacampeon.presentation.BottomNavItem
 import com.ferpa.argentinacampeon.presentation.BottomNavigationBar
 import com.ferpa.argentinacampeon.presentation.Navigation
 import com.ferpa.argentinacampeon.presentation.Screen
+import com.ferpa.argentinacampeon.presentation.about_us.AppInfoBlock
 import com.ferpa.argentinacampeon.presentation.tutorial.WelcomeScreen
 import com.ferpa.argentinacampeon.presentation.ui.theme.BestQatar2022PhotosTheme
+import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.presentation.versus.VersusScreenPreview
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
@@ -71,7 +75,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                     val navController = rememberNavController()
-                    if (viewModel.isFirstTime.value == UpdateLocalState(succes = false)) {
+                    if (viewModel.isFirstTime.value == UpdateLocalState(succes = false) && viewModel.versionOk.value) {
                         Scaffold(bottomBar = {
                             BottomNavigationBar(items = listOf(
                                 /*
@@ -80,13 +84,11 @@ class MainActivity : ComponentActivity() {
                                     route = Screen.StoryScreenRoute.route,
                                     icon = Icons.Default.MoreVert
                                 ),
-
-                            BottomNavItem(
-                                name = "Detail",
-                                route = Screen.PhotoDetailScreenRoute.route,
-                                icon = Icons.Default.Done
-                            ),
-
+                                BottomNavItem(
+                                    name = "Detail",
+                                    route = Screen.PhotoDetailScreenRoute.route,
+                                    icon = Icons.Default.Done
+                                ),
                                 BottomNavItem(
                                     name = "List",
                                     route = Screen.PhotoListScreenRoute.route,
@@ -135,9 +137,31 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }
+                    } else if (!viewModel.versionOk.value) {
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Constants.VioletDark)
+                        ) {
+                            Dialog(onDismissRequest = { }) {
+                                Box(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight(0.5f)
+                                    .background(Constants.VioletDark),
+                                    contentAlignment = Alignment.Center,
+                                    content = {
+                                        AppInfoBlock(
+                                            info = viewModel.forceUpdateVersion.value,
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            paddingValues = PaddingValues(horizontal = MaterialTheme.spacing.medium)
+                                        )
+                                    })
+                            }
+                        }
                     } else {
                         firebaseAnalytics.logSingleEvent(FIRST_OPEN)
-                        WelcomeScreen(navController = navController,
+                        WelcomeScreen(
+                            navController = navController,
                             viewModel = viewModel,
                             onDataLoaded = {
                                 keepSplashScreen = false

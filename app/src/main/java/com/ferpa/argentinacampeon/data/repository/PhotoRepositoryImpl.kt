@@ -51,10 +51,6 @@ class PhotoRepositoryImpl(
 
     override suspend fun checkFirstTime(): Boolean = (getFirstTime().first() == null)
 
-    override suspend fun getMinVersion(): String {
-        return photoSource.getMinVersion()
-    }
-
     override suspend fun setFirstTime(isFirstTime: Boolean) {
         context.dataStore.edit {
             it[FIRST_TIME] = isFirstTime
@@ -194,6 +190,10 @@ class PhotoRepositoryImpl(
 
     override suspend fun getExtraInfo(): List<InfoFromApi?>? {
         return photoDao.getAppInfo().first().extra
+    }
+
+    override suspend fun getMinVersion(): InfoFromApi? {
+        return photoDao.getAppInfo().first().extra?.first { it?.priority == 100 }
     }
 
     override suspend fun insertNewPhotos(localLastInsertPhotoDate: String): Boolean {

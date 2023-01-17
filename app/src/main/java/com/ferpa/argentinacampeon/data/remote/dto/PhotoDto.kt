@@ -1,9 +1,8 @@
 package com.ferpa.argentinacampeon.data.remote.dto
 
 import androidx.room.PrimaryKey
-import com.ferpa.argentinacampeon.common.ServerRoutes.BASE_URL
-import com.ferpa.argentinacampeon.common.ServerRoutes.PHOTO_PATH
-import com.ferpa.argentinacampeon.data.remote.ArgentinaCampeonService
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.BASE_URL
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.PHOTO_PATH
 import com.ferpa.argentinacampeon.domain.model.*
 
 data class PhotoDto(

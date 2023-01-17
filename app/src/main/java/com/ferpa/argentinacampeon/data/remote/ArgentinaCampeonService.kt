@@ -1,13 +1,12 @@
 package com.ferpa.argentinacampeon.data.remote
 
 import com.ferpa.argentinacampeon.common.Constants.BEST_PHOTOS_LIMIT
-import com.ferpa.argentinacampeon.common.ServerRoutes.APP_INFO_BASE_ROUTE
-import com.ferpa.argentinacampeon.common.ServerRoutes.MATCH_BASE_ROUTE
-import com.ferpa.argentinacampeon.common.ServerRoutes.MIN_VERSION_ROUTE
-import com.ferpa.argentinacampeon.common.ServerRoutes.PHOTOGRAPHER_BASE_ROUTE
-import com.ferpa.argentinacampeon.common.ServerRoutes.PHOTO_BASE_ROUTE
-import com.ferpa.argentinacampeon.common.ServerRoutes.PLAYER_BASE_ROUTE
-import com.ferpa.argentinacampeon.common.ServerRoutes.TAGS_BASE_ROUTE
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.APP_INFO_BASE_ROUTE
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.MATCH_BASE_ROUTE
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.PHOTOGRAPHER_BASE_ROUTE
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.PHOTO_BASE_ROUTE
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.PLAYER_BASE_ROUTE
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.TAGS_BASE_ROUTE
 import com.ferpa.argentinacampeon.data.remote.dto.*
 import com.ferpa.argentinacampeon.domain.model.*
 import com.ferpa.argentinacampeon.domain.model.Tag
@@ -29,9 +28,6 @@ interface ArgentinaCampeonService {
     /**
      * APP INFO
      */
-    @GET("$APP_INFO_BASE_ROUTE$MIN_VERSION_ROUTE")
-    suspend fun getMinVersion(): String
-
     @GET(APP_INFO_BASE_ROUTE)
     suspend fun getAppInfo(@Query("getFrom") getFrom: String): List<AppInfo>
 
