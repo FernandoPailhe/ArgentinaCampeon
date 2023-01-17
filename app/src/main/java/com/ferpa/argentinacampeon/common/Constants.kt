@@ -45,6 +45,7 @@ object Constants {
     /**
      * ANIMATION DURATIONS
      */
+    const val LOAD_SCREEN_DELAY: Long = 20000
     const val POST_VOTE_DELAY: Long = 350
     const val NAV_ANIMATION_DURATION = 900
 

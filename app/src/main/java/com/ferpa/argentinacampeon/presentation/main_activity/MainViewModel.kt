@@ -11,6 +11,7 @@ import com.ferpa.argentinacampeon.common.Resource
 import com.ferpa.argentinacampeon.domain.businesslogic.*
 import com.ferpa.argentinacampeon.domain.model.Photo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -30,8 +31,8 @@ class MainViewModel @Inject constructor(
     private val getFavoritePairListStateUseCase: GetFavoritePairListStateUseCase
 ) : ViewModel() {
 
-    private val _isFirstTime = mutableStateOf(true)
-    val isFirstTime: MutableState<Boolean> = _isFirstTime
+    private val _isFirstTime = mutableStateOf(UpdateLocalState())
+    val isFirstTime: MutableState<UpdateLocalState> = _isFirstTime
 
     private val _tutorialInfo = mutableStateOf(InfoListState())
     val tutorialInfo: MutableState<InfoListState> = _tutorialInfo
@@ -56,10 +57,22 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun checkIsFirstTime(){
-        getIsFirstTimeUseCase().onEach {
-            _isFirstTime.value = it
-            Log.d(TAG, "FIRST TIME -> $it")
+    private fun checkIsFirstTime() {
+        getIsFirstTimeUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _isFirstTime.value =
+                        UpdateLocalState(succes = result.data ?: false)
+                }
+                is Resource.Error -> {
+                    _isFirstTime.value = UpdateLocalState(
+                        error = result.message ?: "An unexpected error occurred"
+                    )
+                }
+                is Resource.Loading -> {
+                    _isFirstTime.value = UpdateLocalState(isLoading = true)
+                }
+            }
         }.launchIn(viewModelScope)
     }
 
@@ -84,13 +97,13 @@ class MainViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun updateLocalDatabase(){
+    private fun updateLocalDatabase() {
         updateLocalAppInfoUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     Log.d(TAG, "LOCAL APP INFO TABLE SUCCESSFULLY")
                     _updateState.value = UpdateLocalDatabaseState(
-                        updateLocalAppInfoState = UpdateLocalAppInfoState(
+                        updateLocalState = UpdateLocalState(
                             isLoading = false,
                             succes = true
                         )
@@ -101,13 +114,13 @@ class MainViewModel @Inject constructor(
                 is Resource.Loading -> {
                     Log.d(TAG, "LOCAL APP INFO TABLE LOADING...")
                     _updateState.value = UpdateLocalDatabaseState(
-                        updateLocalAppInfoState = UpdateLocalAppInfoState(isLoading = true)
+                        updateLocalState = UpdateLocalState(isLoading = true)
                     )
                 }
                 is Resource.Error -> {
                     Log.d(TAG, "LOCAL APP INFO TABLE FAIL")
                     _updateState.value = UpdateLocalDatabaseState(
-                        updateLocalAppInfoState = UpdateLocalAppInfoState(
+                        updateLocalState = UpdateLocalState(
                             isLoading = false,
                             error = result.message.toString()
                         )
@@ -308,8 +321,8 @@ class MainViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun setFirstTimeFalse(){
-        _isFirstTime.value = false
+    fun setFirstTimeFalse() {
+        _isFirstTime.value = UpdateLocalState(succes = false)
         viewModelScope.launch {
             setFirstTimeFalseUseCase()
         }

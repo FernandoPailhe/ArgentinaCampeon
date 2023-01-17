@@ -28,10 +28,10 @@ import com.google.accompanist.pager.PagerState
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun Navigation(navController: NavHostController, mainViewModel: MainViewModel, pagerState: PagerState) {
+fun Navigation(navController: NavHostController, mainViewModel: MainViewModel, pagerState: PagerState, onDataLoaded: () -> Unit ) {
     NavHost(navController = navController, startDestination = Screen.VersusScreenRoute.route) {
         composable(route = Screen.VersusScreenRoute.route) {
-            VersusScreen(navController, mainViewModel =  mainViewModel, pagerState = pagerState)
+            VersusScreen(navController, mainViewModel =  mainViewModel, pagerState = pagerState, onDataLoaded = { onDataLoaded() })
         }
         composable(route = Screen.PhotoDetailScreenRoute.route) {
             PhotoDetailScreen(navController)

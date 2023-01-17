@@ -38,14 +38,14 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
+    private var keepSplashScreen = true
+
     @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                (viewModel.versusListState.value.isLoading &&
-                        viewModel.versusListState.value.photos.isEmpty() &&
-                        viewModel.favoriteState.value.isLoading)
+                        viewModel.isFirstTime.value.isLoading && keepSplashScreen && viewModel.updateState.value.updateLocalMatchListState.isLoading
             }
         }
         setContent {
@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                     val navController = rememberNavController()
-                    if (!viewModel.isFirstTime.value) {
+                    if (viewModel.isFirstTime.value == UpdateLocalState(succes = false)) {
                         Scaffold(bottomBar = {
                             BottomNavigationBar(items = listOf(
                                 /*
@@ -76,7 +76,8 @@ class MainActivity : ComponentActivity() {
                                 route = Screen.PhotoDetailScreenRoute.route,
                                 icon = Icons.Default.Done
                             ),
-                             */ BottomNavItem(
+                             */
+                                BottomNavItem(
                                     name = "List",
                                     route = Screen.PhotoListScreenRoute.route,
                                     icon = Icons.Default.List
@@ -116,12 +117,17 @@ class MainActivity : ComponentActivity() {
                                 Navigation(
                                     navController = navController,
                                     mainViewModel = viewModel,
-                                    pagerState
+                                    pagerState,
+                                    onDataLoaded = {
+                                        keepSplashScreen = false
+                                    }
                                 )
                             }
                         }
                     } else {
-                        WelcomeScreen(navController = navController, viewModel)
+                        WelcomeScreen(navController = navController, viewModel, onDataLoaded = {
+                            keepSplashScreen = false
+                        })
                     }
                 }
             }

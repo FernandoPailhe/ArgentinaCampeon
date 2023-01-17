@@ -48,6 +48,7 @@ fun WelcomeScreen(
     viewModel: MainViewModel,
     tutorialViewModel: TutorialViewModel = hiltViewModel(),
     versusViewModel: VersusViewModel = hiltViewModel(),
+    onDataLoaded: () -> Unit
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -60,6 +61,7 @@ fun WelcomeScreen(
     val scope = rememberCoroutineScope()
     val pairList = tutorialViewModel.versusListState.value.photos
 
+
     Surface(
         shape = MaterialTheme.shapes.medium,
         color = Constants.VioletDark
@@ -68,17 +70,8 @@ fun WelcomeScreen(
             modifier = Modifier.fillMaxHeight(),
             contentAlignment = Alignment.Center,
             content = {
-                if (verticalPagerState.currentPage < 1 && verticalPagerState.currentPageOffset == 0f ) {
-                    Box(modifier = Modifier.fillMaxHeight()) {
-                        WelcomeBackdrop(
-                            drawableResource = R.drawable.coronacion_cerca,
-                            offset = 0.0f,
-                            page = 0,
-                            slideOut = slideOutBackDrop.value
-                        )
-                    }
-                }
                 if (infoList.isNotEmpty()) {
+                    onDataLoaded()
                     val infoListPosition =
                         remember { mutableStateOf(verticalPagerState.currentPage + 3) }
                     VerticalPager(
@@ -136,22 +129,6 @@ fun WelcomeScreen(
                                                 verticalArrangement = Arrangement.Center
                                             ) {
                                                 if (horizontalPagerState.currentPage == 1) tutorialViewModel.getTutorialPairList()
-                                                /*
-                                                if (horizontalPagerState.currentPage == 3) {
-
-                                                    userScrollEnabled.value = false
-                                                    slideOutBackDrop.value = true
-                                                    VersusScreenTutorial(
-                                                        tutorialViewModel = tutorialViewModel,
-                                                        onButtonClicked = {
-                                                            viewModel.setFirstTimeFalse()
-                                                        },
-                                                        infoFromApiList = infoList
-                                                    )
-
-                                                } else {
-
-                                                 */
                                                 Text(
                                                     text = info.content ?: "",
                                                     fontSize = 16.sp,

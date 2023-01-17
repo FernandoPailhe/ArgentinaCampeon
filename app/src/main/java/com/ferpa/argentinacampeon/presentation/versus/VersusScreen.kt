@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -11,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.common.Constants.LOAD_SCREEN_DELAY
 import com.ferpa.argentinacampeon.common.Constants.POST_VOTE_DELAY
 import com.ferpa.argentinacampeon.presentation.Screen
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
@@ -28,12 +30,14 @@ fun VersusScreen(
     modifier: Modifier = Modifier,
     mainViewModel: MainViewModel,
     pagerState: PagerState,
-    versusViewModel: VersusViewModel = hiltViewModel()
+    versusViewModel: VersusViewModel = hiltViewModel(),
+    onDataLoaded: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val pairList = mainViewModel.versusListState.value.photos
     val pairFavoritesList = mainViewModel.favoriteState.value.favorites
     if (pairList.isEmpty()) return
+    onDataLoaded()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -45,7 +49,6 @@ fun VersusScreen(
                 .background(Constants.VioletDark),
             verticalArrangement = Arrangement.Center
         ) {
-
             VerticalPager(
                 count = pairList.size,
                 state = pagerState,
@@ -112,7 +115,8 @@ fun VersusScreen(
                                         delay(POST_VOTE_DELAY)
                                         mainViewModel.getFavoritePairListStateUpdate()
                                     }
-                                }
+                                },
+
                             )
                         }
                     }
