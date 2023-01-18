@@ -39,9 +39,22 @@ fun MatchInfoBox(
             "Ahmed bin Ali" -> R.drawable.ahmed
             "Lusail" -> R.drawable.lusail
             "974" -> R.drawable.stadium_974
-            else -> R.drawable.player_argentina_backdrop
+            else -> R.drawable.argentina_backdrop
         }
-        TopBackdrop(drawableResource = drawableResource)
+
+        when (match.stadiumId) {
+            "Ahmed bin Ali" -> TopBackdrop(drawableResource = drawableResource)
+            "Lusail" -> TopBackdrop(drawableResource = drawableResource)
+            "974" -> TopBackdrop(drawableResource = drawableResource)
+            else -> TopGradientBackdrop(drawableResource = drawableResource)
+        }
+
+        val stadiumText = when (match.stadiumId) {
+            "Ahmed bin Ali" -> "${match.stadiumId} Stadium"
+            "Lusail" -> "${match.stadiumId} Stadium"
+            "974" -> "${match.stadiumId} Stadium"
+            else -> match.stadiumId
+        }
 
         Box(
             modifier = Modifier
@@ -65,7 +78,7 @@ fun MatchInfoBox(
                         overflow = TextOverflow.Ellipsis,
                     )
                     Text(
-                        text = "${match.stadiumId} Stadium",
+                        text = stadiumText ?: "",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Light,
                         textAlign = TextAlign.Center,

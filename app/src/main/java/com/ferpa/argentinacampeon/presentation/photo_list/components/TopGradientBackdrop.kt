@@ -1,6 +1,6 @@
 package com.ferpa.argentinacampeon.presentation.photo_list.components
 
-import androidx.compose.foundation.Image
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
@@ -9,18 +9,23 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.resource.drawable.DrawableResource
 import com.ferpa.argentinacampeon.common.Constants
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun TopBackdrop(drawableResource: Int, height: Int = Constants.TOP_BACKGROUND_HEIGHT, color: Color = Constants.VioletDark) {
-    Box(modifier = Modifier.fillMaxWidth().height(height.dp)) {
-        Image(
-            painter = painterResource(drawableResource),
-            contentDescription = "backdrop image",
-            modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.Crop
+fun TopGradientBackdrop(drawableResource: Int) {
+    Box(modifier = Modifier.fillMaxWidth()) {
+        GlideImage(
+            model = drawableResource,
+            contentDescription = "player",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(Constants.TOP_BACKGROUND_HEIGHT.dp)
         )
         BoxWithConstraints(
             Modifier
@@ -29,11 +34,12 @@ fun TopBackdrop(drawableResource: Int, height: Int = Constants.TOP_BACKGROUND_HE
             val aspectRatio = maxWidth / maxHeight
             Box(
                 Modifier
-                    .fillMaxSize()
+                    .height((Constants.TOP_BACKGROUND_HEIGHT / 3).dp)
+                    .fillMaxWidth()
                     .scale(maxOf(aspectRatio, 1f), maxOf(1 / aspectRatio, 1f))
                     .background(
-                        brush = Brush.radialGradient(
-                            colors = listOf(Color(0xFFFFFF), color),
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Color(0xA218182F), Color(0xFFFFFF))
                         ),
                     )
             )
