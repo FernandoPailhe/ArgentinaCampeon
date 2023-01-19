@@ -11,7 +11,7 @@ import com.ferpa.argentinacampeon.common.Extensions.appVersion
 import com.ferpa.argentinacampeon.common.Extensions.toPairIdList
 import com.ferpa.argentinacampeon.common.Resource
 import com.ferpa.argentinacampeon.domain.businesslogic.*
-import com.ferpa.argentinacampeon.domain.model.InfoFromApi
+import com.ferpa.argentinacampeon.domain.model.ServerInfo
 import com.ferpa.argentinacampeon.domain.model.Photo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -40,8 +40,8 @@ class MainViewModel @Inject constructor(
     private val _versionOk = mutableStateOf(true)
     val versionOk: MutableState<Boolean> = _versionOk
 
-    private val _forceUpdateVersion = mutableStateOf(InfoFromApi(content = "Debe actualizar la versión"))
-    val forceUpdateVersion: MutableState<InfoFromApi> = _forceUpdateVersion
+    private val _forceUpdateVersion = mutableStateOf(ServerInfo(content = "Debe actualizar la versión"))
+    val forceUpdateVersion: MutableState<ServerInfo> = _forceUpdateVersion
 
     private val _isFirstTime = mutableStateOf(UpdateLocalState())
     val isFirstTime: MutableState<UpdateLocalState> = _isFirstTime
@@ -112,7 +112,7 @@ class MainViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
                     _tutorialInfo.value =
-                        InfoListState(infoFromApi = result.data ?: emptyList())
+                        InfoListState(serverInfo = result.data ?: emptyList())
                     getFavoritePairListState()
                 }
                 is Resource.Error -> {
@@ -363,7 +363,7 @@ class MainViewModel @Inject constructor(
         getForceUpdateVersionUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    _forceUpdateVersion.value = result.data ?: InfoFromApi(content = "Debe actualizar la versión")
+                    _forceUpdateVersion.value = result.data ?: ServerInfo(content = "Debe actualizar la versión")
                 }
             }
         }.launchIn(viewModelScope)

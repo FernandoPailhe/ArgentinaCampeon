@@ -17,7 +17,7 @@ import retrofit2.http.*
 interface ArgentinaCampeonService {
 
     @GET("{downloadPath}")
-    suspend fun downloadImage(downloadPath: String): Response<ResponseBody>
+    suspend fun downloadImage(@Path("downloadPath")downloadPath: String): Response<ResponseBody>
 
     /**
      * UPDATE STATUS

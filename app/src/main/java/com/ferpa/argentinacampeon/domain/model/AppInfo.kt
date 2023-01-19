@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 data class AppInfo(
     @PrimaryKey
     val id: String = "",
-    val welcome: List<InfoFromApi?>? = emptyList(),
-    val tutorial: List<InfoFromApi?>? = emptyList(),
-    val share: List<InfoFromApi?>? = emptyList(),
-    val aboutUs: List<InfoFromApi?>? = emptyList(),
-    val extra: List<InfoFromApi?>? = emptyList(),
+    val welcome: List<ServerInfo?>? = emptyList(),
+    val tutorial: List<ServerInfo?>? = emptyList(),
+    val share: List<ServerInfo?>? = emptyList(),
+    val aboutUs: List<ServerInfo?>? = emptyList(),
+    val extra: List<ServerInfo?>? = emptyList(),
     val lastUpdate: String? = ""
 )

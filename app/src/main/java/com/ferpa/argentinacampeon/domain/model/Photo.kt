@@ -78,6 +78,16 @@ fun Photo.getPhotoUrl(isPhotoList: Boolean = false): String? {
     }
 }
 
+fun Photo.getDownloadUrl(): String? {
+    return if (this.photoUrl == null) {
+        null
+    } else if (photoUrl.contains("192.168.100.4")) {
+        "$PHOTO_PATH/${this.photoUrl.split("/").last()}"
+    } else {
+        "$PHOTO_PATH/${this.photoUrl}"
+    }
+}
+
 fun Photo.getLocalDrawableResource(): Int {
     return when (this.id) {
         "c567da10-3c75-4262-be60-91f73b41f562" -> R.drawable.tuto_enzo

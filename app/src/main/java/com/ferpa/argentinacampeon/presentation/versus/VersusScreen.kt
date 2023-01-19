@@ -1,5 +1,8 @@
 package com.ferpa.argentinacampeon.presentation.versus
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,15 +11,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ferpa.argentinacampeon.R
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VERSUS_MATCH_CLICK
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VERSUS_PLAYER_CLICK
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Constants.POST_VOTE_DELAY
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
+import com.ferpa.argentinacampeon.domain.model.Photo
 import com.ferpa.argentinacampeon.presentation.Screen
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
 import com.ferpa.argentinacampeon.presentation.main_activity.MainViewModel
@@ -38,6 +45,7 @@ fun VersusScreen(
     onDataLoaded: () -> Unit,
     firebaseAnalytics: FirebaseAnalytics
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val pairList = mainViewModel.versusListState.value.photos
     val pairFavoritesList = mainViewModel.favoriteState.value.favorites
@@ -123,6 +131,9 @@ fun VersusScreen(
                                         mainViewModel.getFavoritePairListStateUpdate()
                                     }
                                 },
+                                onSendClick = { downloadUrl ->
+                                    versusViewModel.shareImage(downloadUrl, context)
+                                },
                                 firebaseAnalytics = firebaseAnalytics
                             )
                         }
@@ -135,12 +146,4 @@ fun VersusScreen(
         }
     }
 
-}
-
-@Preview(showBackground = true)
-@Composable
-fun VersusScreenPreview() {
-    BestQatar2022PhotosTheme {
-//        VersusScreen(navController = rememberNavController())
-    }
 }

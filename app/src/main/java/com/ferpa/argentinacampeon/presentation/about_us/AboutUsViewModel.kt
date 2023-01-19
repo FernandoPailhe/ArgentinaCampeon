@@ -32,7 +32,7 @@ class AboutUsViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
                     _aboutUsInfo.value =
-                        InfoListState(infoFromApi = result.data ?: emptyList())
+                        InfoListState(serverInfo = result.data ?: emptyList())
                 }
                 is Resource.Error -> {
                     _aboutUsInfo.value = InfoListState(

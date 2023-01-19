@@ -220,17 +220,17 @@ class Converters {
     }
 
     @TypeConverter
-    fun stringToListInfo(data: String?): List<InfoFromApi?>? {
+    fun stringToListInfo(data: String?): List<ServerInfo?>? {
         if (data == null) {
             return Collections.emptyList()
         }
         val listType: Type = object :
-            TypeToken<List<InfoFromApi?>?>() {}.type
-        return Gson().fromJson<List<InfoFromApi?>>(data, listType)
+            TypeToken<List<ServerInfo?>?>() {}.type
+        return Gson().fromJson<List<ServerInfo?>>(data, listType)
     }
 
     @TypeConverter
-    fun listInfoTitleToString(someObjects: List<InfoFromApi?>?): String? {
+    fun listInfoTitleToString(someObjects: List<ServerInfo?>?): String? {
         return Gson().toJson(someObjects)
     }
 

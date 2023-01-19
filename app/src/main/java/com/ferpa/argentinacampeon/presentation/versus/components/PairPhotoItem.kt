@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.SHARE_IMAGE
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VOTE_BOTTOM
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VOTE_TOP
 import com.ferpa.argentinacampeon.common.Constants
@@ -14,6 +15,7 @@ import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.common.Extensions.logSwitchFavorite
 import com.ferpa.argentinacampeon.domain.model.Photo
 import com.ferpa.argentinacampeon.domain.model.Vote
+import com.ferpa.argentinacampeon.domain.model.getDownloadUrl
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.google.android.gms.dynamic.IFragmentWrapper
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -30,6 +32,7 @@ fun PairPhotoItem(
     onTagClick: (String) -> Unit = {},
     onMatchClick: (String) -> Unit = {},
     onBookmarkClick: (String) -> Unit = {},
+    onSendClick: (String) -> Unit = {},
     firebaseAnalytics: FirebaseAnalytics
 ) {
     val configuration = LocalConfiguration.current
@@ -77,6 +80,12 @@ fun PairPhotoItem(
                         onBookmarkClick = {
                             firebaseAnalytics.logSwitchFavorite(bookmarkPair.first)
                             onBookmarkClick(photoPair.first.id)
+                        },
+                        onSendClick = {
+                            photoPair.first.getDownloadUrl()?.let { downloadUrl ->
+                                firebaseAnalytics.logSingleEvent(SHARE_IMAGE)
+                                onSendClick(downloadUrl)
+                            }
                         }
                     )
                 })
@@ -109,6 +118,12 @@ fun PairPhotoItem(
                         onBookmarkClick = {
                             firebaseAnalytics.logSwitchFavorite(bookmarkPair.second)
                             onBookmarkClick(photoPair.second.id)
+                        },
+                        onSendClick = {
+                            photoPair.second.getDownloadUrl()?.let { downloadUrl ->
+                                firebaseAnalytics.logSingleEvent(SHARE_IMAGE)
+                                onSendClick(downloadUrl)
+                            }
                         }
                     )
 

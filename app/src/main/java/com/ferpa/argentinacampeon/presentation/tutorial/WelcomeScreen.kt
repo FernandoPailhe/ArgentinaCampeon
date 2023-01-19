@@ -56,7 +56,7 @@ fun WelcomeScreen(
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val textOffset = (screenHeight / 5.5f)
-    val infoList = viewModel.tutorialInfo.value.infoFromApi
+    val infoList = viewModel.tutorialInfo.value.serverInfo
     tutorialViewModel.getTutorialPairList()
     val userScrollEnabled = remember { mutableStateOf(true) }
     val slideOutBackDrop = remember { mutableStateOf(false) }

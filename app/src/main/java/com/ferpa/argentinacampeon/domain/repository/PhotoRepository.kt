@@ -3,6 +3,8 @@ package com.ferpa.argentinacampeon.domain.repository
 import com.ferpa.argentinacampeon.data.remote.dto.PhotoDto
 import com.ferpa.argentinacampeon.domain.model.*
 import kotlinx.coroutines.flow.Flow
+import okhttp3.ResponseBody
+import retrofit2.Response
 
 interface PhotoRepository {
 
@@ -22,17 +24,17 @@ interface PhotoRepository {
 
     suspend fun updateLocalMatchList(): Boolean
 
-    suspend fun getWelcomeInfo(): List<InfoFromApi?>?
+    suspend fun getWelcomeInfo(): List<ServerInfo?>?
 
-    suspend fun getTutorialInfo(): List<InfoFromApi?>?
+    suspend fun getTutorialInfo(): List<ServerInfo?>?
 
-    suspend fun getAboutUsInfo(): List<InfoFromApi?>?
+    suspend fun getAboutUsInfo(): List<ServerInfo?>?
 
-    suspend fun getShareInfo(): List<InfoFromApi?>?
+    suspend fun getShareInfo(): List<ServerInfo?>?
 
-    suspend fun getExtraInfo(): List<InfoFromApi?>?
+    suspend fun getExtraInfo(): List<ServerInfo?>?
 
-    suspend fun getMinVersion(): InfoFromApi?
+    suspend fun getMinVersion(): ServerInfo?
 
     suspend fun insertNewPhotos(localLastInsertPhotoDate: String): Boolean
 
@@ -73,5 +75,7 @@ interface PhotoRepository {
     suspend fun postPlayer(player: Player)
 
     suspend fun switchFavorite(photoId: String)
+
+    suspend fun downloadImage(downloadPath: String): Response<ResponseBody>
 
 }

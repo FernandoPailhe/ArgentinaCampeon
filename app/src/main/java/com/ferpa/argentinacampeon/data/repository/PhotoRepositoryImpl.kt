@@ -20,6 +20,8 @@ import com.ferpa.argentinacampeon.domain.repository.PhotoRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import okhttp3.ResponseBody
+import retrofit2.Response
 import java.time.LocalDateTime
 
 
@@ -172,27 +174,27 @@ class PhotoRepositoryImpl(
         }
     }
 
-    override suspend fun getWelcomeInfo(): List<InfoFromApi?>? {
+    override suspend fun getWelcomeInfo(): List<ServerInfo?>? {
         return photoDao.getAppInfo().first().welcome
     }
 
-    override suspend fun getTutorialInfo(): List<InfoFromApi?>? {
+    override suspend fun getTutorialInfo(): List<ServerInfo?>? {
         return photoDao.getAppInfo().first().tutorial
     }
 
-    override suspend fun getAboutUsInfo(): List<InfoFromApi?>? {
+    override suspend fun getAboutUsInfo(): List<ServerInfo?>? {
         return photoDao.getAppInfo().first().aboutUs?.sortedBy { it?.priority }
     }
 
-    override suspend fun getShareInfo(): List<InfoFromApi?>? {
+    override suspend fun getShareInfo(): List<ServerInfo?>? {
         return photoDao.getAppInfo().first().share
     }
 
-    override suspend fun getExtraInfo(): List<InfoFromApi?>? {
+    override suspend fun getExtraInfo(): List<ServerInfo?>? {
         return photoDao.getAppInfo().first().extra
     }
 
-    override suspend fun getMinVersion(): InfoFromApi? {
+    override suspend fun getMinVersion(): ServerInfo? {
         return photoDao.getAppInfo().first().extra?.first { it?.priority == 100 }
     }
 
@@ -398,6 +400,10 @@ class PhotoRepositoryImpl(
             Log.e("updateLocalPhotoDetail", e.localizedMessage ?: "Unknown error")
         }
 
+    }
+
+    override suspend fun downloadImage(downloadPath: String): Response<ResponseBody> {
+        return photoSource.downloadImage(downloadPath)
     }
 
 }

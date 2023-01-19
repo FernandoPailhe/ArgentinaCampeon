@@ -32,7 +32,7 @@ import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Extensions.appVersion
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
-import com.ferpa.argentinacampeon.domain.model.InfoFromApi
+import com.ferpa.argentinacampeon.domain.model.ServerInfo
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
 import com.google.firebase.analytics.FirebaseAnalytics
 
@@ -80,8 +80,8 @@ fun AboutUsScreen(
                                     .padding(MaterialTheme.spacing.default),
                             )
                         }
-                        items(listState.infoFromApi.size) { index ->
-                            val info = listState.infoFromApi[index] ?: return@items
+                        items(listState.serverInfo.size) { index ->
+                            val info = listState.serverInfo[index] ?: return@items
                             AppInfoBlock(info = info, firebaseAnalytics)
                         }
                     }
@@ -110,7 +110,7 @@ fun AboutUsScreen(
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun AppInfoBlock(
-    info: InfoFromApi,
+    info: ServerInfo,
     firebaseAnalytics: FirebaseAnalytics? = null,
     context: Context = LocalContext.current,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,

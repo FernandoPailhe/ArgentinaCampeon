@@ -1,10 +1,10 @@
 package com.ferpa.argentinacampeon.presentation.main_activity
 
 
-import com.ferpa.argentinacampeon.domain.model.InfoFromApi
+import com.ferpa.argentinacampeon.domain.model.ServerInfo
 
 data class InfoListState(
     val isLoading: Boolean = false,
-    val infoFromApi: List<InfoFromApi?> = emptyList(),
+    val serverInfo: List<ServerInfo?> = emptyList(),
     val error: String = ""
 )
