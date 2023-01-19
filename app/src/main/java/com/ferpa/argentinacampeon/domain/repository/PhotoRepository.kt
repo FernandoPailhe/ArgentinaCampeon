@@ -30,7 +30,7 @@ interface PhotoRepository {
 
     suspend fun getAboutUsInfo(): List<ServerInfo?>?
 
-    suspend fun getShareInfo(): List<ServerInfo?>?
+    suspend fun getShareInfo(): ServerInfo?
 
     suspend fun getExtraInfo(): List<ServerInfo?>?
 

@@ -32,7 +32,7 @@ fun PairPhotoItem(
     onTagClick: (String) -> Unit = {},
     onMatchClick: (String) -> Unit = {},
     onBookmarkClick: (String) -> Unit = {},
-    onSendClick: (String) -> Unit = {},
+    onSendClick: (Photo) -> Unit = {},
     firebaseAnalytics: FirebaseAnalytics
 ) {
     val configuration = LocalConfiguration.current
@@ -66,15 +66,12 @@ fun PairPhotoItem(
             )
             Box(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.TopEnd,
-//                contentAlignment = Alignment.CenterEnd,
+                contentAlignment = Alignment.CenterEnd,
                 content = {
                     Icons(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .padding( horizontal = MaterialTheme.spacing.default,
-                            vertical = MaterialTheme.spacing.medium)
-//                            .padding(MaterialTheme.spacing.default)
+                            .padding(MaterialTheme.spacing.default)
                             .fillMaxHeight(0.8f),
                         isFavorite = bookmarkPair.first,
                         onBookmarkClick = {
@@ -82,10 +79,8 @@ fun PairPhotoItem(
                             onBookmarkClick(photoPair.first.id)
                         },
                         onSendClick = {
-                            photoPair.first.getDownloadUrl()?.let { downloadUrl ->
-                                firebaseAnalytics.logSingleEvent(SHARE_IMAGE)
-                                onSendClick(downloadUrl)
-                            }
+                            firebaseAnalytics.logSingleEvent(SHARE_IMAGE)
+                            onSendClick(photoPair.first)
                         }
                     )
                 })
@@ -110,9 +105,7 @@ fun PairPhotoItem(
                     Icons(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .padding( horizontal = MaterialTheme.spacing.default,
-                                vertical = MaterialTheme.spacing.medium)
-//                            .padding(MaterialTheme.spacing.default)
+                            .padding(MaterialTheme.spacing.default)
                             .fillMaxHeight(0.8f),
                         isFavorite = bookmarkPair.second,
                         onBookmarkClick = {
@@ -120,10 +113,8 @@ fun PairPhotoItem(
                             onBookmarkClick(photoPair.second.id)
                         },
                         onSendClick = {
-                            photoPair.second.getDownloadUrl()?.let { downloadUrl ->
-                                firebaseAnalytics.logSingleEvent(SHARE_IMAGE)
-                                onSendClick(downloadUrl)
-                            }
+                            firebaseAnalytics.logSingleEvent(SHARE_IMAGE)
+                            onSendClick(photoPair.second)
                         }
                     )
 
@@ -139,18 +130,4 @@ fun PairPhotoItem(
 
 }
 
-/**
-@Preview(showBackground = true)
-@Composable
-fun PairPhotoItemBackUpPreview() {
-BestQatar2022PhotosTheme {
-PairPhotoItem(
-photoPair = Pair(
-PreviewPhotos.prevPhotoTitle.toLocalPhoto(),
-PreviewPhotos.prevPhotoTitle.toLocalPhoto()
-),
-onPhotoClick = { VoteDto("1", "2") })
-}
-}
- */
 

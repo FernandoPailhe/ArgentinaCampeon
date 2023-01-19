@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -138,18 +139,23 @@ class MainActivity : ComponentActivity() {
                                 .background(Constants.VioletDark)
                         ) {
                             Dialog(onDismissRequest = { }) {
-                                Box(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .fillMaxHeight(0.5f)
-                                    .background(Constants.VioletDark),
-                                    contentAlignment = Alignment.Center,
-                                    content = {
-                                        AppInfoBlock(
-                                            info = viewModel.forceUpdateVersion.value,
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            paddingValues = PaddingValues(horizontal = MaterialTheme.spacing.medium)
-                                        )
-                                    })
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxHeight(0.5f)
+                                        .fillMaxWidth(),
+                                    shape = RoundedCornerShape(MaterialTheme.spacing.medium)
+                                ) {
+                                    Box(modifier = Modifier
+                                        .background(Constants.VioletDark),
+                                        contentAlignment = Alignment.Center,
+                                        content = {
+                                            AppInfoBlock(
+                                                info = viewModel.forceUpdateVersion.value,
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                paddingValues = PaddingValues(horizontal = MaterialTheme.spacing.medium)
+                                            )
+                                        })
+                                }
                             }
                         }
                     } else {

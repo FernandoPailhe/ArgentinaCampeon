@@ -18,7 +18,7 @@ class ShareImageUseCase @Inject constructor(
         val sendIntent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
             putParcelableArrayListExtra(Intent.EXTRA_STREAM, photoUriArray)
             type = "image/*"
-            putExtra(Intent.EXTRA_TEXT, text ?: "Hola")
+            putExtra(Intent.EXTRA_TEXT, text ?: "Reviví la tercerca ★★★ y bajate Argentina campeon del mundo la app")
             type = "image/png"
         }
         val shareIntent = Intent.createChooser(sendIntent, null)

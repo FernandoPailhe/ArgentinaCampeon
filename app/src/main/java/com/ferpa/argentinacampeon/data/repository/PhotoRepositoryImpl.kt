@@ -21,6 +21,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Response
 import java.time.LocalDateTime
 
@@ -186,8 +187,8 @@ class PhotoRepositoryImpl(
         return photoDao.getAppInfo().first().aboutUs?.sortedBy { it?.priority }
     }
 
-    override suspend fun getShareInfo(): List<ServerInfo?>? {
-        return photoDao.getAppInfo().first().share
+    override suspend fun getShareInfo(): ServerInfo? {
+        return photoDao.getAppInfo().first().share?.first()
     }
 
     override suspend fun getExtraInfo(): List<ServerInfo?>? {
