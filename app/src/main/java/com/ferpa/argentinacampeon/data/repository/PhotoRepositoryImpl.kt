@@ -202,8 +202,12 @@ class PhotoRepositoryImpl(
     override suspend fun insertNewPhotos(localLastInsertPhotoDate: String): Boolean {
         return try {
             photoSource.getNewPhotos(localLastInsertPhotoDate).forEach {
-                photoDao.insertLocalPhoto(it.toLocalPhoto())
-                Log.d("updateLocalPhotoList", it.photoUrl.toString())
+                if (photoDao.getLocalPhotoById(it.id) != null){
+                    updateLocalPhotoDetail(it)
+                } else {
+                    photoDao.insertLocalPhoto(it.toLocalPhoto())
+                    Log.d("updateLocalPhotoList", it.photoUrl.toString())
+                }
             }
             true
         } catch (e: Exception) {
