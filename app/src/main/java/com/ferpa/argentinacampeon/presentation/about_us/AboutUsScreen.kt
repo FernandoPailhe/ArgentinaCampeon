@@ -29,13 +29,12 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.ABOUT_US_LINK_CLICK
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.FORCE_UPDATE_CLICK
-import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Extensions.appVersion
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.domain.model.ServerInfo
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
-import com.ferpa.argentinacampeon.presentation.versus.components.TagCard
+import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.google.firebase.analytics.FirebaseAnalytics
 
 @SuppressLint("QueryPermissionsNeeded")

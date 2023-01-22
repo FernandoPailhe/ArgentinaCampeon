@@ -34,6 +34,8 @@ class MainViewModel @Inject constructor(
     private val updateLocalMatchListUseCase: UpdateLocalMatchListUseCase,
     private val getVersusListUseCase: GetVersusListUseCase,
     private val getFavoritePairListStateUseCase: GetFavoritePairListStateUseCase,
+    private val getLastVersionUseCase: GetLastVersionUseCase,
+    private val getUpdateVersionInfoUseCase: GetUpdateVersionInfoUseCase,
     @ApplicationContext context: Context
 ) : ViewModel() {
 
@@ -61,6 +63,12 @@ class MainViewModel @Inject constructor(
     private val _favoriteState = mutableStateOf(FavoritePairListState(isLoading = true))
     val favoriteState: State<FavoritePairListState> = _favoriteState
 
+    private val _isLastVersion = mutableStateOf(true)
+    val isLastVersion: MutableState<Boolean> = _isLastVersion
+
+    private val _updateVersionInfo = mutableStateOf(ServerInfo())
+    val updateVersionInfo: MutableState<ServerInfo> = _updateVersionInfo
+
     init {
         viewModelScope.launch {
             checkIsFirstTime()
@@ -76,7 +84,11 @@ class MainViewModel @Inject constructor(
                     result.data?.apply {
                         _versionOk.value = result.data <= context.appVersion()
                         Log.d("appVersion", versionOk.value.toString())
-                        getForceUpdateVersion()
+                        if (!versionOk.value) {
+                            getForceUpdateVersion()
+                        } else {
+                            checkLastVersion(context = context)
+                        }
                     }
                 }
                 is Resource.Error -> {
@@ -367,6 +379,38 @@ class MainViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun checkLastVersion(context: Context){
+        getLastVersionUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    result.data?.apply {
+                        _isLastVersion.value = result.data <= context.appVersion()
+                        Log.d("appVersion", isLastVersion.value.toString())
+                        getUpdateVersionInfo()
+                    }
+                }
+                is Resource.Error -> {
+                    _isLastVersion.value = true
+                    Log.d("appVersion", "no data from server")
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun getUpdateVersionInfo() {
+        getUpdateVersionInfoUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _updateVersionInfo.value = result.data ?: ServerInfo()
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    fun dismissUpdateDialog() {
+        _isLastVersion.value = true
     }
 
     companion object {

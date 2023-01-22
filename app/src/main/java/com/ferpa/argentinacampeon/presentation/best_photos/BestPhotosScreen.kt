@@ -98,7 +98,7 @@ fun BestPhotosScreen(
         if (state.error.isNotBlank()) {
             Text(
                 text = state.error,
-                color = Color.Red,
+                color = Constants.VioletDark,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()

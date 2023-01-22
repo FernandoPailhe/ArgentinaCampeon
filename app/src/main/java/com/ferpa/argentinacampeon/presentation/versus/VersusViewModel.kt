@@ -2,17 +2,18 @@ package com.ferpa.argentinacampeon.presentation.versus
 
 
 import android.content.Context
-import android.provider.Settings.Global.getString
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ferpa.argentinacampeon.R
+import com.ferpa.argentinacampeon.common.Extensions.appVersion
 import com.ferpa.argentinacampeon.common.Resource
 import com.ferpa.argentinacampeon.domain.businesslogic.*
 import com.ferpa.argentinacampeon.domain.model.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -24,7 +25,8 @@ class VersusViewModel @Inject constructor(
     private val switchFavoriteUseCase: SwitchFavoriteUseCase,
     private val downloadImageUseCase: DownloadImageUseCase,
     private val shareImageUseCase: ShareImageUseCase,
-    private val getShareInfoUseCase: GetShareInfoUseCase
+    private val getShareInfoUseCase: GetShareInfoUseCase,
+    @ApplicationContext context: Context
 ) : ViewModel() {
 
     private val _shareImageState = mutableStateOf(ShareImageState())

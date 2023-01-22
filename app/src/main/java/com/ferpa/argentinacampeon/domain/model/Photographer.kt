@@ -8,13 +8,14 @@ import com.ferpa.argentinacampeon.common.Constants.UNKNOWN_AUTHOR
 data class Photographer(
     @PrimaryKey
     val id: String = "",
-    val name: String? = "",
-    val country: String? = "",
-    val web: String? = "",
-    val source: String? = "",
-    val photos: List<String?>? = emptyList(),
-    val links: List<String?>? = emptyList(),
-    val lastUpdate: String? = ""
+    val name: String? = null,
+    val country: String? = null,
+    val web: String? = null,
+    val source: String? = null,
+    val links: List<String?>? = null,
+    val lastUpdate: String? = null
 )
 
 fun Photographer.getName() = this.name ?: UNKNOWN_AUTHOR
+
+fun Photographer.getFirstLink(): String? = if (!this.links.isNullOrEmpty()) this.links.first() else null

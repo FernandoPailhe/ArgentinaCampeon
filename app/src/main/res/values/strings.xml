@@ -11,6 +11,10 @@
     <string name="tags">Tags</string>
     <string name="unknown_error">Unknown error</string>
     <string name="photos">Fotos: </string>
+    <string name="later">Más tarde</string>
+    <string name="photographer">Ph: </string>
+    <string name="media">Medio: </string>
+    <string name="source">Fuente: </string>
     <string name="share">Reviví la tercerca ★★★ y bajate la app:\nhttps://play.google.com/store/apps/details?id=com.ferpa.argentinacampeon</string>
     <string name="empty_favorites">Todavía no guardaste ninguna foto en tu lista.\nCuando quieras guardarte una imamen, tocá este ícono que vas a encontrar sobre la foto:</string>
 </resources>

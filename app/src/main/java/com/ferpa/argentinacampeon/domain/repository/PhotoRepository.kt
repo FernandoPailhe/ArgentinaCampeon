@@ -38,6 +38,8 @@ interface PhotoRepository {
 
     suspend fun getMinVersion(): ServerInfo?
 
+    suspend fun getLastVersion(): ServerInfo?
+
     suspend fun insertNewPhotos(localLastInsertPhotoDate: String): Boolean
 
     suspend fun getTutorialVersusList(size: Int): List<Pair<Photo, Photo>>
@@ -79,7 +81,6 @@ interface PhotoRepository {
     suspend fun switchFavorite(photoId: String)
 
     suspend fun downloadImage(downloadPath: String): Response<ResponseBody>
-
 
     /**
      * MENU LISTS

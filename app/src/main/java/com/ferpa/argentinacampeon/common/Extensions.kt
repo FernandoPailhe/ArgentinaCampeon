@@ -1,6 +1,7 @@
 package com.ferpa.argentinacampeon.common
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.core.content.FileProvider
+import androidx.core.util.PatternsCompat
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.ADD_TO_FAVORITE
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.DELETE_FAVORITE
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
@@ -55,11 +57,50 @@ object Extensions {
         graphicsLayer(rotationZ = 360f * angleRatio)
     }
 
+    fun String.getUrlIconFromUrl(): String {
+        return if (this.contains("twitter")) {
+            "https://cdn-icons-png.flaticon.com/512/3256/3256013.png"
+        } else if (this.contains("instagram")) {
+            "https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+        } else if (this.contains("facebook")) {
+            "https://cdn-icons-png.flaticon.com/512/733/733547.png"
+        } else {
+            "https://cdn-icons-png.flaticon.com/512/1197/1197414.png"
+        }
+    }
+
     fun Context.appVersion(): String {
         return try {
             packageManager.getPackageInfo(packageName, 0).versionName
         } catch (ex: PackageManager.NameNotFoundException) {
             ""
+        }
+    }
+
+    fun Context.linkIntent(link: String) {
+        try {
+            if (PatternsCompat.EMAIL_ADDRESS
+                    .matcher(link)
+                    .matches()
+            ) {
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.data = Uri.parse("mailto:")
+                intent.putExtra(
+                    Intent.EXTRA_EMAIL,
+                    arrayOf(link.trim())
+                )
+                this.startActivity(intent)
+            } else {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(link)
+                this.startActivity(intent)
+            }
+        } catch (e: Exception) {
+            Log.e(
+                "Intent",
+                e.localizedMessage
+                    ?: "An unexpected error occurred"
+            )
         }
     }
 
@@ -80,17 +121,17 @@ object Extensions {
     }
 
 
-   /**
-    *  Extension function to log event in Firebase Analytics.
-    *  Call this function from a Fragment Class with String of event to log.
-    */
-    fun FirebaseAnalytics.logSingleEvent(event: String){
+    /**
+     *  Extension function to log event in Firebase Analytics.
+     *  Call this function from a Fragment Class with String of event to log.
+     */
+    fun FirebaseAnalytics.logSingleEvent(event: String) {
         val bundle = Bundle()
         bundle.putString("eventLog", event)
         this.logEvent(event, bundle)
     }
 
-    fun FirebaseAnalytics.logSwitchFavorite(oldStatus: Boolean){
+    fun FirebaseAnalytics.logSwitchFavorite(oldStatus: Boolean) {
         if (oldStatus) {
             this.logSingleEvent(DELETE_FAVORITE)
         } else {

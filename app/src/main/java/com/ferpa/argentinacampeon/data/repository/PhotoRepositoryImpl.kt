@@ -12,8 +12,6 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Constants.DATA_STORE_NAME
 import com.ferpa.argentinacampeon.common.Extensions.toHiddenPhotoList
-import com.ferpa.argentinacampeon.common.routes.ServerRoutes.BASE_URL
-import com.ferpa.argentinacampeon.common.routes.ServerRoutes.PHOTO_PATH
 import com.ferpa.argentinacampeon.data.remote.ArgentinaCampeonService
 import com.ferpa.argentinacampeon.data.local.PhotoDao
 import com.ferpa.argentinacampeon.data.remote.dto.*
@@ -21,7 +19,6 @@ import com.ferpa.argentinacampeon.domain.model.*
 import com.ferpa.argentinacampeon.domain.repository.PhotoRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.flow.*
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -199,6 +196,10 @@ class PhotoRepositoryImpl(
 
     override suspend fun getMinVersion(): ServerInfo? {
         return photoDao.getAppInfo().first().extra?.first { it?.priority == 100 }
+    }
+
+    override suspend fun getLastVersion(): ServerInfo? {
+        return photoDao.getAppInfo().first().extra?.first { it?.priority == 99 }
     }
 
     override suspend fun insertNewPhotos(localLastInsertPhotoDate: String): Boolean {

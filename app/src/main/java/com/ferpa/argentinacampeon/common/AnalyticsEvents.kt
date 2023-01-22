@@ -33,6 +33,9 @@ object AnalyticsEvents {
     const val FORCE_UPDATE_MESSAGE = "force_update_message"
     const val FORCE_UPDATE_CLICK = "force_update_click"
     const val UPDATE_MESSAGE = "update_message"
+    const val UPDATE_LATER = "update_later"
     const val UPDATE_CLICK = "update_click"
+    const val PHOTOGRAPHER_LINK = "ph_link_click"
+    const val MEDIA_LINK = "media_link_click"
 
 }

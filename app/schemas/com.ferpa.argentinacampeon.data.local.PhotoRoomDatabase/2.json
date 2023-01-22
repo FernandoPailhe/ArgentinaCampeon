@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "33e734e01731e0b42e037890e0f5ac9d",
+    "identityHash": "4ce085dadb66758988bf8bb1809e6a49",
     "entities": [
       {
         "tableName": "Photo",
@@ -128,7 +128,7 @@
       },
       {
         "tableName": "Player",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `displayName` TEXT, `name` TEXT NOT NULL, `nickName` TEXT, `birthday` TEXT, `position` TEXT, `nationalTeam` TEXT, `number` INTEGER, `team` TEXT, `profilePhotoUrl` TEXT, `lastUpdate` TEXT, `stats` TEXT, `localVotes` INTEGER NOT NULL, `localVersus` INTEGER NOT NULL, `localRank` REAL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `displayName` TEXT, `name` TEXT NOT NULL, `nickName` TEXT, `birthday` TEXT, `position` TEXT, `nationalTeam` TEXT, `number` INTEGER, `team` TEXT, `profilePhotoUrl` TEXT, `lastUpdate` TEXT, `stats` TEXT, `localVotes` INTEGER NOT NULL, `localVersus` INTEGER NOT NULL, `localRank` REAL, `photoCount` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -219,6 +219,12 @@
             "columnName": "localRank",
             "affinity": "REAL",
             "notNull": false
+          },
+          {
+            "fieldPath": "photoCount",
+            "columnName": "photoCount",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -380,7 +386,7 @@
       },
       {
         "tableName": "Photographer",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `country` TEXT, `web` TEXT, `source` TEXT, `photos` TEXT, `links` TEXT, `lastUpdate` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `country` TEXT, `web` TEXT, `source` TEXT, `links` TEXT, `lastUpdate` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -409,12 +415,6 @@
           {
             "fieldPath": "source",
             "columnName": "source",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "photos",
-            "columnName": "photos",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -459,12 +459,68 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "AppInfo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `welcome` TEXT, `tutorial` TEXT, `share` TEXT, `aboutUs` TEXT, `extra` TEXT, `lastUpdate` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "welcome",
+            "columnName": "welcome",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tutorial",
+            "columnName": "tutorial",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "share",
+            "columnName": "share",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "aboutUs",
+            "columnName": "aboutUs",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extra",
+            "columnName": "extra",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastUpdate",
+            "columnName": "lastUpdate",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '33e734e01731e0b42e037890e0f5ac9d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4ce085dadb66758988bf8bb1809e6a49')"
     ]
   }
 }

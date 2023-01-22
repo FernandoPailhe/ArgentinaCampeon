@@ -13,10 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ferpa.argentinacampeon.R
+import com.ferpa.argentinacampeon.common.AnalyticsEvents
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.SHARE_IMAGE
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VERSUS_MATCH_CLICK
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VERSUS_PLAYER_CLICK
@@ -24,6 +30,8 @@ import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Constants.POST_VOTE_DELAY
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.presentation.Screen
+import com.ferpa.argentinacampeon.presentation.about_us.AppInfoBlock
+import com.ferpa.argentinacampeon.presentation.about_us.contactUs
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
 import com.ferpa.argentinacampeon.presentation.main_activity.MainViewModel
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
@@ -151,8 +159,70 @@ fun VersusScreen(
             )
         }
         if (versusViewModel.shareImageState.value.error.isNotEmpty()) {
-            Dialog(onDismissRequest = { versusViewModel.closeDialog()}) {
+            Dialog(onDismissRequest = { versusViewModel.closeDialog() }) {
                 ErrorDialog(versusViewModel)
+            }
+        }
+        if (!mainViewModel.isLastVersion.value) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Constants.VioletDark)
+            ) {
+                Dialog(onDismissRequest = { mainViewModel.isLastVersion.value }) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth(),
+                        shape = RoundedCornerShape(MaterialTheme.spacing.medium)
+                    ) {
+                        Box(modifier = Modifier
+                            .background(Constants.VioletDark),
+                            contentAlignment = Alignment.Center,
+                            content = {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    AppInfoBlock(
+                                        info = mainViewModel.updateVersionInfo.value,
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        paddingValues = PaddingValues(horizontal = MaterialTheme.spacing.medium),
+                                        isAMessage = AnalyticsEvents.UPDATE_MESSAGE
+                                    )
+                                    Card(
+                                        modifier = Modifier
+                                            .padding(MaterialTheme.spacing.default),
+                                        shape = MaterialTheme.shapes.small,
+                                        backgroundColor = Constants.LightBlue,
+                                        elevation = 8.dp
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier
+                                                .clickable {
+                                                    firebaseAnalytics.let {
+                                                        it.logSingleEvent(
+                                                            AnalyticsEvents.FORCE_UPDATE_CLICK
+                                                        )
+                                                    }
+                                                    mainViewModel.dismissUpdateDialog()
+                                                },
+                                            horizontalArrangement = Arrangement.SpaceAround
+                                        ) {
+                                            Text(
+                                                text = stringResource(id = R.string.later),
+                                                fontWeight = FontWeight.SemiBold,
+                                                color = Color.White,
+                                                fontSize = 18.sp,
+                                                modifier = Modifier
+                                                    .padding(MaterialTheme.spacing.default),
+                                                textAlign = TextAlign.Center,
+                                                letterSpacing = 1.sp
+                                            )
+                                        }
+                                    }
+                                }
+                            })
+                    }
+                }
             }
         }
     }
