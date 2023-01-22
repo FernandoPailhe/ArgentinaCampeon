@@ -19,3 +19,19 @@ data class Photographer(
 fun Photographer.getName() = this.name ?: UNKNOWN_AUTHOR
 
 fun Photographer.getFirstLink(): String? = if (!this.links.isNullOrEmpty()) this.links.first() else null
+
+fun Photographer.toPhotographerTitle(): PhotographerTitle {
+    val photographerDisplayName = if (!this.name.isNullOrEmpty() && !this.source.isNullOrEmpty()) {
+        "${this.name} - ${this.source}"
+    } else if (!this.name.isNullOrEmpty()) {
+        this.name
+    }  else if (!this.source.isNullOrEmpty()) {
+        this.source
+    } else {
+        "Fuente desconocida"
+    }
+    return PhotographerTitle(
+        id = this.id,
+        name = photographerDisplayName
+    )
+}

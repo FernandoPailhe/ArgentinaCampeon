@@ -8,6 +8,19 @@ import retrofit2.Response
 
 interface PhotoRepository {
 
+    /**
+     * ADMIN
+     */
+    suspend fun getPhotosByState(rarity: Int): List<PhotoDto>
+
+    suspend fun getWorstPhotos(): List<PhotoDto>
+
+    suspend fun getPhotoDto(id: String): PhotoDto
+
+    suspend fun fullUpdatePhoto(photoDto: PhotoDto): Response<Any>
+
+    suspend fun updateState(id: String, rarity: Int):Response<Any>
+
     fun getFirstTime(): Flow<Boolean?>
 
     suspend fun checkFirstTime(): Boolean
@@ -60,7 +73,7 @@ interface PhotoRepository {
 
     suspend fun getPhotoDetail(id: String): PhotoDto
 
-    suspend fun getFavoritePairListState(pairIdList: List<Pair<String, String>>): List<Pair<Boolean,Boolean>>
+    suspend fun getFavoritePairListState(pairIdList: List<Pair<String, String>>): List<Pair<Boolean, Boolean>>
 
     suspend fun getFavoriteListState(idList: List<String>): List<Boolean>
 
@@ -89,7 +102,9 @@ interface PhotoRepository {
 
     suspend fun getPlayers(search: String): List<PlayerItem>
 
-    suspend fun getPhotographers(search: String): List<Photographer>
+    suspend fun getAllPlayers(): List<PlayerTitle>
+
+    suspend fun getPhotographers(): List<Photographer>
 
     suspend fun getTags(search: String): List<Tag>
 

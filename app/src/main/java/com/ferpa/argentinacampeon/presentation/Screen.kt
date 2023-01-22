@@ -47,6 +47,10 @@ sealed class Screen(val route: String) {
     object PhotoDetailScreenRoute : Screen("photo_detail_screen/{${PARAM_PHOTO_ID}}") {
         fun createRoute(photoId: String) = "photo_detail_screen/$photoId"
     }
+    object PhotoDtoEditScreen: Screen ("admin_photodto_edit/{${PARAM_PHOTO_ID}}") {
+        fun createRoute(photoId: String) = "admin_photodto_edit/$photoId"
+    }
+    object AdminPhotoDtoListScreen: Screen ("admin_photodto_list")
 
     object VersusScreenRoute : Screen("versus_screen")
 }

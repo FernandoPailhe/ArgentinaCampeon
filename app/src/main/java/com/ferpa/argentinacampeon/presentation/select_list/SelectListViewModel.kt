@@ -83,7 +83,7 @@ class SelectListViewModel @Inject constructor(
     }
 
     private fun getPhotographers() {
-        getPhotographersUseCase(search.value).onEach { result ->
+        getPhotographersUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     _selectListState.value = SelectListState(photographers = result.data)

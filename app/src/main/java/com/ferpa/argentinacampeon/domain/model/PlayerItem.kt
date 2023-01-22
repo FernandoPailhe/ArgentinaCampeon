@@ -6,3 +6,11 @@ data class PlayerItem(
     val photoUrl: String? = "",
     val photoCount: Int? = 0
 )
+
+fun PlayerItem.toPlayerTitle(): PlayerTitle {
+    return PlayerTitle(
+        id = this.id,
+        displayName = this.displayName,
+        nationalTeam = ""
+    )
+}

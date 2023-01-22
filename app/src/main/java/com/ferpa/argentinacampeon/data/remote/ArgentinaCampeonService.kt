@@ -18,7 +18,29 @@ import retrofit2.http.*
 interface ArgentinaCampeonService {
 
     @GET("{downloadPath}")
-    suspend fun downloadImage(@Path("downloadPath")downloadPath: String): Response<ResponseBody>
+    suspend fun downloadImage(@Path("downloadPath") downloadPath: String): Response<ResponseBody>
+
+    /**
+     * ADMIN CALLS
+     */
+    @GET("${PHOTO_BASE_ROUTE}/state")
+    suspend fun getPhotosByState(@Query("rarity") rarity: Int): List<PhotoDto>
+
+    @GET("${PHOTO_BASE_ROUTE}/worst")
+    suspend fun getWostPhotos(): List<PhotoDto>
+
+    @POST("${PHOTO_BASE_ROUTE}/update")
+    suspend fun fullUpdatePhoto(
+        @Body photoDto: PhotoDto,
+        @Query("full") full: Int
+    ): Response<Any>
+
+    @POST("${PHOTO_BASE_ROUTE}/state/{id}")
+    suspend fun updateState(
+        @Path("id") id: String,
+        @Query("postkey") postKey: String,
+        @Query("rarity") rarity: Int
+    ): Response<Any>
 
     /**
      * UPDATE STATUS
@@ -48,7 +70,10 @@ interface ArgentinaCampeonService {
     suspend fun getPhotoById(@Path("id") id: String): PhotoDto
 
     @GET("${PHOTO_BASE_ROUTE}${PLAYER_BASE_ROUTE}/{playerId}")
-    suspend fun getPhotosByPlayer(@Path("playerId") playerId: String, @Query("best") best: Int = 0): List<PhotoDto>
+    suspend fun getPhotosByPlayer(
+        @Path("playerId") playerId: String,
+        @Query("best") best: Int = 0
+    ): List<PhotoDto>
 
     @GET("${PHOTO_BASE_ROUTE}${PLAYER_BASE_ROUTE}/{playerId}?best=1")
     suspend fun getBestPhotosByPlayer(@Path("playerId") playerId: String): List<PhotoDto>

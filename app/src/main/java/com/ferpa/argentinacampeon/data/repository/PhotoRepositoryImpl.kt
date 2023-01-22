@@ -12,6 +12,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Constants.DATA_STORE_NAME
 import com.ferpa.argentinacampeon.common.Extensions.toHiddenPhotoList
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.POST_KEY
 import com.ferpa.argentinacampeon.data.remote.ArgentinaCampeonService
 import com.ferpa.argentinacampeon.data.local.PhotoDao
 import com.ferpa.argentinacampeon.data.remote.dto.*
@@ -40,6 +41,36 @@ class PhotoRepositoryImpl(
         val FIRST_TIME = booleanPreferencesKey("firstTime")
         val LOCAL_USER_VERSION = intPreferencesKey("userVersion")
     }
+
+    override suspend fun getPhotosByState(rarity: Int): List<PhotoDto> {
+        return photoSource.getPhotosByState(rarity)
+    }
+
+    override suspend fun getWorstPhotos(): List<PhotoDto> {
+        return photoSource.getWostPhotos()
+    }
+
+    override suspend fun getPhotoDto(id: String): PhotoDto {
+        return photoSource.getPhotoById(id)
+    }
+
+    override suspend fun fullUpdatePhoto(photoDto: PhotoDto): Response<Any> {
+        return photoSource.fullUpdatePhoto(photoDto, 1)
+    }
+
+    override suspend fun updateState(id: String, rarity: Int): Response<Any> {
+        return photoSource.updateState(id, POST_KEY, rarity)
+    }
+
+    /**
+     * ADMIN
+     */
+
+
+
+
+
+
 
     /**
      * Data Store Preferences
@@ -463,6 +494,10 @@ class PhotoRepositoryImpl(
         }
     }
 
+    override suspend fun getAllPlayers(): List<PlayerTitle> {
+        return photoDao.getAllPlayers().first().map { it.toPlayerTitle() }
+    }
+
     override suspend fun updatePlayersProfile(): Flow<Boolean> = flow {
         try {
             Log.d("updatePlayerPhoto", "is running")
@@ -484,7 +519,7 @@ class PhotoRepositoryImpl(
         }
     }.flowOn(defaultDispatcher)
 
-    override suspend fun getPhotographers(query: String): List<Photographer> {
+    override suspend fun getPhotographers(): List<Photographer> {
         return photoSource.getPhotographers()
     }
 

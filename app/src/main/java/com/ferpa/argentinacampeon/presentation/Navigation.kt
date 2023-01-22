@@ -27,6 +27,8 @@ import com.ferpa.argentinacampeon.common.Constants.PLAYERS
 import com.ferpa.argentinacampeon.common.Constants.TAGS
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.presentation.about_us.AboutUsScreen
+import com.ferpa.argentinacampeon.presentation.admin.edit.PhotoDtoEditScreen
+import com.ferpa.argentinacampeon.presentation.admin.list.AdminPhotoDtoListScreen
 import com.ferpa.argentinacampeon.presentation.best_photos.BestPhotosScreen
 import com.ferpa.argentinacampeon.presentation.favorites.FavoritePhotosScreen
 import com.ferpa.argentinacampeon.presentation.insertData.InsertDataScreen
@@ -97,6 +99,12 @@ fun Navigation(navController: NavHostController, mainViewModel: MainViewModel, p
         }
         composable(route = Screen.StoryScreenRoute.route) {
             InsertDataScreen()
+        }
+        composable(route = Screen.AdminPhotoDtoListScreen.route) {
+            AdminPhotoDtoListScreen(navController)
+        }
+        composable(route = Screen.PhotoDtoEditScreen.route) {
+            PhotoDtoEditScreen(navController)
         }
     }
 }

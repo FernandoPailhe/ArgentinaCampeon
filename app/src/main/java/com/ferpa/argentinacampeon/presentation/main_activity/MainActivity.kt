@@ -74,10 +74,9 @@ class MainActivity : ComponentActivity() {
                     if (viewModel.isFirstTime.value == UpdateLocalState(succes = false) && viewModel.versionOk.value) {
                         Scaffold(bottomBar = {
                             BottomNavigationBar(items = listOf(
-                                /*
                                 BottomNavItem(
                                     name = "Story",
-                                    route = Screen.StoryScreenRoute.route,
+                                    route = Screen.AdminPhotoDtoListScreen.route,
                                     icon = Icons.Default.MoreVert
                                 ),
                                 BottomNavItem(
@@ -85,7 +84,6 @@ class MainActivity : ComponentActivity() {
                                     route = Screen.PhotoDetailScreenRoute.route,
                                     icon = Icons.Default.Done
                                 ),
-                                 */
                                 BottomNavItem(
                                     name = stringResource(R.string.select),
                                     route = Screen.SelectListScreenRoute.route,

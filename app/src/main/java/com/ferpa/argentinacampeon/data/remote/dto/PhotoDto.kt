@@ -16,6 +16,7 @@ data class PhotoDto(
     val players: List<PlayerTitle?>? = null,
     val photographer: PhotographerTitle? = null,
     val tags: List<Tag?>? = null,
+    val votes: Long? = 1,
     val versus: Long? = 1,
     val rank: Double? = 0.0,
     val description: String? = null,
@@ -97,4 +98,26 @@ fun PhotoDto.getPhotoUrl(): String {
             "${BASE_URL}${PHOTO_PATH}/${this.photoUrl}"
         }
     }
+}
+
+fun PhotoDto.addPlayer(playerTitle: PlayerTitle): PhotoDto {
+    val list = if (this.players.isNullOrEmpty()) {
+        listOf<PlayerTitle>(playerTitle)
+    } else {
+        val tempList = this.players.toMutableList()
+        tempList.add(playerTitle)
+        tempList.toList()
+    }
+    return this.copy(players = list)
+}
+
+fun PhotoDto.removePlayer(playerTitle: PlayerTitle): PhotoDto {
+    val list = if (!this.players.isNullOrEmpty()) {
+        val tempList = this.players.toMutableList()
+        tempList.remove(playerTitle)
+        tempList.toList()
+    } else {
+        emptyList()
+    }
+    return this.copy(players = list)
 }

@@ -64,6 +64,9 @@ interface PhotoDao {
     @Query("SELECT * from player WHERE photoCount > 0 ORDER BY photoCount DESC")
     fun getPlayers(): Flow<List<Player>>
 
+    @Query("SELECT * from player ORDER BY photoCount DESC")
+    fun getAllPlayers(): Flow<List<Player>>
+
     @Query("SELECT * from player WHERE photoCount = -1 AND profilePhotoUrl IS NULL")
     fun getPlayersWithoutPhotoData(): Flow<List<Player>>
 

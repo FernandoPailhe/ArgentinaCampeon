@@ -1,9 +1,8 @@
-package com.ferpa.argentinacampeon.domain.businesslogic
+package com.ferpa.argentinacampeon.domain.businesslogic.admin
 
-import android.util.Log
 import com.ferpa.argentinacampeon.common.Resource
+import com.ferpa.argentinacampeon.data.remote.dto.PhotoDto
 import com.ferpa.argentinacampeon.domain.model.Photo
-import com.ferpa.argentinacampeon.domain.model.Photographer
 import com.ferpa.argentinacampeon.domain.repository.PhotoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -11,16 +10,15 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class GetPhotographersUseCase @Inject constructor(
+class GetPhotoDtoUseCase @Inject constructor(
     private val repository: PhotoRepository
 ) {
 
-    operator fun invoke(): Flow<Resource<List<Photographer>>> = flow {
+    operator fun invoke(id: String): Flow<Resource<PhotoDto>> = flow {
         try {
             emit(Resource.Loading())
-            val photographers = repository.getPhotographers()
-            Log.d("getPhotographers", photographers.size.toString())
-            emit(Resource.Success(photographers))
+            val photos = repository.getPhotoDto(id)
+            emit(Resource.Success(photos))
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
         } catch (e: IOException) {
