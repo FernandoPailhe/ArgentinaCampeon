@@ -21,6 +21,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.ferpa.argentinacampeon.R
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.FIRST_OPEN
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.FORCE_UPDATE_MESSAGE
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.common.LockScreenOrientation
@@ -84,11 +85,12 @@ class MainActivity : ComponentActivity() {
                                     route = Screen.PhotoDetailScreenRoute.route,
                                     icon = Icons.Default.Done
                                 ),
+                                 */
                                 BottomNavItem(
-                                    name = "List",
-                                    route = Screen.PhotoListScreenRoute.route,
+                                    name = stringResource(R.string.select),
+                                    route = Screen.SelectListScreenRoute.route,
                                     icon = Icons.Default.List
-                                ),*/
+                                ),
                                 BottomNavItem(
                                     name = stringResource(id = R.string.best),
                                     route = Screen.BestPhotosScreenRoute.route,
@@ -152,7 +154,8 @@ class MainActivity : ComponentActivity() {
                                             AppInfoBlock(
                                                 info = viewModel.forceUpdateVersion.value,
                                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                                paddingValues = PaddingValues(horizontal = MaterialTheme.spacing.medium)
+                                                paddingValues = PaddingValues(horizontal = MaterialTheme.spacing.medium),
+                                                isAMessage = FORCE_UPDATE_MESSAGE
                                             )
                                         })
                                 }

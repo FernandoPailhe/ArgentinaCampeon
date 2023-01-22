@@ -22,6 +22,8 @@ interface PhotoRepository {
 
     suspend fun updateLocalPlayersList(): Boolean
 
+    suspend fun updatePlayersProfile(): Flow<Boolean>
+
     suspend fun updateLocalMatchList(): Boolean
 
     suspend fun getWelcomeInfo(): List<ServerInfo?>?
@@ -77,5 +79,17 @@ interface PhotoRepository {
     suspend fun switchFavorite(photoId: String)
 
     suspend fun downloadImage(downloadPath: String): Response<ResponseBody>
+
+
+    /**
+     * MENU LISTS
+     */
+    suspend fun getMatches(): List<Match>
+
+    suspend fun getPlayers(search: String): List<PlayerItem>
+
+    suspend fun getPhotographers(search: String): List<Photographer>
+
+    suspend fun getTags(search: String): List<Tag>
 
 }

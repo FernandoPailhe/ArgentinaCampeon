@@ -12,6 +12,11 @@ object Constants {
     const val PARAM_TAG = "tag"
     const val PARAM_PHOTOGRAPHER_ID = "photographerId"
 
+    const val PARAM_LIST_TYPE = "listType"
+    const val MATCHES = "matches"
+    const val PLAYERS = "players"
+    const val PHOTOGRAPHERS = "photographers"
+    const val TAGS = "tags"
 
     const val NO_TAG_KEY = "no_tag"
 

@@ -80,7 +80,7 @@ fun Icons(
             Box() {
 
                 Icon(
-                    imageVector = Icons.Default.Send,
+                    imageVector = Icons.Default.Share,
                     tint = Constants.VioletTransparent,
                     contentDescription = "send",
                     modifier = Modifier
@@ -89,7 +89,7 @@ fun Icons(
                         .blur(2.dp)
                 )
                 Icon(
-                    imageVector = Icons.Default.Send,
+                    imageVector = Icons.Default.Share,
                     tint = Color.White,
                     contentDescription = "send",
                     modifier = Modifier

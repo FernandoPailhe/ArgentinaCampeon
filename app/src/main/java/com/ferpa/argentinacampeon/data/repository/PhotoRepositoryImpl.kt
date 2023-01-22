@@ -12,6 +12,8 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Constants.DATA_STORE_NAME
 import com.ferpa.argentinacampeon.common.Extensions.toHiddenPhotoList
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.BASE_URL
+import com.ferpa.argentinacampeon.common.routes.ServerRoutes.PHOTO_PATH
 import com.ferpa.argentinacampeon.data.remote.ArgentinaCampeonService
 import com.ferpa.argentinacampeon.data.local.PhotoDao
 import com.ferpa.argentinacampeon.data.remote.dto.*
@@ -19,9 +21,9 @@ import com.ferpa.argentinacampeon.domain.model.*
 import com.ferpa.argentinacampeon.domain.repository.PhotoRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.flow.*
 import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Response
 import java.time.LocalDateTime
 
@@ -202,7 +204,7 @@ class PhotoRepositoryImpl(
     override suspend fun insertNewPhotos(localLastInsertPhotoDate: String): Boolean {
         return try {
             photoSource.getNewPhotos(localLastInsertPhotoDate).forEach {
-                if (photoDao.getLocalPhotoById(it.id) != null){
+                if (photoDao.getLocalPhotoById(it.id) != null) {
                     updateLocalPhotoDetail(it)
                 } else {
                     photoDao.insertLocalPhoto(it.toLocalPhoto())
@@ -227,16 +229,30 @@ class PhotoRepositoryImpl(
 
     override suspend fun getVersusList(ignorePair: Pair<String, String>): List<Pair<Photo, Photo>> {
 
-        val versusPhotos = photoDao.getVersusPhoto().first()
-            .filterNot {
-                it.id == ignorePair.first || it.id == ignorePair.first
-            }
-            .sortedWith(compareBy(
-                { it.localVersus }, { it.rank }
-            ))
+        val noVotedVersusPhoto = photoDao.getVersusPhotoNoVoted().first().filterNot {
+            it.id == ignorePair.first || it.id == ignorePair.second
+        }.shuffled()
 
-        val firstList = versusPhotos.subList(0, versusPhotos.size / 2).shuffled()
-        val secondList = versusPhotos.subList(versusPhotos.size / 2, versusPhotos.size).shuffled()
+        return if (noVotedVersusPhoto.size > 10) {
+            if (noVotedVersusPhoto.size > 30 ) {
+                getPairList(noVotedVersusPhoto.subList(0,29))
+            } else {
+                getPairList(noVotedVersusPhoto)
+            }
+        } else {
+            val versusPhotos = photoDao.getVersusPhoto().first()
+                .filterNot {
+                    it.id == ignorePair.first || it.id == ignorePair.second
+                }
+                .sortedByDescending { it.rank }
+            getPairList(versusPhotos)
+        }
+
+    }
+
+    private fun getPairList(list: List<Photo>): List<Pair<Photo, Photo>> {
+        val firstList = list.subList(0, list.size / 2).shuffled()
+        val secondList = list.subList(list.size / 2, list.size).shuffled()
         var randomPair = firstList.mapIndexed { index, localPhotoTitle ->
             if (index / 2 == 0) {
                 Pair(localPhotoTitle, secondList[index])
@@ -247,11 +263,11 @@ class PhotoRepositoryImpl(
             it.first.versusIds.contains(it.second.id)
         }
 
-        if (randomPair.isEmpty()) {
-            val newVersusList = versusPhotos.shuffled()
-            val firstListSecondChance = newVersusList.subList(0, versusPhotos.size / 2).shuffled()
+        if (randomPair.size < 2) {
+            val newVersusList = list.shuffled()
+            val firstListSecondChance = newVersusList.subList(0, list.size / 2).shuffled()
             val secondListSecondChance =
-                newVersusList.subList(versusPhotos.size / 2, versusPhotos.size).shuffled()
+                newVersusList.subList(list.size / 2, list.size).shuffled()
             randomPair = firstListSecondChance.mapIndexed { index, localPhotoTitle ->
                 Pair(localPhotoTitle, secondListSecondChance[index])
             }.filterNot {
@@ -409,6 +425,70 @@ class PhotoRepositoryImpl(
 
     override suspend fun downloadImage(downloadPath: String): Response<ResponseBody> {
         return photoSource.downloadImage(downloadPath)
+    }
+
+    override suspend fun getMatches(): List<Match> {
+        /*
+        val list = listOf(
+            "/gens/colo (27).jpeg",
+            "/mexico/afa_mexico (22).jpeg",
+            "/polonia/afa_polonia (21).jpeg",
+            "/octavos/afa_octavos (25).jpeg",
+            "/cuartos/afa_cuartos (23).jpeg",
+            "/semifinal/Julian_2do_gol2.jpg",
+            "/final/afa_final (20).jpeg",
+            "/final/afa_final (6).jpeg",
+            "/arg/antena_santi (1).jpeg",
+            "/arg/afa_arg (1).jpeg",
+            "",
+            "",
+            ""
+        )
+         */
+        return photoDao.getMatches().first().sortedBy { it.date }
+        /*
+        .mapIndexed { index, match ->
+        match.addUrl("${BASE_URL}${PHOTO_PATH}${list[index]}")
+    }
+
+         */
+    }
+
+    override suspend fun getPlayers(search: String): List<PlayerItem> {
+        return if (search.isEmpty()) {
+            photoDao.getPlayers().first().map { it.toPlayerItem() }
+        } else {
+            photoDao.getPlayersWithSearch(search).first().map { it.toPlayerItem() }
+        }
+    }
+
+    override suspend fun updatePlayersProfile(): Flow<Boolean> = flow {
+        try {
+            Log.d("updatePlayerPhoto", "is running")
+            photoDao.getPlayersWithoutPhotoData().first().forEach {
+                val photoData = photoSource.getPhotosByPlayer(it.id, 1)
+                if (photoData.isNotEmpty()){
+                    photoDao.updateLocalPlayer(
+                        it.copy(
+                            profilePhotoUrl = photoData.first().getPhotoUrl(),
+                            photoCount = photoData.first().versus?.toInt() ?: 0
+                        )
+                    )
+                }
+            }
+            emit(true)
+        } catch (e: Exception) {
+            Log.d("updatePhotoPlayerList", e.toString())
+            emit(false)
+        }
+    }.flowOn(defaultDispatcher)
+
+    override suspend fun getPhotographers(query: String): List<Photographer> {
+        return photoSource.getPhotographers()
+    }
+
+    override suspend fun getTags(query: String): List<Tag> {
+        return photoSource.getTags()
     }
 
 }

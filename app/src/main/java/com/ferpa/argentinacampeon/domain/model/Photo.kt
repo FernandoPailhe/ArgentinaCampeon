@@ -90,8 +90,8 @@ fun Photo.getDownloadUrl(): String? {
 
 fun Photo.getLocalDrawableResource(): Int {
     return when (this.id) {
-        "c567da10-3c75-4262-be60-91f73b41f562" -> R.drawable.tuto_enzo
-        "40ae9632-bf02-40e6-b30d-9a51ba8ade37" -> R.drawable.tuto_dibu
+        "c567da10-3c75-4262-be60-91f73b41f562" -> R.drawable.tuto_enzo //No deberian estar más en el server
+        "40ae9632-bf02-40e6-b30d-9a51ba8ade37" -> R.drawable.tuto_dibu //No deberian estar más en el server
         "10febc0b-6c86-417f-bda5-ebcb3679a09e" -> R.drawable.tuto_julian
         "4e31c2b9-49c8-4291-aeae-d15e818a0103" -> R.drawable.tuto_fideo
         else -> R.drawable.coronacion_cerca

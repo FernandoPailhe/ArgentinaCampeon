@@ -40,6 +40,9 @@ interface PhotoDao {
     @Query("SELECT * from photo WHERE rarity > -1 ORDER BY localVersus ASC LIMIT 30")
     fun getVersusPhoto(): Flow<List<Photo>>
 
+    @Query("SELECT * from photo WHERE rarity > -1 AND localVersus = 0 ORDER BY rank DESC LIMIT 60")
+    fun getVersusPhotoNoVoted(): Flow<List<Photo>>
+
     @Query("SELECT * from photo WHERE insertDate = 1")
     fun getTutorialVersusPhoto(): Flow<List<Photo>>
 
@@ -58,8 +61,14 @@ interface PhotoDao {
     /**
      * PLAYER TABLE
      */
-    @Query("SELECT * from player")
+    @Query("SELECT * from player WHERE photoCount > 0 ORDER BY photoCount DESC")
     fun getPlayers(): Flow<List<Player>>
+
+    @Query("SELECT * from player WHERE photoCount = -1 AND profilePhotoUrl IS NULL")
+    fun getPlayersWithoutPhotoData(): Flow<List<Player>>
+
+    @Query("SELECT * from player  WHERE (displayName LIKE :search OR name LIKE :search OR nickName LIKE :search)  ORDER BY photoCount DESC")
+    fun getPlayersWithSearch(search: String): Flow<List<Player>>
 
     @Query("SELECT lastUpdate from player ORDER BY lastUpdate DESC LIMIT 1")
     fun getLastPlayerUpdateDate(): Flow<String>
@@ -78,6 +87,9 @@ interface PhotoDao {
      */
     @Query("SELECT * from `match`")
     fun getMatches(): Flow<List<Match>>
+
+    @Query("SELECT * from `match` WHERE (tournamentInstance LIKE :search OR teamA LIKE :search OR teamB LIKE :search)")
+    fun getMatchesWithSearch(search: String): Flow<List<Match>>
 
     @Query("SELECT lastUpdate from `match` ORDER BY lastUpdate DESC LIMIT 1")
     fun getLastMatchUpdateDate(): Flow<String>

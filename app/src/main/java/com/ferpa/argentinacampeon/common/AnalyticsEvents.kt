@@ -26,5 +26,13 @@ object AnalyticsEvents {
     const val BEST_BLOCKED_PHOTO_CLICK = "best_blocked_photo_click"
     const val LIST_PHOTO_CLICK = "list_photo_click"
     const val ABOUT_US_LINK_CLICK = "about_us_link_click"
+    const val SELECT_LIST_PLAYER_CLICK = "select_list_player_click"
+    const val SELECT_LIST_MATCH_CLICK = "select_list_match_click"
+    const val SELECT_LIST_PHOTOGRAPHER_CLICK = "select_list_photographer_click"
+    const val SELECT_LIST_TAG_CLICK = "select_list_tag_click"
+    const val FORCE_UPDATE_MESSAGE = "force_update_message"
+    const val FORCE_UPDATE_CLICK = "force_update_click"
+    const val UPDATE_MESSAGE = "update_message"
+    const val UPDATE_CLICK = "update_click"
 
 }

@@ -39,7 +39,11 @@ fun MatchInfoBox(
             "Ahmed bin Ali" -> R.drawable.ahmed
             "Lusail" -> R.drawable.lusail
             "974" -> R.drawable.stadium_974
-            else -> R.drawable.argentina_backdrop
+            else ->  if (match.tournamentInstance == "La locura argentina") {
+                R.drawable.argentina_backdrop
+            } else {
+                R.drawable.recibimiento2
+            }
         }
 
         when (match.stadiumId) {

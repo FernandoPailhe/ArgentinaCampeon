@@ -11,7 +11,7 @@ class GetShareInfoUseCase @Inject constructor(
         return try {
             var info = ""
             repository.getShareInfo()?.let {
-                val info = it.content ?: ""
+                val info = it.content ?: "Reviví la tercerca ★★★ y bajate la app:\nhttps://play.google.com/store/apps/details?id=com.ferpa.argentinacampeon"
             }
             info
         } catch (e: Exception) {

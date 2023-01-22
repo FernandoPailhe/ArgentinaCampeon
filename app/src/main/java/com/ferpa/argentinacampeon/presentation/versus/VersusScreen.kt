@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.SHARE_IMAGE
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VERSUS_MATCH_CLICK
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VERSUS_PLAYER_CLICK
 import com.ferpa.argentinacampeon.common.Constants
@@ -130,6 +131,7 @@ fun VersusScreen(
                                     }
                                 },
                                 onSendClick = { photo ->
+                                    firebaseAnalytics.logSingleEvent(SHARE_IMAGE)
                                     versusViewModel.shareImage(photo, context)
                                 },
                                 firebaseAnalytics = firebaseAnalytics

@@ -4,16 +4,22 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BookmarkAdd
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -76,20 +82,29 @@ fun FavoritePhotosScreen(
         if (state.photos.isEmpty() && !state.isLoading) {
             Box(modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center, content = {
-                Text(
-                    text = stringResource(id = empty_favorites),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    textAlign = TextAlign.Center,
-                    color = Constants.VioletDark,
-                    modifier = Modifier
-                        .padding(
-                            horizontal = MaterialTheme.spacing.medium,
-                            vertical = MaterialTheme.spacing.medium
+                    Column(horizontalAlignment = Alignment.CenterHorizontally){
+                        Text(
+                            text = stringResource(id = empty_favorites),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = TextAlign.Center,
+                            color = Constants.VioletDark,
+                            modifier = Modifier
+                                .padding(
+                                    horizontal = MaterialTheme.spacing.medium,
+                                    vertical = MaterialTheme.spacing.medium
+                                )
+                                .fillMaxWidth(),
+                            overflow = TextOverflow.Ellipsis,
                         )
-                        .fillMaxWidth(),
-                    overflow = TextOverflow.Ellipsis,
-                )
+                        Icon(
+                            imageVector = Icons.Default.BookmarkAdd,
+                            tint = Constants.VioletDark,
+                            contentDescription = "send",
+                            modifier = Modifier
+                                .size(Constants.ICON_SIZE.dp)
+                        )
+                    }
             })
         }
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))

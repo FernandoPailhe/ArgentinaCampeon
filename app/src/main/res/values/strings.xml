@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">Campeón del Mundo</string>
-    <string name="favorites">Favoritos</string>
+    <string name="favorites">Tu lista</string>
     <string name="best">Top 20</string>
+    <string name="select">Listados</string>
     <string name="versus">Duelo</string>
     <string name="search">Buscar</string>
+    <string name="matches">Partidos</string>
+    <string name="players">Jugadores</string>
+    <string name="photographers">Fotógrafos</string>
+    <string name="tags">Tags</string>
     <string name="unknown_error">Unknown error</string>
-    <string name="empty_favorites">Todavía no agregaste ninguna foto\na tu lista de favoritos.</string>
+    <string name="photos">Fotos: </string>
+    <string name="share">Reviví la tercerca ★★★ y bajate la app:\nhttps://play.google.com/store/apps/details?id=com.ferpa.argentinacampeon</string>
+    <string name="empty_favorites">Todavía no guardaste ninguna foto en tu lista.\nCuando quieras guardarte una imamen, tocá este ícono que vas a encontrar sobre la foto:</string>
 </resources>

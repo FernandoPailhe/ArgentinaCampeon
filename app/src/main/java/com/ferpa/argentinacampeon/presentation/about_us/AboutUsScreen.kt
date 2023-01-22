@@ -28,12 +28,14 @@ import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.ABOUT_US_LINK_CLICK
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.FORCE_UPDATE_CLICK
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Extensions.appVersion
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.domain.model.ServerInfo
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
+import com.ferpa.argentinacampeon.presentation.versus.components.TagCard
 import com.google.firebase.analytics.FirebaseAnalytics
 
 @SuppressLint("QueryPermissionsNeeded")
@@ -114,8 +116,10 @@ fun AppInfoBlock(
     firebaseAnalytics: FirebaseAnalytics? = null,
     context: Context = LocalContext.current,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    paddingValues: PaddingValues = PaddingValues(0.dp)
+    paddingValues: PaddingValues = PaddingValues(0.dp),
+    isAMessage: String = ""
 ) {
+    if (isAMessage.isNotEmpty()) firebaseAnalytics?.logSingleEvent(isAMessage)
     Column(
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = horizontalAlignment,
@@ -131,6 +135,7 @@ fun AppInfoBlock(
             )
         }
         if (!info.title.isNullOrEmpty() && info.title != "minVersion") {
+            if (isAMessage.isEmpty()) Divider(color = Constants.LightBlueTransparent)
             Text(
                 text = info.title,
                 fontSize = 14.sp,
@@ -152,38 +157,80 @@ fun AppInfoBlock(
             )
         }
         if (!info.link.isNullOrEmpty()) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = MaterialTheme.spacing.default)
-                    .clickable {
-                        firebaseAnalytics?.let { it.logSingleEvent(ABOUT_US_LINK_CLICK) }
-                        contactUs(info.link, context)
-                    },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(modifier = Modifier.padding(start = MaterialTheme.spacing.small)) {
-                    info.iconUrl?.let {
-                        GlideImage(
-                            model = it,
-                            contentDescription = info.title,
+            if (info.dateCondition != null && info.dateCondition.contains("button")) {
+                Card(
+                    modifier = Modifier
+                        .padding(MaterialTheme.spacing.default),
+                    shape = MaterialTheme.shapes.small,
+                    backgroundColor = Constants.LightBlue,
+                    elevation = 8.dp
+                ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .clickable {
+                            firebaseAnalytics?.let { it.logSingleEvent(FORCE_UPDATE_CLICK) }
+                            contactUs(info.link, context)
+                        },
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                        Box(modifier = Modifier.padding(MaterialTheme.spacing.default)) {
+                            info.iconUrl?.let {
+                                GlideImage(
+                                    model = it,
+                                    contentDescription = info.title,
+                                    modifier = Modifier
+                                        .size(Constants.ICON_SIZE.dp),
+                                    contentScale = ContentScale.Fit,
+                                )
+                            }
+                        }
+                        Text(
+                            text = info.dateCondition.split("=").last(),
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White,
+                            fontSize = 18.sp,
                             modifier = Modifier
-                                .size(Constants.ICON_SIZE.dp)
-                                .padding(MaterialTheme.spacing.small),
-                            contentScale = ContentScale.Fit,
+                                .padding(end = MaterialTheme.spacing.default),
+                            textAlign = TextAlign.Center,
+                            letterSpacing = 1.sp
                         )
                     }
                 }
-                Text(
-                    text = info.link,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Light,
-                    color = Color.White,
+            } else {
+                Row(
                     modifier = Modifier
-                        .padding(MaterialTheme.spacing.default),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
+                        .fillMaxWidth()
+                        .padding(bottom = MaterialTheme.spacing.default)
+                        .clickable {
+                            firebaseAnalytics?.let { it.logSingleEvent(ABOUT_US_LINK_CLICK) }
+                            contactUs(info.link, context)
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(modifier = Modifier.padding(start = MaterialTheme.spacing.small)) {
+                        info.iconUrl?.let {
+                            GlideImage(
+                                model = it,
+                                contentDescription = info.title,
+                                modifier = Modifier
+                                    .size(Constants.ICON_SIZE.dp)
+                                    .padding(MaterialTheme.spacing.small),
+                                contentScale = ContentScale.Fit,
+                            )
+                        }
+                    }
+                    Text(
+                        text = info.link,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Light,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(MaterialTheme.spacing.default),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                }
             }
         }
     }

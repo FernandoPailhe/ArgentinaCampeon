@@ -22,19 +22,17 @@ data class Match(
     val extra: String? = "",
 )
 
-fun Match.getMatchTitle(): String = "${this.tournamentInstance}: ${this.teamA} vs. ${this.teamB}"
-
 fun Match.getScore(): Pair<String, String> {
     val scoreItems = this.score?.split(" - ", " (")
     Log.d("getScore", scoreItems?.size.toString())
     return when (scoreItems?.size) {
         2 -> {
-            Pair(scoreItems[0],scoreItems[1])
+            Pair(scoreItems[0], scoreItems[1])
         }
         4 -> {
             Pair(
-             scoreItems[0][0] + " (${scoreItems[2][0]})",
-             scoreItems[1][0] + " (${scoreItems[3][0]})"
+                scoreItems[0][0] + " (${scoreItems[2][0]})",
+                scoreItems[1][0] + " (${scoreItems[3][0]})"
             )
         }
         else -> {
@@ -50,16 +48,53 @@ fun Match.getTeamsAndScore(): Pair<String, String> {
         2 -> {
             Pair(
                 this.teamA + System.getProperty("line.separator") + scoreItems[0],
-                this.teamB + System.getProperty("line.separator") + scoreItems[1])
+                this.teamB + System.getProperty("line.separator") + scoreItems[1]
+            )
         }
         4 -> {
             Pair(
-                this.teamA + System.getProperty("line.separator") + scoreItems[0][0] + System.getProperty("line.separator") + "(${scoreItems[2][0]})",
-                this.teamB + System.getProperty("line.separator") + scoreItems[1][0] + System.getProperty("line.separator") + "(${scoreItems[3][0]})"
+                this.teamA + System.getProperty("line.separator") + scoreItems[0][0] + System.getProperty(
+                    "line.separator"
+                ) + "(${scoreItems[2][0]})",
+                this.teamB + System.getProperty("line.separator") + scoreItems[1][0] + System.getProperty(
+                    "line.separator"
+                ) + "(${scoreItems[3][0]})"
             )
         }
         else -> {
             Pair("", "")
         }
+    }
+}
+
+fun Match.toMatchTitle(): MatchTitle {
+    val title = if (this.teamA.isNullOrEmpty() || this.teamB.isNullOrEmpty()) {
+        this.tournamentInstance
+    } else "${this.tournamentInstance}: ${this.teamA} vs. ${this.teamB}"
+    return MatchTitle(
+        id = this.id,
+        date = this.date ?: "",
+        title = title,
+        score = this.score
+    )
+}
+
+fun Match.getMatchTitle(): String {
+    return if (this.teamA.isNullOrEmpty() || this.teamB.isNullOrEmpty()) {
+        this.tournamentInstance ?: ""
+    } else {
+        "${this.tournamentInstance}: ${this.teamA} vs. ${this.teamB}"
+    }
+}
+
+fun Match.addUrl(url: String): Match = this.copy(extra = url)
+
+fun Match.getItemTitle(): String {
+    return if (this.teamA.isNullOrEmpty() || this.teamB.isNullOrEmpty()) {
+        this.tournamentInstance ?: ""
+    } else if (this.teamA == "Argentina") {
+        this.teamB
+    } else {
+        this.teamA
     }
 }

@@ -1,5 +1,6 @@
 package com.ferpa.argentinacampeon.domain.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ferpa.argentinacampeon.data.remote.dto.PlayerDto
@@ -22,6 +23,8 @@ data class Player(
     val localVotes: Int = 0,
     val localVersus: Int = 0,
     val localRank: Double? = 0.0,
+    @ColumnInfo
+    val photoCount: Int = -1
 )
 
 fun Player.updateVoteWin(): Player  {
@@ -51,6 +54,23 @@ fun Player.toPlayerDto(): PlayerDto {
         profilePhotoUrl = this.profilePhotoUrl,
         lastUpdate = this.lastUpdate,
         stats = this.stats
+    )
+}
+
+fun Player.toPlayerTitle(): PlayerTitle {
+    return PlayerTitle(
+        id = this.id,
+        displayName = this.displayName,
+        nationalTeam = this.nationalTeam
+    )
+}
+
+fun Player.toPlayerItem(): PlayerItem {
+    return PlayerItem(
+        id = this.id,
+        displayName = this.displayName,
+        photoUrl = this.profilePhotoUrl,
+        photoCount = this.photoCount
     )
 }
 

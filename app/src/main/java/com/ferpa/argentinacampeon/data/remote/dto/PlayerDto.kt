@@ -14,7 +14,7 @@ data class PlayerDto(
     val nationalTeam: String? = "",
     val number: Int? = null,
     val team: String? = "",
-    val profilePhotoUrl: String? = "",
+    val profilePhotoUrl: String? = null,
     val lastUpdate: String? = "",
     val stats: Stats? = null
 )

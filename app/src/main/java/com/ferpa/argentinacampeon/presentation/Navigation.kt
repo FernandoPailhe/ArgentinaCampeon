@@ -21,6 +21,10 @@ import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_PHOTO_DETAIL
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_TOP
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_VERSUS
 import com.ferpa.argentinacampeon.common.Constants
+import com.ferpa.argentinacampeon.common.Constants.MATCHES
+import com.ferpa.argentinacampeon.common.Constants.PHOTOGRAPHERS
+import com.ferpa.argentinacampeon.common.Constants.PLAYERS
+import com.ferpa.argentinacampeon.common.Constants.TAGS
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.presentation.about_us.AboutUsScreen
 import com.ferpa.argentinacampeon.presentation.best_photos.BestPhotosScreen
@@ -29,6 +33,7 @@ import com.ferpa.argentinacampeon.presentation.insertData.InsertDataScreen
 import com.ferpa.argentinacampeon.presentation.main_activity.MainViewModel
 import com.ferpa.argentinacampeon.presentation.photo_detail.PhotoDetailScreen
 import com.ferpa.argentinacampeon.presentation.photo_list.PhotoListScreen
+import com.ferpa.argentinacampeon.presentation.select_list.SelectListScreen
 import com.ferpa.argentinacampeon.presentation.versus.VersusScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
@@ -46,9 +51,25 @@ fun Navigation(navController: NavHostController, mainViewModel: MainViewModel, p
             firebaseAnalytics.logSingleEvent(NAV_PHOTO_DETAIL)
             PhotoDetailScreen(navController, firebaseAnalytics)
         }
-        composable(route = Screen.PhotoListScreenRoute.route) {
+        composable(route = Screen.SelectListScreenRoute.route) {
             firebaseAnalytics.logSingleEvent(NAV_LIST)
-            PhotoListScreen(navController, firebaseAnalytics)
+            SelectListScreen(navController, firebaseAnalytics)
+        }
+        composable(route = Screen.SelectMatchesListScreenRoute.route) {
+            firebaseAnalytics.logSingleEvent(NAV_LIST)
+            SelectListScreen(navController, firebaseAnalytics)
+        }
+        composable(route = Screen.SelectPlayersListScreenRoute.route) {
+            firebaseAnalytics.logSingleEvent(NAV_LIST)
+            SelectListScreen(navController, firebaseAnalytics)
+        }
+        composable(route = Screen.SelectPhotographersListScreenRoute.route) {
+            firebaseAnalytics.logSingleEvent(NAV_LIST)
+            SelectListScreen(navController, firebaseAnalytics)
+        }
+        composable(route = Screen.SelectTagsListScreenRoute.route) {
+            firebaseAnalytics.logSingleEvent(NAV_LIST)
+            SelectListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.PhotoListByPlayerScreenRoute.route) {
             firebaseAnalytics.logSingleEvent(NAV_LIST)

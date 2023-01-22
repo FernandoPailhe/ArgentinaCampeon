@@ -16,6 +16,7 @@ data class PhotoDto(
     val players: List<PlayerTitle?>? = null,
     val photographer: PhotographerTitle? = null,
     val tags: List<Tag?>? = null,
+    val versus: Long? = 1,
     val rank: Double? = 0.0,
     val description: String? = null,
     val photoType: String? = null,

@@ -2,10 +2,13 @@ package com.ferpa.argentinacampeon.presentation.versus
 
 
 import android.content.Context
+import android.provider.Settings.Global.getString
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ferpa.argentinacampeon.R
 import com.ferpa.argentinacampeon.common.Resource
 import com.ferpa.argentinacampeon.domain.businesslogic.*
 import com.ferpa.argentinacampeon.domain.model.*
@@ -50,7 +53,7 @@ class VersusViewModel @Inject constructor(
                     is Resource.Success -> {
                         result.data?.let {
                             _shareImageState.value = ShareImageState(image = it)
-                            val text = photo.photographer?.share() + System.getProperty("line.separator") + (getShareInfoUseCase() ?: "")
+                            val text = photo.photographer?.share() + System.getProperty("line.separator") + context.getString(R.string.share)
                             shareImageState.value.image?.let { it1 ->
                                 shareImageUseCase(
                                     it1,
