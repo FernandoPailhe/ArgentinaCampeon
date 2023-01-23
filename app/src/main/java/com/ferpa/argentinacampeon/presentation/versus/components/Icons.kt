@@ -48,6 +48,17 @@ fun Icons(
                     .padding(MaterialTheme.spacing.small)
                     .size(ICON_SIZE.dp)
             )
+            Icon(
+                imageVector = Icons.Default.Share,
+                tint = Color.White,
+                contentDescription = "send",
+                modifier = Modifier
+                    .clickable {
+                        onSendClick()
+                    }
+                    .padding(MaterialTheme.spacing.small)
+                    .size(ICON_SIZE.dp)
+            )
         }
     } else {
         Column(

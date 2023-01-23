@@ -7,17 +7,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.ferpa.argentinacampeon.common.AnalyticsEvents.SHARE_IMAGE
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.VERSUS_SHARE_IMAGE
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VOTE_BOTTOM
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VOTE_TOP
-import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.common.Extensions.logSwitchFavorite
 import com.ferpa.argentinacampeon.domain.model.Photo
 import com.ferpa.argentinacampeon.domain.model.Vote
-import com.ferpa.argentinacampeon.domain.model.getDownloadUrl
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
-import com.google.android.gms.dynamic.IFragmentWrapper
 import com.google.firebase.analytics.FirebaseAnalytics
 
 
@@ -79,7 +76,7 @@ fun PairPhotoItem(
                             onBookmarkClick(photoPair.first.id)
                         },
                         onSendClick = {
-                            firebaseAnalytics.logSingleEvent(SHARE_IMAGE)
+                            firebaseAnalytics.logSingleEvent(VERSUS_SHARE_IMAGE)
                             onSendClick(photoPair.first)
                         }
                     )
@@ -113,7 +110,7 @@ fun PairPhotoItem(
                             onBookmarkClick(photoPair.second.id)
                         },
                         onSendClick = {
-                            firebaseAnalytics.logSingleEvent(SHARE_IMAGE)
+                            firebaseAnalytics.logSingleEvent(VERSUS_SHARE_IMAGE)
                             onSendClick(photoPair.second)
                         }
                     )

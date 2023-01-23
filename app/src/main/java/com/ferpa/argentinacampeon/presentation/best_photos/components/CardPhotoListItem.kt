@@ -41,7 +41,8 @@ fun CardPhotoListItem(
     onPlayerClick: (String) -> Unit = {},
     onMatchClick: (String) -> Unit = {},
     onTagClick: (String) -> Unit = {},
-    onBookMarkClick: (String) -> Unit = {}
+    onBookMarkClick: (String) -> Unit = {},
+    onSendClick: (Photo) -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -104,7 +105,8 @@ fun CardPhotoListItem(
                             Icons(
                                 isFavorite = isFavorite,
                                 isPhotoCard = true,
-                                onBookmarkClick = { onBookMarkClick(photo.id) }
+                                onBookmarkClick = { onBookMarkClick(photo.id) },
+                                onSendClick = { onSendClick(photo) }
                             )
                         }
                     })

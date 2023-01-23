@@ -23,20 +23,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ferpa.argentinacampeon.R
 import com.ferpa.argentinacampeon.common.AnalyticsEvents
-import com.ferpa.argentinacampeon.common.AnalyticsEvents.SHARE_IMAGE
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VERSUS_MATCH_CLICK
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.VERSUS_PLAYER_CLICK
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.VERSUS_SHARE_IMAGE
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Constants.POST_VOTE_DELAY
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.presentation.Screen
 import com.ferpa.argentinacampeon.presentation.about_us.AppInfoBlock
-import com.ferpa.argentinacampeon.presentation.about_us.contactUs
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
 import com.ferpa.argentinacampeon.presentation.main_activity.MainViewModel
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.presentation.versus.components.PairPhotoItem
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.VerticalPager
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -139,7 +140,7 @@ fun VersusScreen(
                                     }
                                 },
                                 onSendClick = { photo ->
-                                    firebaseAnalytics.logSingleEvent(SHARE_IMAGE)
+                                    firebaseAnalytics.logSingleEvent(VERSUS_SHARE_IMAGE)
                                     versusViewModel.shareImage(photo, context)
                                 },
                                 firebaseAnalytics = firebaseAnalytics

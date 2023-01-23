@@ -11,15 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.ferpa.argentinacampeon.common.AnalyticsEvents
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_BLOCKED_PHOTO_CLICK
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_MATCH_CLICK
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_PHOTO_CLICK
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_PLAYER_CLICK
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_TAG_CLICK
+import com.ferpa.argentinacampeon.common.AnalyticsEvents.TOP_SHARE_IMAGE
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.presentation.Screen
@@ -33,6 +34,7 @@ fun BestPhotosScreen(
     firebaseAnalytics: FirebaseAnalytics,
     viewModel: BestPhotosViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val state = viewModel.state.value
     val favoritesState = viewModel.favoriteState.value
     Box(
@@ -88,9 +90,14 @@ fun BestPhotosScreen(
                                 )
                             )
                         },
-                    onBookMarkClick = {
-                        viewModel.switchFavorite(it)
-                    })
+                        onBookMarkClick = {
+                            viewModel.switchFavorite(it)
+                        },
+                        onSendClick = { photo ->
+                            firebaseAnalytics.logSingleEvent(TOP_SHARE_IMAGE)
+                            viewModel.shareImage(photo, context)
+                        },
+                    )
                 }
             }
         }

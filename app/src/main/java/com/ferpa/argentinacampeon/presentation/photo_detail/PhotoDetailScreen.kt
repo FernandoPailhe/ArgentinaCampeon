@@ -5,9 +5,12 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,12 +27,14 @@ import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.ferpa.argentinacampeon.R
+import com.ferpa.argentinacampeon.common.AnalyticsEvents
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.MEDIA_LINK
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.PHOTOGRAPHER_LINK
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Extensions.linkIntent
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.data.remote.dto.getPhotoUrl
+import com.ferpa.argentinacampeon.data.remote.dto.toLocalPhoto
 import com.ferpa.argentinacampeon.domain.model.getFirstLink
 import com.ferpa.argentinacampeon.presentation.Screen
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
@@ -58,9 +64,11 @@ fun PhotoDetailScreen(
     ) {
         val photoDetail = state.photo
         val photographerDetail = phState.photographer
-
+        val scrollState = rememberScrollState()
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState, true),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             GlideImage(
@@ -259,6 +267,49 @@ fun PhotoDetailScreen(
                         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                     }
                 })
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = MaterialTheme.spacing.default), horizontalArrangement = Arrangement.Center, content = {
+                Card(
+                    modifier = Modifier
+                        .padding(MaterialTheme.spacing.default),
+                    shape = MaterialTheme.shapes.small,
+                    backgroundColor = Constants.LightBlue,
+                    elevation = 8.dp
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .clickable {
+                                firebaseAnalytics.logSingleEvent(AnalyticsEvents.DET_SHARE_IMAGE)
+                                photoDetail?.toLocalPhoto(false)
+                                    ?.let { viewModel.shareImage(it, context) }
+                            },
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        Box(modifier = Modifier.padding(MaterialTheme.spacing.default)) {
+                            Icon(
+                                imageVector = Icons.Default.Share,
+                                tint = Color.White,
+                                contentDescription = "send",
+                                modifier = Modifier
+                                    .size(Constants.ICON_SIZE.dp)
+                                    .padding(end = MaterialTheme.spacing.default)
+                            )
+                        }
+                        Text(
+                            text = stringResource(id = R.string.share_button),
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            modifier = Modifier
+                                .padding(MaterialTheme.spacing.default),
+                            textAlign = TextAlign.Center,
+                            letterSpacing = 1.sp
+                        )
+                    }
+                }
+            })
         }
 
         Log.d("PhotoDetail", state.photo?.photoUrl.toString())
