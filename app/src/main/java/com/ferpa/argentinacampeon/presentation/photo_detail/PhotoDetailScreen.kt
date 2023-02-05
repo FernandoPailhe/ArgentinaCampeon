@@ -62,256 +62,265 @@ fun PhotoDetailScreen(
             .fillMaxSize()
             .background(Constants.VioletDark)
     ) {
-        val photoDetail = state.photo
-        val photographerDetail = phState.photographer
-        val scrollState = rememberScrollState()
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState, true),
-            verticalArrangement = Arrangement.SpaceEvenly
-        ) {
-            GlideImage(
-                model = photoDetail?.getPhotoUrl(),
-                contentDescription = photoDetail?.description,
+        if (state.photo != null) {
+            val photoDetail = state.photo
+            val photographerDetail = phState.photographer
+            val scrollState = rememberScrollState()
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
+                    .fillMaxSize()
+                    .verticalScroll(scrollState, true),
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                GlideImage(
+                    model = if (photoDetail == null || photoDetail.getPhotoUrl()
+                            .isNullOrEmpty()
+                    ) R.drawable.cargando else photoDetail.getPhotoUrl(),
+                    contentDescription = photoDetail?.description,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
 //                            onPhotoClick()
-                    },
-                contentScale = ContentScale.FillWidth
-            )
-            MatchText(matchTitle = photoDetail?.match, onMatchClick = {
-                navController.navigate(
-                    Screen.PhotoListByMatchScreenRoute.createRoute(
-                        it
-                    )
+                        },
+                    contentScale = ContentScale.FillWidth
                 )
-            })
-
-            PlayerRow(players = photoDetail?.players, onPlayerClick = {
-                navController.navigate(
-                    Screen.PhotoListByPlayerScreenRoute.createRoute(
-                        it
+                MatchText(matchTitle = photoDetail?.match, onMatchClick = {
+                    navController.navigate(
+                        Screen.PhotoListByMatchScreenRoute.createRoute(
+                            it
+                        )
                     )
-                )
-            })
+                })
 
-            Text(
-                text = photoDetail?.description ?: "",
-                color = Color.White,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
-            )
-
-            TagRow(tags = photoDetail?.tags, onTagClick = {
-                navController.navigate(
-                    Screen.PhotoListByTagScreenRoute.createRoute(
-                        it
+                PlayerRow(players = photoDetail?.players, onPlayerClick = {
+                    navController.navigate(
+                        Screen.PhotoListByPlayerScreenRoute.createRoute(
+                            it
+                        )
                     )
+                })
+
+                Text(
+                    text = photoDetail?.description ?: "",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
                 )
-            })
 
-            Spacer(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-            )
+                TagRow(tags = photoDetail?.tags, onTagClick = {
+                    navController.navigate(
+                        Screen.PhotoListByTagScreenRoute.createRoute(
+                            it
+                        )
+                    )
+                })
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(MaterialTheme.spacing.medium),
-                contentAlignment = Alignment.BottomCenter,
-                content = {
-                    if (photographerDetail != null) {
-                        Box(content = {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                backgroundColor = Constants.LightBlueTransparent
-                            ) {
-                                Surface(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(1.dp),
-                                    color = Constants.VioletDark
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(MaterialTheme.spacing.medium),
+                    contentAlignment = Alignment.BottomCenter,
+                    content = {
+                        if (photographerDetail != null) {
+                            Box(content = {
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    backgroundColor = Constants.LightBlueTransparent
                                 ) {
-                                    Column(
+                                    Surface(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(
-                                                top = MaterialTheme.spacing.medium,
-                                                bottom = MaterialTheme.spacing.default
-                                            ),
-                                        horizontalAlignment = Alignment.Start
+                                            .padding(1.dp),
+                                        color = Constants.VioletDark
                                     ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(
+                                                    top = MaterialTheme.spacing.medium,
+                                                    bottom = MaterialTheme.spacing.default
+                                                ),
+                                            horizontalAlignment = Alignment.Start
+                                        ) {
 
-                                        val title2 =
-                                            if (!photographerDetail?.name.isNullOrEmpty()) {
-                                                stringResource(id = R.string.media)
-                                            } else {
-                                                stringResource(id = R.string.source)
-                                            }
+                                            val title2 =
+                                                if (!photographerDetail?.name.isNullOrEmpty()) {
+                                                    stringResource(id = R.string.media)
+                                                } else {
+                                                    stringResource(id = R.string.source)
+                                                }
 
-                                        photographerDetail?.name?.let { name ->
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                modifier = Modifier
-                                                    .padding(
-                                                        horizontal = MaterialTheme.spacing.medium
-                                                    )
-                                                    .clickable {
-                                                        if (!photographerDetail
-                                                                .getFirstLink()
-                                                                .isNullOrEmpty()
-                                                        ) {
-                                                            firebaseAnalytics.logSingleEvent(
-                                                                PHOTOGRAPHER_LINK
-                                                            )
-                                                            context.linkIntent(photographerDetail.getFirstLink()!!)
+                                            photographerDetail?.name?.let { name ->
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    modifier = Modifier
+                                                        .padding(
+                                                            horizontal = MaterialTheme.spacing.medium
+                                                        )
+                                                        .clickable {
+                                                            if (!photographerDetail
+                                                                    .getFirstLink()
+                                                                    .isNullOrEmpty()
+                                                            ) {
+                                                                firebaseAnalytics.logSingleEvent(
+                                                                    PHOTOGRAPHER_LINK
+                                                                )
+                                                                context.linkIntent(
+                                                                    photographerDetail.getFirstLink()!!
+                                                                )
+                                                            }
                                                         }
+                                                ) {
+                                                    photographerDetail.getFirstLink()?.let { link ->
+                                                        Hyperlink(
+                                                            link,
+                                                            withIcon = true,
+                                                            onlyIcon = true,
+                                                            onClick = {
+                                                                firebaseAnalytics.logSingleEvent(
+                                                                    PHOTOGRAPHER_LINK
+                                                                )
+                                                                context.linkIntent(link)
+                                                            }
+                                                        )
                                                     }
-                                            ) {
-                                                photographerDetail.getFirstLink()?.let { link ->
-                                                    Hyperlink(
-                                                        link,
-                                                        withIcon = true,
-                                                        onlyIcon = true,
-                                                        onClick = {
-                                                            firebaseAnalytics.logSingleEvent(
-                                                                PHOTOGRAPHER_LINK
-                                                            )
-                                                            context.linkIntent(link)
-                                                        }
+                                                    Text(
+                                                        text = stringResource(id = R.string.photographer) + " " + name,
+                                                        color = Color.White,
+                                                        fontSize = 16.sp,
+                                                        modifier = Modifier.padding(
+                                                            horizontal = MaterialTheme.spacing.medium,
+                                                            vertical = MaterialTheme.spacing.default
+                                                        )
                                                     )
                                                 }
-                                                Text(
-                                                    text = stringResource(id = R.string.photographer) + " " + name,
-                                                    color = Color.White,
-                                                    fontSize = 16.sp,
-                                                    modifier = Modifier.padding(
-                                                        horizontal = MaterialTheme.spacing.medium,
-                                                        vertical = MaterialTheme.spacing.default
-                                                    )
-                                                )
                                             }
-                                        }
 
-                                        photographerDetail?.source?.let { source ->
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                modifier = Modifier
-                                                    .padding(
-                                                        horizontal = MaterialTheme.spacing.medium
-                                                    )
-                                                    .clickable {
-                                                        if (!photographerDetail.web.isNullOrEmpty()) {
-                                                            firebaseAnalytics.logSingleEvent(
-                                                                MEDIA_LINK
-                                                            )
-                                                            context.linkIntent(photographerDetail.web!!)
+                                            photographerDetail?.source?.let { source ->
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    modifier = Modifier
+                                                        .padding(
+                                                            horizontal = MaterialTheme.spacing.medium
+                                                        )
+                                                        .clickable {
+                                                            if (!photographerDetail.web.isNullOrEmpty()) {
+                                                                firebaseAnalytics.logSingleEvent(
+                                                                    MEDIA_LINK
+                                                                )
+                                                                context.linkIntent(
+                                                                    photographerDetail.web!!
+                                                                )
+                                                            }
                                                         }
+                                                ) {
+                                                    photographerDetail?.web?.let { link ->
+                                                        Hyperlink(link,
+                                                            withIcon = true,
+                                                            onlyIcon = true,
+                                                            onClick = {
+                                                                firebaseAnalytics.logSingleEvent(
+                                                                    MEDIA_LINK
+                                                                )
+                                                                context.linkIntent(link)
+                                                            }
+                                                        )
                                                     }
-                                            ) {
-                                                photographerDetail?.web?.let { link ->
-                                                    Hyperlink(link,
-                                                        withIcon = true,
-                                                        onlyIcon = true,
-                                                        onClick = {
-                                                            firebaseAnalytics.logSingleEvent(
-                                                                MEDIA_LINK
-                                                            )
-                                                            context.linkIntent(link)
-                                                        }
+                                                    Text(
+                                                        text = "$title2 $source",
+                                                        color = Color.White,
+                                                        fontSize = 16.sp,
+                                                        modifier = Modifier.padding(
+                                                            horizontal = MaterialTheme.spacing.medium,
+                                                            vertical = MaterialTheme.spacing.default
+                                                        )
                                                     )
                                                 }
-                                                Text(
-                                                    text = "$title2 $source",
-                                                    color = Color.White,
-                                                    fontSize = 16.sp,
-                                                    modifier = Modifier.padding(
-                                                        horizontal = MaterialTheme.spacing.medium,
-                                                        vertical = MaterialTheme.spacing.default
-                                                    )
-                                                )
                                             }
                                         }
                                     }
                                 }
-                            }
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.TopCenter,
-                                content = {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.TopCenter,
+                                    content = {
 
-                                    Surface(
-                                        modifier = Modifier
-                                            .height(Constants.ICON_SIZE.dp)
-                                            .width(Constants.ICON_SIZE.dp * 1.5f)
-                                            .offset(
-                                                y = -Constants.ICON_SIZE.dp / 2
-                                            ), color = Constants.VioletDark
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.PhotoCamera,
-                                            tint = Constants.LightBlue,
-                                            contentDescription = "photographer",
+                                        Surface(
                                             modifier = Modifier
-                                                .size(Constants.ICON_SIZE.dp),
-                                        )
-                                    }
-                                })
-                        })
-                    }
-                    if (phState.isLoading) {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                })
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = MaterialTheme.spacing.default), horizontalArrangement = Arrangement.Center, content = {
-                Card(
-                    modifier = Modifier
-                        .padding(MaterialTheme.spacing.default),
-                    shape = MaterialTheme.shapes.small,
-                    backgroundColor = Constants.LightBlue,
-                    elevation = 8.dp
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .clickable {
-                                firebaseAnalytics.logSingleEvent(AnalyticsEvents.DET_SHARE_IMAGE)
-                                photoDetail?.toLocalPhoto(false)
-                                    ?.let { viewModel.shareImage(it, context) }
-                            },
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ) {
-                        Box(modifier = Modifier.padding(MaterialTheme.spacing.default)) {
-                            Icon(
-                                imageVector = Icons.Default.Share,
-                                tint = Color.White,
-                                contentDescription = "send",
-                                modifier = Modifier
-                                    .size(Constants.ICON_SIZE.dp)
-                                    .padding(end = MaterialTheme.spacing.default)
-                            )
+                                                .height(Constants.ICON_SIZE.dp)
+                                                .width(Constants.ICON_SIZE.dp * 1.5f)
+                                                .offset(
+                                                    y = -Constants.ICON_SIZE.dp / 2
+                                                ), color = Constants.VioletDark
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.PhotoCamera,
+                                                tint = Constants.LightBlue,
+                                                contentDescription = "photographer",
+                                                modifier = Modifier
+                                                    .size(Constants.ICON_SIZE.dp),
+                                            )
+                                        }
+                                    })
+                            })
                         }
-                        Text(
-                            text = stringResource(id = R.string.share_button),
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.White,
-                            fontSize = 14.sp,
+                        if (phState.isLoading) {
+                            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                        }
+                    })
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = MaterialTheme.spacing.default),
+                    horizontalArrangement = Arrangement.Center,
+                    content = {
+                        Card(
                             modifier = Modifier
                                 .padding(MaterialTheme.spacing.default),
-                            textAlign = TextAlign.Center,
-                            letterSpacing = 1.sp
-                        )
-                    }
-                }
-            })
+                            shape = MaterialTheme.shapes.small,
+                            backgroundColor = Constants.LightBlue,
+                            elevation = 8.dp
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .clickable {
+                                        firebaseAnalytics.logSingleEvent(AnalyticsEvents.DET_SHARE_IMAGE)
+                                        photoDetail?.toLocalPhoto(false)
+                                            ?.let { viewModel.shareImage(it, context) }
+                                    },
+                                horizontalArrangement = Arrangement.SpaceAround
+                            ) {
+                                Box(modifier = Modifier.padding(MaterialTheme.spacing.default)) {
+                                    Icon(
+                                        imageVector = Icons.Default.Share,
+                                        tint = Color.White,
+                                        contentDescription = "send",
+                                        modifier = Modifier
+                                            .size(Constants.ICON_SIZE.dp)
+                                            .padding(end = MaterialTheme.spacing.default)
+                                    )
+                                }
+                                Text(
+                                    text = stringResource(id = R.string.share_button),
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Color.White,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier
+                                        .padding(MaterialTheme.spacing.default),
+                                    textAlign = TextAlign.Center,
+                                    letterSpacing = 1.sp
+                                )
+                            }
+                        }
+                    })
+            }
         }
-
         Log.d("PhotoDetail", state.photo?.photoUrl.toString())
         if (state.error.isNotBlank()) {
             Text(
