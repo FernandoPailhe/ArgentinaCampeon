@@ -46,8 +46,12 @@ class PhotoDetailViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Retrieves detailed information for a specified photo.
+     *
+     * @param photoId the ID of the photo to retrieve information for
+     */
     private fun getPhotoDetail(photoId: String) {
-        Log.d("PhotoDetailViewModel", "run get photo id: $photoId")
         getPhotoDetailUseCase(photoId).onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -66,6 +70,11 @@ class PhotoDetailViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Retrieves detailed information for a specified photographer.
+     *
+     * @param photographerId The ID of the photographer to retrieve information for.
+     */
     private fun getPhotographerDetail(photographerId: String) {
         getPhotographerDetailUseCase(photographerId).onEach { result ->
             when (result) {
@@ -84,6 +93,17 @@ class PhotoDetailViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+
+    /**
+     * Shares the given photo with the provided context.
+     *
+     * The function sharing a Photo object as an image via a sharing Intent in Android. It takes a Photo object and a Context as parameters, and then it calls the getDownloadUrl() function of the Photo object to obtain the URL of the image to be shared. The function then uses the downloadImageUseCase to download the image from the URL and create a Bitmap object that can be shared.
+     * If the download is successful, the function creates a ShareImageState object and sets the image property to the downloaded Bitmap object. Then, the function creates a text message to accompany the shared image, including the photographer's name and the app name. Finally, the function calls the shareImageUseCase to share the image and the text message via an Android sharing Intent.
+     * If the download fails or an error occurs, the function sets the error property of the ShareImageState object to the error message.
+     *
+     * @param photo The photo to share.
+     * @param context The context to share the photo with.
+     */
     fun shareImage(photo: Photo, context: Context) {
         photo.getDownloadUrl()?.let { downloadUrl ->
             downloadImageUseCase(downloadUrl, context).onEach { result ->
@@ -91,8 +111,10 @@ class PhotoDetailViewModel @Inject constructor(
                     is Resource.Success -> {
                         result.data?.let {
                             _shareImageState.value = ShareImageState(image = it)
-                            val text = photo.photographer?.share() + System.getProperty("line.separator") + context.getString(
-                                R.string.share)
+                            val text =
+                                photo.photographer?.share() + System.getProperty("line.separator") + context.getString(
+                                    R.string.share
+                                )
                             shareImageState.value.image?.let { it1 ->
                                 shareImageUseCase(
                                     it1,
