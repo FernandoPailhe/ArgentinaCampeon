@@ -5,11 +5,11 @@ Argentina Campeon del Mundo is an Android application that allows users to view 
 
 __App:__ https://play.google.com/store/apps/details?id=com.ferpa.argentinacampeon
 
-##Features
+## Features
 * View and organize photos of the Scaloneta team from the 2022 World Cup in Qatar
 * Vote on pairs of photos to generate a community-curated list of the best photos
 
-##Technologies Used
+## Technologies Used
 * SOLID Principles Followed
 * MVVM Architecture used to separate concerns
 * Clean Architecture for structuring the app's codebase
@@ -20,7 +20,7 @@ __App:__ https://play.google.com/store/apps/details?id=com.ferpa.argentinacampeo
 * Retrofit for making API calls
 * Coroutines for managing asynchronous tasks
 
-##Screebhots
+## Screebhots
 ![Screenshot_20230206_142524_Campen del Mundo](https://user-images.githubusercontent.com/100050838/220635194-3d4af480-3148-44aa-9b97-3cfa40a6d006.jpg)
 ![Screenshot_20230206_142537_Campen del Mundo](https://user-images.githubusercontent.com/100050838/220635201-7dc7ad16-f252-4d32-b131-1f896d0158ce.jpg)
 ![Screenshot_20230206_142550_Campen del Mundo](https://user-images.githubusercontent.com/100050838/220635206-6a8f15e8-bcd8-477f-8c33-2ee1fdfb81fd.jpg)
