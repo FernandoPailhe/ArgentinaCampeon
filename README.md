@@ -11,7 +11,7 @@ __App:__ https://play.google.com/store/apps/details?id=com.ferpa.argentinacampeo
 
 ## Technologies Used
 * SOLID Principles Followed
-* MVVM Architecture used to separate concerns
+* MVVM Pattern used to separate concerns
 * Clean Architecture for structuring the app's codebase
 * Use Cases for implementing app logic
 * Jetpack Compose for building the UI
