@@ -9,7 +9,7 @@ __App:__ https://play.google.com/store/apps/details?id=com.ferpa.argentinacampeo
 * View and organize photos of the Scaloneta team from the 2022 World Cup in Qatar
 * Vote on pairs of photos to generate a community-curated list of the best photos
 
-## Technologies Used
+## Technologies
 * SOLID Principles Followed
 * MVVM Pattern used to separate concerns
 * Clean Architecture for structuring the app's codebase
