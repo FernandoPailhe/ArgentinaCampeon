@@ -20,7 +20,7 @@ __App:__ https://play.google.com/store/apps/details?id=com.ferpa.argentinacampeo
 * Retrofit for making API calls
 * Coroutines for managing asynchronous tasks
 
-## Screeshots
+## Screenshots
 ![Screenshot_20230206_142524_Campen del Mundo](https://user-images.githubusercontent.com/100050838/220635194-3d4af480-3148-44aa-9b97-3cfa40a6d006.jpg)
 ![Screenshot_20230206_142537_Campen del Mundo](https://user-images.githubusercontent.com/100050838/220635201-7dc7ad16-f252-4d32-b131-1f896d0158ce.jpg)
 ![Screenshot_20230206_142550_Campen del Mundo](https://user-images.githubusercontent.com/100050838/220635206-6a8f15e8-bcd8-477f-8c33-2ee1fdfb81fd.jpg)
