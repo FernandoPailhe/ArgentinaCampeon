@@ -1,7 +1,5 @@
 package com.ferpa.argentinacampeon.presentation.tutorial
 
-import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -12,7 +10,6 @@ import com.ferpa.argentinacampeon.presentation.main_activity.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +21,6 @@ class TutorialViewModel @Inject constructor(
     val versusListState: State<VersusListState> = _versusListState
 
     fun getTutorialPairList() {
-        Log.d(TAG, "getTutorialPairList -> running")
         if (versusListState.value.photos.size <= 1) {
             getTutorialVersusListUseCase().onEach { result ->
                 when (result) {

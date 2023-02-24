@@ -36,18 +36,45 @@ class VersusViewModel @Inject constructor(
 
     }
 
+    /**
+     * postVote()
+     *
+     * @param vote {Vote} The Vote to be used.
+     * @param isTutorial {Boolean} Optional parameter.
+     *
+     * Launches a postVoteUseCase() with the given Vote and the value of isTutorial in an Android ViewModelScope.
+     */
     fun postVote(vote: Vote, isTutorial: Boolean = false) {
         viewModelScope.launch {
             postVoteUseCase(vote, isTutorial)
         }
     }
 
+    /**
+     * switchFavorite()
+     *
+     * @param photoId {String} The Id of the Photo.
+     *
+     * Launches a switchFavoriteUseCase() with the given photoId in an Android ViewModelScope.
+     */
     fun switchFavorite(photoId: String) {
         viewModelScope.launch {
             switchFavoriteUseCase(photoId)
         }
     }
 
+    /**
+     * shareImage()
+     *
+     * @param photo {Photo} The Photo to be shared.
+     * @param context {Context} The Context in which the Photo is shared.
+     *
+     * Uses the given photo's getDownloadUrl() to launch a downloadImageUseCase() in an Android ViewModelScope. The
+     * _shareImageState is set to a new ShareImageState() with the data from the result of the downloadImageUseCase().
+     * If the download was successful, the _shareImageState is set with the data from the result. Then the
+     * shareImageState is set with the image and a string is created by photograper's share() and a message from the
+     * given context. Finally, shareImageUseCase() is launched with the given image, context and text.
+     */
     fun shareImage(photo: Photo, context: Context) {
         photo.getDownloadUrl()?.let { downloadUrl ->
             downloadImageUseCase(downloadUrl, context).onEach { result ->
@@ -78,6 +105,11 @@ class VersusViewModel @Inject constructor(
         }
     }
 
+    /**
+     * closeDialog()
+     *
+     * Resets the _shareImageState to ShareImageState().
+     */
     fun closeDialog() {
         _shareImageState.value = ShareImageState()
     }
