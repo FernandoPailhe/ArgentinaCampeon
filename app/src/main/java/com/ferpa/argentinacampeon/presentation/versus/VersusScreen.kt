@@ -1,7 +1,12 @@
 package com.ferpa.argentinacampeon.presentation.versus
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -42,6 +47,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun VersusScreen(
@@ -59,6 +65,7 @@ fun VersusScreen(
     val pairFavoritesList = mainViewModel.favoriteState.value.favorites
     if (pairList.isEmpty()) return
     onDataLoaded()
+
     Box(
         modifier = Modifier
             .fillMaxSize()

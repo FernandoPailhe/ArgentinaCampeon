@@ -18,9 +18,7 @@ import androidx.core.content.FileProvider
 import androidx.core.util.PatternsCompat
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.ADD_TO_FAVORITE
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.DELETE_FAVORITE
-import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.data.remote.dto.PhotoDto
-import com.ferpa.argentinacampeon.data.remote.dto.toHiddenPhoto
 import com.ferpa.argentinacampeon.data.remote.dto.toLocalPhoto
 import com.ferpa.argentinacampeon.domain.model.Photo
 import com.google.firebase.analytics.FirebaseAnalytics

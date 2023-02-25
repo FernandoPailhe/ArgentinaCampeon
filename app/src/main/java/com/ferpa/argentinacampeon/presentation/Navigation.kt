@@ -21,10 +21,6 @@ import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_PHOTO_DETAIL
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_TOP
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.NAV_VERSUS
 import com.ferpa.argentinacampeon.common.Constants
-import com.ferpa.argentinacampeon.common.Constants.MATCHES
-import com.ferpa.argentinacampeon.common.Constants.PHOTOGRAPHERS
-import com.ferpa.argentinacampeon.common.Constants.PLAYERS
-import com.ferpa.argentinacampeon.common.Constants.TAGS
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
 import com.ferpa.argentinacampeon.presentation.about_us.AboutUsScreen
 import com.ferpa.argentinacampeon.presentation.best_photos.BestPhotosScreen
