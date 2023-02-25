@@ -1,9 +1,13 @@
 package com.ferpa.argentinacampeon.presentation.main_activity
 
+import android.Manifest
 import android.content.pm.ActivityInfo
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -65,6 +69,10 @@ class MainActivity : ComponentActivity() {
                     color = Constants.VioletDark,
                     darkIcons = false
                 )
+                val permissionLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.RequestPermission(),
+                    onResult = {}
+                )
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = Constants.VioletDark
@@ -122,6 +130,9 @@ class MainActivity : ComponentActivity() {
                                     )
                                 )
                             ) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                }
                                 val pagerState = rememberPagerState()
                                 Navigation(
                                     navController = navController,

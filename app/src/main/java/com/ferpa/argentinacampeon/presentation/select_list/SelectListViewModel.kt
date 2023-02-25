@@ -44,6 +44,9 @@ class SelectListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Function to get the list of matches available
+     */
     private fun getMatches() {
         viewModelScope.launch {
             getMatchesUseCase().onEach { result ->
@@ -65,6 +68,11 @@ class SelectListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Function to get the list of players available
+     *
+     * @param search The search query used to get the list
+     */
     private fun getPlayers() {
         getPlayersUseCase(search.value).onEach { result ->
             when (result) {
@@ -82,6 +90,11 @@ class SelectListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Function to get the list of players available
+     *
+     * @param search The search query used to get the list
+     */
     private fun getPhotographers() {
         getPhotographersUseCase(search.value).onEach { result ->
             when (result) {
@@ -99,6 +112,11 @@ class SelectListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Function to get the list of tags available
+     *
+     * @param search The search query used to get the list
+     */
     private fun getTags() {
         getTagsUseCase(search.value).onEach { result ->
             when (result) {
@@ -116,6 +134,11 @@ class SelectListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Function to set the page based on the provided route
+     *
+     * @param route The route used to set the page
+     */
     fun setPage(route: String) {
         when (route) {
             Screen.SelectListScreenRoute.createRoute(MATCHES) -> getMatches()

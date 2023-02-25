@@ -1,6 +1,5 @@
 package com.ferpa.argentinacampeon.presentation.photo_list
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -52,8 +51,12 @@ class PhotoListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Function to get the match detail by their ID provided
+     *
+     * @param id The ID used to get the detail
+     */
     private fun getMatchDetailById(id: String){
-        Log.d("getMatchDetailViewModel",id )
         getMatchDetailUseCase(id).onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -69,8 +72,12 @@ class PhotoListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Function to get the player detail by their player ID provided
+     *
+     * @param playerId The player ID used to get the detail
+     */
     private fun getPlayerDetailById(playerId: String){
-        Log.d("getPlayerDetailViewModel",playerId )
         getPlayerDetailUseCase(playerId).onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -86,8 +93,12 @@ class PhotoListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Function to get the tag detail by their ID provided
+     *
+     * @param id The ID used to get the detail
+     */
     private fun getTagDetailById(id: String){
-        Log.d("getTagViewModel",id )
         getTagDetailUseCase(id).onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -103,8 +114,12 @@ class PhotoListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Function to get the photographer detail by their ID provided
+     *
+     * @param id The ID used to get the detail
+     */
     private fun getPhotographerDetailById(id: String){
-        Log.d("getTagViewModel",id )
         getPhotographerDetailUseCase(id).onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -120,6 +135,11 @@ class PhotoListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Function to get the list of photos by match ID provided
+     *
+     * @param matchId The match ID used to get the photo list
+     */
     private fun getPhotoListByMatch(matchId: String) {
         getPhotosByMatchUseCase(matchId).onEach { result ->
             when (result) {
@@ -138,6 +158,11 @@ class PhotoListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Function to get the list of photos by tag provided
+     *
+     * @param tag The tag used to get the photo list
+     */
     private fun getPhotoListByTag(tag: String) {
         getPhotosByTagUseCase(tag).onEach { result ->
             when (result) {
@@ -156,6 +181,11 @@ class PhotoListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Function to get the list of photos by player ID provided
+     *
+     * @param playerId The player ID used to get the photo list
+     */
     private fun getPhotoListByPlayer(playerId: String) {
         getPhotosByPlayerUseCase(playerId).onEach { result ->
             when (result) {
@@ -174,6 +204,11 @@ class PhotoListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Function to get the list of photos by photographer ID provided
+     *
+     * @param photographerId The photographer ID used to get the photo list
+     */
     private fun getPhotoListByPhotographer(photographerId: String) {
         getPhotosByPhotographerUseCase(photographerId).onEach { result ->
             when (result) {
