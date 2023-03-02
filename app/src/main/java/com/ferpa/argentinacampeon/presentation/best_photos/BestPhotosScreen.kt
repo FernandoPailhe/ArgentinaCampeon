@@ -22,6 +22,7 @@ import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_PLAYER_CLICK
 import com.ferpa.argentinacampeon.common.AnalyticsEvents.BEST_TAG_CLICK
 import com.ferpa.argentinacampeon.common.Constants
 import com.ferpa.argentinacampeon.common.Extensions.logSingleEvent
+import com.ferpa.argentinacampeon.domain.model.getPhotoUrl
 import com.ferpa.argentinacampeon.presentation.Screen
 import com.ferpa.argentinacampeon.presentation.best_photos.components.CardPhotoListItem
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
@@ -53,16 +54,12 @@ fun BestPhotosScreen(
                             false
                         },
                         onItemClick = { photo ->
-                            if (!photo.photoUrl.isNullOrEmpty()) {
                                 firebaseAnalytics.logSingleEvent(BEST_PHOTO_CLICK)
                                 navController.navigate(
                                     Screen.PhotoDetailScreenRoute.createRoute(
                                         photo.id
                                     )
                                 )
-                            } else {
-                                firebaseAnalytics.logSingleEvent(BEST_BLOCKED_PHOTO_CLICK)
-                            }
                         },
                         onPlayerClick = {
                             firebaseAnalytics.logSingleEvent(BEST_PLAYER_CLICK)

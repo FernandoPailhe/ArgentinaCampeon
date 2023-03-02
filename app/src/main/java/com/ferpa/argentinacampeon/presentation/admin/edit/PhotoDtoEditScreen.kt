@@ -25,6 +25,7 @@ import com.ferpa.argentinacampeon.data.remote.dto.getRank
 import com.ferpa.argentinacampeon.domain.model.getMinimalTitle
 import com.ferpa.argentinacampeon.domain.model.toMatchTitle
 import com.ferpa.argentinacampeon.domain.model.toPhotographerTitle
+import com.ferpa.argentinacampeon.presentation.Screen
 import com.ferpa.argentinacampeon.presentation.common.components.BottomGradient
 import com.ferpa.argentinacampeon.presentation.ui.theme.spacing
 import com.ferpa.argentinacampeon.presentation.versus.components.TagRow
@@ -132,28 +133,28 @@ fun PhotoDtoEditScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Button(onClick = { viewModel.setVotesAndVersus(4, 16) }, modifier = Modifier.padding(MaterialTheme.spacing.default)) {
-                        Text(text = "4/16", fontSize = 10.sp)
+                        Text(text = "4/16", fontSize = 10.sp, color = Color.White)
                     }
                     Button(onClick = { viewModel.setVotesAndVersus(4, 13) }, modifier = Modifier.padding(MaterialTheme.spacing.default)) {
-                        Text(text = "5/13", fontSize = 10.sp)
+                        Text(text = "5/13", fontSize = 10.sp, color = Color.White)
                     }
                     Button(onClick = { viewModel.setVotesAndVersus(8, 16) }, modifier = Modifier.padding(MaterialTheme.spacing.default)) {
-                        Text(text = "8/16", fontSize = 10.sp)
+                        Text(text = "8/16", fontSize = 10.sp, color = Color.White)
                     }
                     Button(onClick = { viewModel.setVotesAndVersus(16, 25) }, modifier = Modifier.padding(MaterialTheme.spacing.default)) {
-                        Text(text = "16/25", fontSize = 10.sp)
+                        Text(text = "16/25", fontSize = 10.sp, color = Color.White)
                     }
                     Button(onClick = { viewModel.setVotesAndVersus(18, 25) }, modifier = Modifier.padding(MaterialTheme.spacing.default)) {
-                        Text(text = "18/25", fontSize = 10.sp)
+                        Text(text = "18/25", fontSize = 10.sp, color = Color.White)
                     }
                     Button(onClick = { viewModel.setVotesAndVersus(14, 18) }, modifier = Modifier.padding(MaterialTheme.spacing.default)) {
-                        Text(text = "14/18", fontSize = 10.sp)
+                        Text(text = "14/18", fontSize = 10.sp, color = Color.White)
                     }
                     Button(onClick = { viewModel.setVotesAndVersus(13, 16) }, modifier = Modifier.padding(MaterialTheme.spacing.default)) {
-                        Text(text = "13/16", fontSize = 10.sp)
+                        Text(text = "13/16", fontSize = 10.sp, color = Color.White)
                     }
                     Button(onClick = { viewModel.setVotesAndVersus(20, 22) }, modifier = Modifier.padding(MaterialTheme.spacing.default)) {
-                        Text(text = "20/22", fontSize = 10.sp)
+                        Text(text = "20/22", fontSize = 10.sp, color = Color.White)
                     }
                 }
                 Row(
@@ -161,23 +162,26 @@ fun PhotoDtoEditScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Button(onClick = { viewModel.setState(0) }) {
-                        Text(text = "disp", fontSize = 10.sp)
+                        Text(text = "disp", fontSize = 10.sp, color = Color.White)
                     }
                     Button(onClick = { viewModel.setState(-1) }) {
-                        Text(text = "ocultas", fontSize = 10.sp)
+                        Text(text = "ocultas", fontSize = 10.sp, color = Color.White)
                     }
                     Button(onClick = { viewModel.setState(-2) }) {
-                        Text(text = "listas", fontSize = 10.sp)
+                        Text(text = "listas", fontSize = 10.sp, color = Color.White)
                     }
                     Button(onClick = { viewModel.setState(-3) }) {
-                        Text(text = "incomp", fontSize = 10.sp)
+                        Text(text = "incomp", fontSize = 10.sp, color = Color.White)
                     }
                     Button(onClick = { viewModel.setState(-4) }) {
-                        Text(text = "elim", fontSize = 10.sp)
+                        Text(text = "elim", fontSize = 10.sp, color = Color.White)
                     }
                 }
-                Button(onClick = { viewModel.fullUpdate() }) {
-                    Text(text = "guardar", fontSize = 10.sp)
+                Button(onClick = {
+                    viewModel.fullUpdate()
+                    navController.navigate(Screen.AdminPhotoDtoListScreen.route)
+                }) {
+                    Text(text = "guardar", fontSize = 10.sp, color = Color.White)
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
             }

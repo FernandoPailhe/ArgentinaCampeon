@@ -67,7 +67,7 @@ fun Photo.getRank(): String {
 fun Photo.updateRank(rankUpdate: Double): Photo = this.copy(rank = rankUpdate)
 
 fun Photo.getPhotoUrl(isPhotoList: Boolean = false): String? {
-    return if ((this.localVotes == 0 && isPhotoList) || this.photoUrl == null) {
+    return if (this.photoUrl == null) {
         null
     } else {
         if (photoUrl.contains("192.168.100.4")) {

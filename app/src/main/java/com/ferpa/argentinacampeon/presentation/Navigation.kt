@@ -44,57 +44,57 @@ import com.google.firebase.analytics.FirebaseAnalytics
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Navigation(navController: NavHostController, mainViewModel: MainViewModel, pagerState: PagerState, onDataLoaded: () -> Unit, firebaseAnalytics: FirebaseAnalytics ) {
-    NavHost(navController = navController, startDestination = Screen.VersusScreenRoute.route) {
+    NavHost(navController = navController, startDestination = Screen.AdminPhotoDtoListScreen.route) {
         composable(route = Screen.VersusScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_VERSUS)
+//            firebaseAnalytics.logSingleEvent(NAV_VERSUS)
             VersusScreen(navController, mainViewModel =  mainViewModel, pagerState = pagerState, onDataLoaded = { onDataLoaded() }, firebaseAnalytics = firebaseAnalytics)
         }
         composable(route = Screen.PhotoDetailScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_PHOTO_DETAIL)
-            PhotoDetailScreen(navController, firebaseAnalytics)
+//            firebaseAnalytics.logSingleEvent(NAV_PHOTO_DETAIL)
+            PhotoDtoEditScreen(navController)
         }
         composable(route = Screen.SelectListScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_LIST)
+//            firebaseAnalytics.logSingleEvent(NAV_LIST)
             SelectListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.SelectMatchesListScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_LIST)
+//            firebaseAnalytics.logSingleEvent(NAV_LIST)
             SelectListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.SelectPlayersListScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_LIST)
+//            firebaseAnalytics.logSingleEvent(NAV_LIST)
             SelectListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.SelectPhotographersListScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_LIST)
+//            firebaseAnalytics.logSingleEvent(NAV_LIST)
             SelectListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.SelectTagsListScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_LIST)
+//            firebaseAnalytics.logSingleEvent(NAV_LIST)
             SelectListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.PhotoListByPlayerScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_LIST)
+//            firebaseAnalytics.logSingleEvent(NAV_LIST)
             PhotoListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.PhotoListByTagScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_LIST)
+//            firebaseAnalytics.logSingleEvent(NAV_LIST)
             PhotoListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.PhotoListByMatchScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_LIST)
+//            firebaseAnalytics.logSingleEvent(NAV_LIST)
             PhotoListScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.BestPhotosScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_TOP)
+//            firebaseAnalytics.logSingleEvent(NAV_TOP)
             BestPhotosScreen(navController = navController, firebaseAnalytics)
         }
         composable(route = Screen.FavoritePhotosScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_FAVORITES)
+//            firebaseAnalytics.logSingleEvent(NAV_FAVORITES)
             FavoritePhotosScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.AboutUsScreenRoute.route) {
-            firebaseAnalytics.logSingleEvent(NAV_INFO)
+//            firebaseAnalytics.logSingleEvent(NAV_INFO)
             AboutUsScreen(navController, firebaseAnalytics)
         }
         composable(route = Screen.StoryScreenRoute.route) {

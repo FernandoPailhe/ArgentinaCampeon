@@ -73,7 +73,7 @@ fun CardPhotoListItem(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     GlideImage(
-                        model = if (photo.photoUrl.isNullOrEmpty()) R.drawable.fot_bloqueada else photo.getPhotoUrl(),
+                        model = if (photo.getPhotoUrl().isNullOrEmpty()) R.drawable.fot_bloqueada else photo.getPhotoUrl(),
                         contentDescription = photo.description,
                         modifier = Modifier
                             .fillMaxWidth(0.4f)

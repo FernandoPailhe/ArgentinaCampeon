@@ -30,7 +30,7 @@ object Extensions {
 
     fun List<PhotoDto>.toHiddenPhotoList(votedIds: List<String>): List<Photo> =
         this.map { photoDto ->
-            photoDto.toLocalPhoto(hiddenPhoto = !votedIds.contains(photoDto.id))
+            photoDto.toLocalPhoto(hiddenPhoto = false)
         }
 
     fun List<Pair<Photo, Photo>?>.toPairIdList(): List<Pair<String, String>> =

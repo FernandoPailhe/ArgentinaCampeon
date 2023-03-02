@@ -34,21 +34,30 @@ fun AdminPhotoDtoListScreen(
         Column() {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Button(onClick = { viewModel.setState(0) }) {
-                    Text(text = "disp", fontSize = 10.sp)
+                    Text(text = "disp", fontSize = 10.sp, color = Color.White)
                 }
                 Button(onClick = { viewModel.setState(-1) }) {
-                    Text(text = "ocult", fontSize = 10.sp)
+                    Text(text = "ocult", fontSize = 10.sp, color = Color.White)
                 }
                 Button(onClick = { viewModel.setState(-2) }) {
-                    Text(text = "listas", fontSize = 10.sp)
+                    Text(text = "listas", fontSize = 10.sp, color = Color.White)
                 }
                 Button(onClick = { viewModel.setState(-3) }) {
-                    Text(text = "incomp", fontSize = 10.sp)
+                    Text(text = "incomp", fontSize = 10.sp, color = Color.White)
                 }
                 Button(onClick = { viewModel.setState(-4) }) {
-                    Text(text = "elim", fontSize = 10.sp)
+                    Text(text = "elim", fontSize = 10.sp, color = Color.White)
                 }
             }
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.default))
+            val title = when (viewModel.rarity.value) {
+                -1 -> "Ocultas"
+                -2 -> "Listas"
+                -3 -> "Incompletas"
+                -4 -> "Eliminadas"
+                else -> "Disponibles"
+            }
+            Text(modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally), text = title, fontSize = 15.sp, color = Color.Black, textAlign = TextAlign.Center)
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.default))
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(state.photos.size) { index ->

@@ -153,26 +153,32 @@ class AdminPhotoDtoEditViewModel @Inject constructor(
     fun addPlayer(player: PlayerTitle) {
         Log.d("player", player.displayName.toString())
         _newPhotoDto.value = newPhotoDto.value?.addPlayer(player)
+        _photoDtoState.value = PhotoDtoEditState(photo = newPhotoDto.value)
         Log.d("player", newPhotoDto.value?.players?.size.toString())
     }
 
     fun removePlayer(player: PlayerTitle) {
         _newPhotoDto.value = newPhotoDto.value?.removePlayer(player)
+        _photoDtoState.value = PhotoDtoEditState(photo = newPhotoDto.value)
     }
 
     fun setState(state: Int) {
         _newPhotoDto.value = newPhotoDto.value?.copy(rarity = state)
+        _photoDtoState.value = PhotoDtoEditState(photo = newPhotoDto.value)
     }
 
     fun setVotesAndVersus(votes: Long, versus: Long){
         _newPhotoDto.value = newPhotoDto.value?.copy(votes = votes, versus = versus)
+        _photoDtoState.value = PhotoDtoEditState(photo = newPhotoDto.value)
     }
 
     fun setMatch(matchTitle: MatchTitle) {
         _newPhotoDto.value = newPhotoDto.value?.copy(match = matchTitle)
+        _photoDtoState.value = PhotoDtoEditState(photo = newPhotoDto.value)
     }
 
     fun setPhotographer(photographerTitle: PhotographerTitle) {
         _newPhotoDto.value = newPhotoDto.value?.copy(photographer = photographerTitle )
+        _photoDtoState.value = PhotoDtoEditState(photo = newPhotoDto.value)
     }
 }

@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                     val navController = rememberNavController()
-                    if (viewModel.isFirstTime.value == UpdateLocalState(succes = false) && viewModel.versionOk.value) {
+                    if (viewModel.isFirstTime.value == UpdateLocalState(succes = false)) {
                         Scaffold(bottomBar = {
                             BottomNavigationBar(items = listOf(
                                 BottomNavItem(
@@ -130,33 +130,6 @@ class MainActivity : ComponentActivity() {
                                     },
                                     firebaseAnalytics = firebaseAnalytics
                                 )
-                            }
-                        }
-                    } else if (!viewModel.versionOk.value) {
-                        Surface(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Constants.VioletDark)
-                        ) {
-                            Dialog(onDismissRequest = { }) {
-                                Card(
-                                    modifier = Modifier
-                                        .fillMaxHeight(0.5f)
-                                        .fillMaxWidth(),
-                                    shape = RoundedCornerShape(MaterialTheme.spacing.medium)
-                                ) {
-                                    Box(modifier = Modifier
-                                        .background(Constants.VioletDark),
-                                        contentAlignment = Alignment.Center,
-                                        content = {
-                                            AppInfoBlock(
-                                                info = viewModel.forceUpdateVersion.value,
-                                                horizontalAlignment = Alignment.CenterHorizontally,
-                                                paddingValues = PaddingValues(horizontal = MaterialTheme.spacing.medium),
-                                                isAMessage = FORCE_UPDATE_MESSAGE
-                                            )
-                                        })
-                                }
                             }
                         }
                     } else {

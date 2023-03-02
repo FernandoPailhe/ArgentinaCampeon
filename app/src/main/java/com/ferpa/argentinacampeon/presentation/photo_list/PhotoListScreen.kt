@@ -109,17 +109,17 @@ fun PhotoListScreen(
                 items(listState.photos.size) { index ->
                     val photo = listState.photos[index]
                     GlideImage(
-                        model = if (photo.photoUrl.isNullOrEmpty()) R.drawable.fot_bloqueada else photo.getPhotoUrl(),
+                        model = photo.getPhotoUrl(),
                         contentDescription = photo.description,
                         modifier = Modifier
                             .height(120.dp)
                             .clickable {
-                                firebaseAnalytics.logSingleEvent(LIST_PHOTO_CLICK)
-                                if (!photo.photoUrl.isNullOrEmpty()) {
-                                    navController.navigate(
-                                        Screen.PhotoDetailScreenRoute.createRoute(photo.id)
-                                    )
-                                }
+//                                firebaseAnalytics.logSingleEvent(LIST_PHOTO_CLICK)
+
+                                navController.navigate(
+                                    Screen.PhotoDetailScreenRoute.createRoute(photo.id)
+                                )
+
                             }
                             .padding(vertical = MaterialTheme.spacing.nano),
                         contentScale = ContentScale.FillHeight,
